@@ -1,7 +1,7 @@
 {
     "name": "cssstyle",
     "description": "CSSStyleDeclaration Object Model implementation",
-    "keywords": ["CSS", "CSSStyleDeclaration", "styleSheet"],
+    "keywords": ["CSS", "CSSStyleDeclaration", "StyleSheet"],
     "version": "0.1.0",
     "homepage": "https://github.com/chad3814/CSSStyleDeclaration",
     "maintainers": [{
