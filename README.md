@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/chad3814/CSSStyleDeclaration.png)](http://travis-ci.org/chad3814/CSSStyleDeclaration)
 CSSStyleDeclaration
 ===================
 
