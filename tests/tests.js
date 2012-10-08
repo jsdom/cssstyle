@@ -41,7 +41,7 @@ module.exports = {
         test.expect(8);
         style.cssText = 'color: blue; background-color: red; width: 78%';
         test.ok(3 === style.length, 'length is not 3');
-        test.ok('color: blue; background-color: red; width: 78%; ' === style.cssText, 'cssText is wrong');
+        test.ok('color: blue; background-color: red; width: 78%;' === style.cssText, 'cssText is wrong');
         test.ok('blue' === style.getPropertyValue('color'), "getPropertyValue('color') failed");
         test.ok('color' === style.item(0), 'item(0) failed');
         test.ok('background-color' === style[1], 'style[1] failed');
@@ -57,14 +57,14 @@ module.exports = {
         style.color = 'blue';
         test.ok(1 === style.length, 'length is not 1');
         test.ok('color' === style[0], 'style[0] is not color');
-        test.ok('color: blue; ' === style.cssText, 'cssText is wrong');
+        test.ok('color: blue;' === style.cssText, 'cssText is wrong');
         test.ok('color' === style.item(0), 'item(0) is not color');
         test.ok('blue' === style.color, 'color is not blue');
         style.backgroundColor = 'red';
         test.ok(2 === style.length, 'length is not 2');
         test.ok('color' === style[0], 'style[0] is not color');
         test.ok('background-color' === style[1], 'style[1] is not background-color');
-        test.ok('color: blue; background-color: red; ' === style.cssText, 'cssText is wrong');
+        test.ok('color: blue; background-color: red;' === style.cssText, 'cssText is wrong');
         test.ok('red' === style.backgroundColor, 'backgroundColor is not red');
         style.removeProperty('color');
         test.ok('background-color' === style[0], 'style[0] is not background-color');
