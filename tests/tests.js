@@ -11,9 +11,10 @@ var properties = [ 'azimuth', 'background', 'backgroundAttachment', 'backgroundC
 module.exports = {
     'Verify Has Properties': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
-        test.expect(properties.length);
+        test.expect(properties.length * 2);
         properties.forEach(function (property) {
-            test.ok(style.hasOwnProperty(property), 'missing ' + property + ' property');
+            test.ok(style.__lookupGetter__(property), 'missing ' + property + ' property');
+            test.ok(style.__lookupSetter__(property), 'missing ' + property + ' property');
         });
         test.done();
     },
@@ -30,10 +31,12 @@ module.exports = {
     },
     'Verify Has Special Properties': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
-        test.expect(3);
-        test.ok(style.hasOwnProperty('cssText'), 'missing cssText property');
-        test.ok(style.hasOwnProperty('length'), 'missing length property');
-        test.ok(style.hasOwnProperty('parentRule'), 'missing parentRule property');
+        test.expect(5);
+        test.ok(style.__lookupGetter__('cssText'), 'missing cssText getter');
+        test.ok(style.__lookupSetter__('cssText'), 'missing cssText setter');
+        test.ok(style.__lookupGetter__('length'), 'missing length getter');
+        test.ok(style.__lookupSetter__('length'), 'missing length setter');
+        test.ok(style.__lookupGetter__('parentRule'), 'missing parentRule getter');
         test.done();
     },
     'Test From Style String': function (test) {
@@ -45,7 +48,7 @@ module.exports = {
         test.ok('blue' === style.getPropertyValue('color'), "getPropertyValue('color') failed");
         test.ok('color' === style.item(0), 'item(0) failed');
         test.ok('background-color' === style[1], 'style[1] failed');
-        test.ok('red' === style.backgroundColor, 'style.backgroundColor failed');
+        test.ok('red' === style.backgroundColor, 'style.backgroundColor failed with "' + style.backgroundColor + '"');
         style.cssText = '';
         test.ok('' === style.cssText, 'cssText is not empty');
         test.ok(0 === style.length, 'length is not 0');

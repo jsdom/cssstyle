@@ -2,7 +2,7 @@
     "name": "cssstyle",
     "description": "CSSStyleDeclaration Object Model implementation",
     "keywords": ["CSS", "CSSStyleDeclaration", "StyleSheet"],
-    "version": "0.2.2",
+    "version": "0.2.3",
     "homepage": "https://github.com/chad3814/CSSStyleDeclaration",
     "maintainers": [{
         "name": "Chad Walker",
@@ -26,9 +26,6 @@
 	"lib": "./lib"
     },
     "main": "./lib/CSSStyleDeclaration.js",
-    "engines": {
-	"node": ">=0.6.0"
-    },
     "dependencies": {
         "cssom"      : "0.2.x"
     },
