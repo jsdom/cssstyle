@@ -72,5 +72,21 @@ module.exports = {
         style.removeProperty('color');
         test.ok('background-color' === style[0], 'style[0] is not background-color');
         test.done();
+    },
+    'Test Shorthand and Implicit Properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(9);
+        style.background = 'blue url(http://www.example.com/some_img.jpg)';
+        test.ok('blue' === style.backgroundColor, 'backgroundColor is not blue');
+        test.ok('url(http://www.example.com/some_img.jpg)' === style.backgroundImage, 'backgroundImage is wrong');
+        test.ok('blue url(http://www.example.com/some_img.jpg)' === style.background, 'background is different');
+        style.border = '1px solid black';
+        test.ok('1px', style.borderWidth, 'borderWidth is not 1px');
+        test.ok('solid', style.borderStyle, 'borderStyle is not solid');
+        test.ok('black', style.borderColor, 'borderColor is not black');
+        test.ok('1px', style.borderTopWidth, 'borderTopWidth is not 1px');
+        test.ok('solid', style.borderLeftStyle, 'borderLeftStyle is not solid');
+        test.ok('black', style.borderBottomColor, 'borderBottomColor is not black');
+        test.done();
     }
 };
