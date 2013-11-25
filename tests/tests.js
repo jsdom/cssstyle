@@ -75,7 +75,7 @@ module.exports = {
     },
     'Test Shorthand Properties': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
-        test.expect(9);
+        test.expect(11);
         style.background = 'blue url(http://www.example.com/some_img.jpg)';
         test.ok('blue' === style.backgroundColor, 'backgroundColor is not blue');
         test.ok('url(http://www.example.com/some_img.jpg)' === style.backgroundImage, 'backgroundImage is wrong');
@@ -87,6 +87,9 @@ module.exports = {
         test.ok('0px', style.borderTopWidth, 'borderTopWidth is not 0px');
         test.ok('solid', style.borderLeftStyle, 'borderLeftStyle is not solid');
         test.ok('black', style.borderBottomColor, 'borderBottomColor is not black');
+        style.font = '12em monospace';
+        test.ok('12em', style.fontSize, 'fontSize is not 12em');
+        test.ok('monospace', style.fontFamily, 'fontFamily is not monospace');
         test.done();
     },
     'Test width and height Properties and null and empty strings': function (test) {
