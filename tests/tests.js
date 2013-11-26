@@ -1,5 +1,5 @@
 "use strict";
-
+var util = require('util');
 var cssstyle = require('../lib/CSSStyleDeclaration');
 
 /**
@@ -73,20 +73,50 @@ module.exports = {
         test.ok('background-color' === style[0], 'style[0] is not background-color');
         test.done();
     },
-    'Test Shorthand and Implicit Properties': function (test) {
+    'Test Shorthand Properties': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(9);
         style.background = 'blue url(http://www.example.com/some_img.jpg)';
         test.ok('blue' === style.backgroundColor, 'backgroundColor is not blue');
         test.ok('url(http://www.example.com/some_img.jpg)' === style.backgroundImage, 'backgroundImage is wrong');
         test.ok('blue url(http://www.example.com/some_img.jpg)' === style.background, 'background is different');
-        style.border = '1px solid black';
-        test.ok('1px', style.borderWidth, 'borderWidth is not 1px');
+        style.border = '0 solid black';
+        test.ok('0px', style.borderWidth, 'borderWidth is not 0px');
         test.ok('solid', style.borderStyle, 'borderStyle is not solid');
         test.ok('black', style.borderColor, 'borderColor is not black');
-        test.ok('1px', style.borderTopWidth, 'borderTopWidth is not 1px');
+        test.ok('0px', style.borderTopWidth, 'borderTopWidth is not 0px');
         test.ok('solid', style.borderLeftStyle, 'borderLeftStyle is not solid');
         test.ok('black', style.borderBottomColor, 'borderBottomColor is not black');
+        test.done();
+    },
+    'Test width and height Properties and null and empty strings': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(7);
+        style.height = 6;
+        test.ok('' === style.height, 'height does not remain unset');
+        style.width = 0;
+        test.ok('0px' === style.width, 'width is not 0px');
+        style.height = '34%';
+        test.ok('34%' === style.height, 'height is not 34%');
+        style.height = '';
+        test.ok(style.length === 1, 'length is not 1');
+        test.ok('width: 0px;' === style.cssText, 'cssText is not "width: 0px;"');
+        style.width = null;
+        test.ok(style.length === 0, 'length is not 0');
+        test.ok('' === style.cssText, 'cssText is not empty string');
+        test.done();
+    },
+    'Test Implicit Properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(7);
+        style.borderWidth = 0;
+        test.ok(style.length === 1, 'length is not 1');
+        test.ok('0px', style.borderWidth, 'borderWidth is not 0px');
+        test.ok('0px', style.borderTopWidth, 'borderTopWidth is not 0px');
+        test.ok('0px', style.borderBottomWidth, 'borderBottomWidth is not 0px');
+        test.ok('0px', style.borderLeftWidth, 'borderLeftWidth is not 0px');
+        test.ok('0px', style.borderRightWidth, 'borderRightWidth is not 0px');
+        test.ok('border-width: 0px;' === style.cssText, 'cssText is not "border-width: 0px", "' + style.cssText + '"');
         test.done();
     }
 };
