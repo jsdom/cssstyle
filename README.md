@@ -10,9 +10,9 @@ Well, NV wants to keep CSSOM fast (which I can appreciate) and CSS2Properties ar
 
 How do I test this code?
 ---
-Use nodeunit, I invoke like this:
+`npm test` should do the trick, assuming you have the dev dependencies installed:
 > ```
-> $ nodeunit tests
+> $ npm test
 >
 > tests
 > ✔ Verify Has Properties

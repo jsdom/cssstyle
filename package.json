@@ -29,6 +29,12 @@
     "dependencies": {
         "cssom"      : "0.3.x"
     },
+    "devDependencies" : {
+      "nodeunit": "~0.8.0"
+    },
+    "scripts": {
+        "test": "nodeunit tests"
+    },
     "licenses": [
 	{
 	    "type": "MIT",
