@@ -113,13 +113,28 @@ module.exports = {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(7);
         style.borderWidth = 0;
-        test.ok(style.length === 1, 'length is not 1');
-        test.ok('0px', style.borderWidth, 'borderWidth is not 0px');
-        test.ok('0px', style.borderTopWidth, 'borderTopWidth is not 0px');
-        test.ok('0px', style.borderBottomWidth, 'borderBottomWidth is not 0px');
-        test.ok('0px', style.borderLeftWidth, 'borderLeftWidth is not 0px');
-        test.ok('0px', style.borderRightWidth, 'borderRightWidth is not 0px');
+        test.ok(1 === style.length, 'length is not 1');
+        test.ok('0px' === style.borderWidth, 'borderWidth is not 0px');
+        test.ok('0px' === style.borderTopWidth, 'borderTopWidth is not 0px');
+        test.ok('0px' === style.borderBottomWidth, 'borderBottomWidth is not 0px');
+        test.ok('0px' === style.borderLeftWidth, 'borderLeftWidth is not 0px');
+        test.ok('0px' === style.borderRightWidth, 'borderRightWidth is not 0px');
         test.ok('border-width: 0px;' === style.cssText, 'cssText is not "border-width: 0px", "' + style.cssText + '"');
+        test.done();
+    },
+    'Test Top, Left, Right, Bottom Properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(6);
+        style.top = 0;
+        style.left = '0%';
+        style.right = '5em';
+        style.bottom = '12pt';
+        test.ok('0px' === style.top, 'top is not 0px');
+        test.ok('0%' === style.left, 'left is not 0%');
+        test.ok('5em' === style.right, 'right is not 5em');
+        test.ok('12pt' === style.bottom, 'bottom is not 12pt');
+        test.ok(4 === style.length, 'length is not 4');
+        test.ok('top: 0px; left: 0%; right: 5em; bottom: 12pt;' === style.cssText, 'text is not "top: 0px; left: 0%; right: 5em; bottom: 12pt;"');
         test.done();
     }
 };
