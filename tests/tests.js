@@ -136,5 +136,27 @@ module.exports = {
         test.ok(4 === style.length, 'length is not 4');
         test.ok('top: 0px; left: 0%; right: 5em; bottom: 12pt;' === style.cssText, 'text is not "top: 0px; left: 0%; right: 5em; bottom: 12pt;"');
         test.done();
+    },
+    'Test Clear and Clip Properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(10);
+        style.clear = 'none';
+        test.ok('none' === style.clear, 'clear is not none');
+        style.clear = 'lfet';   // intentionally wrong
+        test.ok('none' === style.clear, 'clear is not still none');
+        style.clear = 'left';
+        test.ok('left' === style.clear, 'clear is not left');
+        style.clear = 'right';
+        test.ok('right' === style.clear, 'clear is not right');
+        style.clear = 'both';
+        test.ok('both' === style.clear, 'clear is not both');
+        style.clip = 'elipse(5px, 10px)';
+        test.ok('' === style.clip, 'clip should not be set');
+        test.ok(1 === style.length, 'length is not 1');
+        style.clip = 'rect(0, 3Em, 2pt, 50%)';
+        test.ok('rect(0px, 3em, 2pt, 50%)' === style.clip, 'clip is not "rect(0px, 3em, 2pt, 50%)", "' + style.clip + '"');
+        test.ok(2 === style.length, 'length is not 2');
+        test.ok('clear: both; clip: rect(0px, 3em, 2pt, 50%);' === style.cssText, 'cssText is not "clear: both; clip: rect(0px, 3em, 2pt, 50%);"');
+        test.done();
     }
 };
