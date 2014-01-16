@@ -1,6 +1,7 @@
 "use strict";
 var util = require('util');
 var cssstyle = require('../lib/CSSStyleDeclaration');
+var hyphenate = require('../lib/hyphenate');
 
 /**
  *  These are the required properties
@@ -8,14 +9,21 @@ var cssstyle = require('../lib/CSSStyleDeclaration');
  **/
 var properties = [ 'azimuth', 'background', 'backgroundAttachment', 'backgroundColor', 'backgroundImage', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderCollapse', 'borderColor', 'borderSpacing', 'borderStyle', 'borderTop', 'borderRight', 'borderBottom', 'borderLeft', 'borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor', 'borderTopStyle', 'borderRightStyle', 'borderBottomStyle', 'borderLeftStyle', 'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'borderWidth', 'bottom', 'captionSide', 'clear', 'clip', 'color', 'content', 'counterIncrement', 'counterReset', 'cue', 'cueAfter', 'cueBefore', 'cursor', 'direction', 'display', 'elevation', 'emptyCells', 'cssFloat', 'font', 'fontFamily', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontVariant', 'fontWeight', 'height', 'left', 'letterSpacing', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginTop', 'marginRight', 'marginBottom', 'marginLeft', 'markerOffset', 'marks', 'maxHeight', 'maxWidth', 'minHeight', 'minWidth', 'orphans', 'outline', 'outlineColor', 'outlineStyle', 'outlineWidth', 'overflow', 'padding', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'page', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pause', 'pauseAfter', 'pauseBefore', 'pitch', 'pitchRange', 'playDuring', 'position', 'quotes', 'richness', 'right', 'size', 'speak', 'speakHeader', 'speakNumeral', 'speakPunctuation', 'speechRate', 'stress', 'tableLayout', 'textAlign', 'textDecoration', 'textIndent', 'textShadow', 'textTransform', 'top', 'unicodeBidi', 'verticalAlign', 'visibility', 'voiceFamily', 'volume', 'whiteSpace', 'widows', 'width', 'wordSpacing', 'zIndex'];
 
+var hyphenated = properties.map(hyphenate);
+
 module.exports = {
     'Verify Has Properties': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
-        test.expect(properties.length * 2);
-        properties.forEach(function (property) {
+        test.expect(properties.length * 4);
+
+        function check (property) {
             test.ok(style.__lookupGetter__(property), 'missing ' + property + ' property');
             test.ok(style.__lookupSetter__(property), 'missing ' + property + ' property');
-        });
+        }
+
+        properties.forEach(check);
+        hyphenated.forEach(check);
+
         test.done();
     },
     'Verify Has Functions': function (test) {
