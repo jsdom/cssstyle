@@ -185,5 +185,14 @@ module.exports = {
         style.color = 'rgba(300, 200, 100, 1.5)';
         test.ok('rgb(255, 200, 100)' === style.color, 'color is not rgb(255, 200, 100) ' + style.color);
         test.done();
+    },
+    'Test short hand properties with embedded spaces': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(3);
+        style.background = 'rgb(0, 0, 0) url(/something/somewhere.jpg)';
+        test.ok('rgb(0, 0, 0)' === style.backgroundColor, 'backgroundColor is not rgb(0, 0, 0): ' + style.backgroundColor);
+        test.ok('url(/something/somewhere.jpg)' === style.backgroundImage, 'backgroundImage is not url(/something/somewhere.jpg): ' + style.backgroundImage);
+        test.ok('background: rgb(0, 0, 0) url(/something/somewhere.jpg);' === style.cssText, 'cssText is not correct: ' + style.cssText);
+        test.done();
     }
 };
