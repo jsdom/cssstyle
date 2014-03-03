@@ -2,17 +2,31 @@
 var util = require('util');
 var cssstyle = require('../lib/CSSStyleDeclaration');
 
+var camelToDashed = require('../lib/parsers').camelToDashed;
+
 /**
  *  These are the required properties
  *  see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSS2Properties
  **/
 var properties = [ 'azimuth', 'background', 'backgroundAttachment', 'backgroundColor', 'backgroundImage', 'backgroundPosition', 'backgroundRepeat', 'border', 'borderCollapse', 'borderColor', 'borderSpacing', 'borderStyle', 'borderTop', 'borderRight', 'borderBottom', 'borderLeft', 'borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor', 'borderTopStyle', 'borderRightStyle', 'borderBottomStyle', 'borderLeftStyle', 'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'borderWidth', 'bottom', 'captionSide', 'clear', 'clip', 'color', 'content', 'counterIncrement', 'counterReset', 'cue', 'cueAfter', 'cueBefore', 'cursor', 'direction', 'display', 'elevation', 'emptyCells', 'cssFloat', 'font', 'fontFamily', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle', 'fontVariant', 'fontWeight', 'height', 'left', 'letterSpacing', 'lineHeight', 'listStyle', 'listStyleImage', 'listStylePosition', 'listStyleType', 'margin', 'marginTop', 'marginRight', 'marginBottom', 'marginLeft', 'markerOffset', 'marks', 'maxHeight', 'maxWidth', 'minHeight', 'minWidth', 'orphans', 'outline', 'outlineColor', 'outlineStyle', 'outlineWidth', 'overflow', 'padding', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'page', 'pageBreakAfter', 'pageBreakBefore', 'pageBreakInside', 'pause', 'pauseAfter', 'pauseBefore', 'pitch', 'pitchRange', 'playDuring', 'position', 'quotes', 'richness', 'right', 'size', 'speak', 'speakHeader', 'speakNumeral', 'speakPunctuation', 'speechRate', 'stress', 'tableLayout', 'textAlign', 'textDecoration', 'textIndent', 'textShadow', 'textTransform', 'top', 'unicodeBidi', 'verticalAlign', 'visibility', 'voiceFamily', 'volume', 'whiteSpace', 'widows', 'width', 'wordSpacing', 'zIndex'];
+var dashed_properties = properties.map(function (property) {
+    return camelToDashed(property);
+});
 
 module.exports = {
     'Verify Has Properties': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(properties.length * 2);
         properties.forEach(function (property) {
+            test.ok(style.__lookupGetter__(property), 'missing ' + property + ' property');
+            test.ok(style.__lookupSetter__(property), 'missing ' + property + ' property');
+        });
+        test.done();
+    },
+    'Verify Has Dashed Properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(dashed_properties.length * 2);
+        dashed_properties.forEach(function (property) {
             test.ok(style.__lookupGetter__(property), 'missing ' + property + ' property');
             test.ok(style.__lookupSetter__(property), 'missing ' + property + ' property');
         });
