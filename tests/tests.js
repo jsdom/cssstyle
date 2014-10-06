@@ -194,5 +194,58 @@ module.exports = {
         test.ok('url(/something/somewhere.jpg)' === style.backgroundImage, 'backgroundImage is not url(/something/somewhere.jpg): ' + style.backgroundImage);
         test.ok('background: rgb(0, 0, 0) url(/something/somewhere.jpg);' === style.cssText, 'cssText is not correct: ' + style.cssText);
         test.done();
+    },
+    'Setting shorthand properties to an empty string should clear all dependent properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.borderWidth = '1px';
+        test.ok('border-width: 1px;' === style.cssText, 'cssText is not "border-width: 1px;": ' + style.cssText);
+        style.border = '';
+        test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
+        test.done();
+    },
+    'Setting implicit properties to an empty string should clear all dependent properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.borderTopWidth = '1px';
+        test.ok('border-top-width: 1px;' === style.cssText, 'cssText is not "border-top-width: 1px;": ' + style.cssText);
+        style.borderWidth = '';
+        test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
+        test.done();
+    },
+    'Setting a shorthand property, whose shorthands are implicit properties, to an empty string shoudl clear all dependent properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(4);
+        style.borderTopWidth = '1px';
+        test.ok('border-top-width: 1px;' === style.cssText, 'cssText is not "border-top-width: 1px;": ' + style.cssText);
+        style.border = '';
+        test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
+        style.borderTop = '1px solid black';
+        test.ok('border-top: 1px solid black;' === style.cssText, 'cssText is not "border-top: 1px solid black;": ' + style.cssText);
+        style.border = '';
+        test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
+        test.done();
+    },
+    'Setting border values to "none" should clear dependent values': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(8);
+        style.borderTopWidth = '1px';
+        test.ok('border-top-width: 1px;' === style.cssText, 'cssText is not "border-top-width: 1px;": ' + style.cssText);
+        style.border = 'none';
+        test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
+        style.borderTopWidth = '1px';
+        test.ok('border-top-width: 1px;' === style.cssText, 'cssText is not "border-top-width: 1px;": ' + style.cssText);
+        style.borderTopStyle = 'none';
+        test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
+        style.borderTopWidth = '1px';
+        test.ok('border-top-width: 1px;' === style.cssText, 'cssText is not "border-top-width: 1px;": ' + style.cssText);
+        style.borderTop = 'none';
+        test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
+        style.borderTopWidth = '1px';
+        style.borderLeftWidth = '1px';
+        test.ok('border-top-width: 1px; border-left-width: 1px;' === style.cssText, 'cssText is not "border-top-width: 1px; border-left-width: 1px;": ' + style.cssText);
+        style.borderTop = 'none';
+        test.ok('border-left-width: 1px;' === style.cssText, 'cssText is not "border-left-width: 1px;": ' + style.cssText);
+        test.done();
     }
 };
