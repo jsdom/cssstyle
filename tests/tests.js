@@ -213,7 +213,7 @@ module.exports = {
         test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
         test.done();
     },
-    'Setting a shorthand property, whose shorthands are implicit properties, to an empty string shoudl clear all dependent properties': function (test) {
+    'Setting a shorthand property, whose shorthands are implicit properties, to an empty string should clear all dependent properties': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(4);
         style.borderTopWidth = '1px';
@@ -246,6 +246,13 @@ module.exports = {
         test.ok('border-top-width: 1px; border-left-width: 1px;' === style.cssText, 'cssText is not "border-top-width: 1px; border-left-width: 1px;": ' + style.cssText);
         style.borderTop = 'none';
         test.ok('border-left-width: 1px;' === style.cssText, 'cssText is not "border-left-width: 1px;": ' + style.cssText);
+        test.done();
+    },
+    'Setting border to 0 should be okay': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(1);
+        style.border = 0;
+        test.ok('border: 0px;' === style.cssText, 'cssText is not "border: 0px;": ' + style.cssText);
         test.done();
     }
 };
