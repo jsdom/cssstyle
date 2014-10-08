@@ -254,5 +254,17 @@ module.exports = {
         style.border = 0;
         test.ok('border: 0px;' === style.cssText, 'cssText is not "border: 0px;": ' + style.cssText);
         test.done();
+    },
+    'Setting values implicit and shorthand properties via cssText and setProperty should propagate to dependent properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(4);
+        style.cssText = 'border: 1px solid black;';
+        test.ok('border: 1px solid black;' === style.cssText, 'cssText is not "border: 1px solid black;": ' + style.cssText);
+        test.ok('1px solid black' === style.borderTop, 'borderTop is not "1px solid black": ' + style.borderTop);
+        style.border = '';
+        test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
+        style.setProperty('border', '1px solid black');
+        test.ok('border: 1px solid black;' === style.cssText, 'cssText is not "border: 1px solid black;": ' + style.cssText);
+        test.done();
     }
 };
