@@ -266,5 +266,16 @@ module.exports = {
         style.setProperty('border', '1px solid black');
         test.ok('border: 1px solid black;' === style.cssText, 'cssText is not "border: 1px solid black;": ' + style.cssText);
         test.done();
+    },
+    'Setting opacity should work': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(3);
+        style.setProperty('opacity', 0.75);
+        test.ok('opacity: 0.75;' === style.cssText, 'cssText is not "opacity: 0.75;": ' + style.cssText);
+        style.opacity = '0.50';
+        test.ok('opacity: 0.5;' === style.cssText, 'cssText is not "opacity: 0.5;": ' + style.cssText);
+        style.opacity = 1.0;
+        test.ok('opacity: 1;' === style.cssText, 'cssText is not "opacity: 1;": ' + style.cssText);
+        test.done();
     }
 };
