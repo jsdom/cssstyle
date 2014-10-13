@@ -33,7 +33,8 @@
       "nodeunit": "~0.8.0"
     },
     "scripts": {
-        "test": "nodeunit tests"
+        "test": "./scripts/run_tests.sh",
+        "prepublish": "node ./scripts/generateTestFiles.js"
     },
     "licenses": [
 	{
