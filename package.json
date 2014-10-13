@@ -16,14 +16,15 @@
         }
     ],
     "repository": {
-	"type": "git",
-	"url": "git://github.com/chad3814/CSSStyleDeclaration.git"
+        "type": "git",
+        "url": "git://github.com/chad3814/CSSStyleDeclaration.git"
     },
     "bugs": {
-	"url": "https://github.com/chad3814/CSSStyleDeclaration/issues"
+        "url": "https://github.com/chad3814/CSSStyleDeclaration/issues"
     },
     "directories": {
-	"lib": "./lib"
+        "lib": "./lib",
+        "scripts": "./scripts"
     },
     "main": "./lib/CSSStyleDeclaration.js",
     "dependencies": {
@@ -37,9 +38,9 @@
         "prepublish": "node ./scripts/generateTestFiles.js"
     },
     "licenses": [
-	{
-	    "type": "MIT",
-	    "url": "http://creativecommons.org/licenses/MIT/"
-	}
+        {
+            "type": "MIT",
+            "url": "http://creativecommons.org/licenses/MIT/"
+        }
     ]
 }
