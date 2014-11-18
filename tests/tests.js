@@ -277,5 +277,12 @@ module.exports = {
         style.opacity = 1.0;
         test.ok('opacity: 1;' === style.cssText, 'cssText is not "opacity: 1;": ' + style.cssText);
         test.done();
+    },
+    'Setting a value to 0 should return the string value': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(1);
+        style.setProperty('fill-opacity', 0);
+        test.ok('0' === style.fillOpacity, 'fillOpacity is not "0": ' + style.fillOpacity);
+        test.done();
     }
 };
