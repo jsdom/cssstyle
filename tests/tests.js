@@ -95,15 +95,15 @@ module.exports = {
         test.ok('url(http://www.example.com/some_img.jpg)' === style.backgroundImage, 'backgroundImage is wrong');
         test.ok('blue url(http://www.example.com/some_img.jpg)' === style.background, 'background is different');
         style.border = '0 solid black';
-        test.ok('0px', style.borderWidth, 'borderWidth is not 0px');
-        test.ok('solid', style.borderStyle, 'borderStyle is not solid');
-        test.ok('black', style.borderColor, 'borderColor is not black');
-        test.ok('0px', style.borderTopWidth, 'borderTopWidth is not 0px');
-        test.ok('solid', style.borderLeftStyle, 'borderLeftStyle is not solid');
-        test.ok('black', style.borderBottomColor, 'borderBottomColor is not black');
+        test.ok('0px' === style.borderWidth, 'borderWidth is not 0px');
+        test.ok('solid' === style.borderStyle, 'borderStyle is not solid');
+        test.ok('black' === style.borderColor, 'borderColor is not black');
+        test.ok('0px' === style.borderTopWidth, 'borderTopWidth is not 0px');
+        test.ok('solid' === style.borderLeftStyle, 'borderLeftStyle is not solid');
+        test.ok('black' === style.borderBottomColor, 'borderBottomColor is not black');
         style.font = '12em monospace';
-        test.ok('12em', style.fontSize, 'fontSize is not 12em');
-        test.ok('monospace', style.fontFamily, 'fontFamily is not monospace');
+        test.ok('12em' === style.fontSize, 'fontSize is not 12em');
+        test.ok('monospace' === style.fontFamily, 'fontFamily is not monospace');
         test.done();
     },
     'Test width and height Properties and null and empty strings': function (test) {
