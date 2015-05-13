@@ -284,5 +284,13 @@ module.exports = {
         style.setProperty('fill-opacity', 0);
         test.ok('0' === style.fillOpacity, 'fillOpacity is not "0": ' + style.fillOpacity);
         test.done();
+    },
+    'onChange callback should be called when the cssText changes': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration(function (cssText) {
+            test.ok('opacity: 0;' === cssText, 'cssText is not "opacity: 0;": ' + cssText);
+            test.done();
+        });
+        test.expect(1);
+        style.setProperty('opacity', 0);
     }
 };
