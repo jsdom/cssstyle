@@ -292,5 +292,12 @@ module.exports = {
         });
         test.expect(1);
         style.setProperty('opacity', 0);
+    },
+    'Setting float should work the same as cssFloat': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(1);
+        style.float = 'left';
+        test.ok('left' === style.cssFloat, 'cssFloat is not "left": ' + style.cssFloat);
+        test.done();
     }
 };
