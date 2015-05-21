@@ -299,5 +299,15 @@ module.exports = {
         style.float = 'left';
         test.ok('left' === style.cssFloat, 'cssFloat is not "left": ' + style.cssFloat);
         test.done();
+    },
+    'Setting improper css to cssText should not throw': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.cssText = 'color: ';
+        test.ok('' === style.cssText, 'cssText wasn\'t cleared: ' + style.cssText);
+        style.color = 'black';
+        style.cssText = 'float: ';
+        test.ok('' === style.cssText, 'cssText wasn\'t cleared: ' + style.cssText);
+        test.done();
     }
 };
