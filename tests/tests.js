@@ -309,5 +309,16 @@ module.exports = {
         style.cssText = 'float: ';
         test.ok('' === style.cssText, 'cssText wasn\'t cleared: ' + style.cssText);
         test.done();
+    },
+    'Make sure url parsing works with quotes': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(3);
+        style.backgroundImage = 'url(http://some/url/here1.png)';
+        test.ok('url(http://some/url/here1.png)' === style.backgroundImage, 'background-image wasn\'t url(http://some/url/here1.png): ' + style.backgroundImage);
+        style.backgroundImage = 'url(\'http://some/url/here2.png\')';
+        test.ok('url(http://some/url/here2.png)' === style.backgroundImage, 'background-image wasn\'t url(http://some/url/here2.png): ' + style.backgroundImage);
+        style.backgroundImage = 'url("http://some/url/here3.png")';
+        test.ok('url(http://some/url/here3.png)' === style.backgroundImage, 'background-image wasn\'t url(http://some/url/here3.png): ' + style.backgroundImage);
+        test.done();
     }
 };
