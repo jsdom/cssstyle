@@ -188,11 +188,14 @@ module.exports = {
     },
     'Test short hand properties with embedded spaces': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
-        test.expect(3);
+        test.expect(4);
         style.background = 'rgb(0, 0, 0) url(/something/somewhere.jpg)';
         test.ok('rgb(0, 0, 0)' === style.backgroundColor, 'backgroundColor is not rgb(0, 0, 0): ' + style.backgroundColor);
         test.ok('url(/something/somewhere.jpg)' === style.backgroundImage, 'backgroundImage is not url(/something/somewhere.jpg): ' + style.backgroundImage);
         test.ok('background: rgb(0, 0, 0) url(/something/somewhere.jpg);' === style.cssText, 'cssText is not correct: ' + style.cssText);
+        style = new cssstyle.CSSStyleDeclaration();
+        style.border = '  1px  solid   black  ';
+        test.ok('1px solid black' === style.border, 'multiple spaces not properly parsed: ' + style.border);
         test.done();
     },
     'Setting shorthand properties to an empty string should clear all dependent properties': function (test) {
@@ -276,6 +279,33 @@ module.exports = {
         test.ok('opacity: 0.5;' === style.cssText, 'cssText is not "opacity: 0.5;": ' + style.cssText);
         style.opacity = 1.0;
         test.ok('opacity: 1;' === style.cssText, 'cssText is not "opacity: 1;": ' + style.cssText);
+        test.done();
+    },
+    'Padding and margin should set/clear shorthand properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        var parts = ["Top","Right","Bottom","Left"];
+        var testParts = function (name,v,V) {
+            style[name] = v;
+            for (var i = 0; i < 4; i++) {
+                var part = name + parts[i];
+                test.ok(V[i] === style[part], part + ' is not "' + V[i] + '": ' + style[part]);
+            }
+            test.ok(v === style[name], name + ' is not "' + v + '": ' + style[name]);
+            style[name] = "";
+        };
+        test.expect(50);
+        testParts("padding","1px",["1px","1px","1px","1px"]);
+        testParts("padding","1px 2%",["1px","2%","1px","2%"]);
+        testParts("padding","1px 2px 3px",["1px","2px","3px","2px"]);
+        testParts("padding","1px 2px 3px 4px",["1px","2px","3px","4px"]);
+        style.paddingTop = style.paddingRight = style.paddingBottom = style.paddingLeft = "1px";
+        testParts("padding","",["","","",""]);
+        testParts("margin","1px",["1px","1px","1px","1px"]);
+        testParts("margin","1px auto",["1px","auto","1px","auto"]);
+        testParts("margin","1px 2% 3px",["1px","2%","3px","2%"]);
+        testParts("margin","1px 2px 3px 4px",["1px","2px","3px","4px"]);
+        style.marginTop = style.marginRight = style.marginBottom = style.marginLeft = "1px";
+        testParts("margin","",["","","",""]);
         test.done();
     },
     'Setting a value to 0 should return the string value': function (test) {
