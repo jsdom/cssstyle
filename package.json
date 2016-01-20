@@ -2,7 +2,7 @@
     "name": "cssstyle",
     "description": "CSSStyleDeclaration Object Model implementation",
     "keywords": ["CSS", "CSSStyleDeclaration", "StyleSheet"],
-    "version": "0.2.30",
+    "version": "0.2.31",
     "homepage": "https://github.com/chad3814/CSSStyleDeclaration",
     "maintainers": [{
         "name": "Chad Walker",
@@ -12,6 +12,8 @@
     "contributors": [{
         "name": "Nikita Vasilyev",
         "email": "me@elv1s.ru"
+    }, {
+        "name": "Davide P. Cervone"
     }],
     "repository": "chad3814/CSSStyleDeclaration",
     "bugs": "https://github.com/chad3814/CSSStyleDeclaration/issues",
