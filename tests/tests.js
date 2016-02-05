@@ -288,9 +288,9 @@ module.exports = {
             style[name] = v;
             for (var i = 0; i < 4; i++) {
                 var part = name + parts[i];
-                test.ok(V[i] === style[part], part + ' is not "' + V[i] + '": ' + style[part]);
+                test.equal(V[i],style[part], part + ' is not "' + V[i] + '": "' + style[part] + '"');
             }
-            test.ok(v === style[name], name + ' is not "' + v + '": ' + style[name]);
+            test.equal(v,style[name], name + ' is not "' + v + '": "' + style[name] + '"');
             style[name] = "";
         };
         test.expect(50);
@@ -307,6 +307,23 @@ module.exports = {
         style.marginTop = style.marginRight = style.marginBottom = style.marginLeft = "1px";
         testParts("margin","",["","","",""]);
         test.done();
+    },
+    'Padding and margin shorthands should set main properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        var parts = ["Top","Right","Bottom","Left"];
+	var testParts = function (name,v,V) {
+	    for (var i = 0; i < 4; i++) {
+		style[name] = v;
+		style[name+parts[i]] = V;
+		var expect = v.split(/ /); expect[i] = V; expect = expect.join(" ");
+		test.equal(expect,style[name], name + ' is not "' + expect + '": "' + style[name] + '"');
+	    }
+	};
+	test.expect(12);
+	testParts("padding","1px 2px 3px 4px","10px");
+	testParts("margin","1px 2px 3px 4px","10px");
+	testParts("margin","1px 2px 3px 4px","auto");
+	test.done();
     },
     'Setting a value to 0 should return the string value': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
