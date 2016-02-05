@@ -311,19 +311,22 @@ module.exports = {
     'Padding and margin shorthands should set main properties': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         var parts = ["Top","Right","Bottom","Left"];
-	var testParts = function (name,v,V) {
-	    for (var i = 0; i < 4; i++) {
-		style[name] = v;
-		style[name+parts[i]] = V;
-		var expect = v.split(/ /); expect[i] = V; expect = expect.join(" ");
-		test.equal(expect,style[name], name + ' is not "' + expect + '": "' + style[name] + '"');
-	    }
-	};
-	test.expect(12);
-	testParts("padding","1px 2px 3px 4px","10px");
-	testParts("margin","1px 2px 3px 4px","10px");
-	testParts("margin","1px 2px 3px 4px","auto");
-	test.done();
+	    var testParts = function (name,v,V) {
+            var expect;
+	        for (var i = 0; i < 4; i++) {
+		        style[name] = v;
+		        style[name+parts[i]] = V;
+		        expect = v.split(/ /);
+                expect[i] = V;
+                expect = expect.join(" ");
+		        test.equal(expect,style[name], name + ' is not "' + expect + '": "' + style[name] + '"');
+	        }
+	    };
+	    test.expect(12);
+	    testParts("padding","1px 2px 3px 4px","10px");
+	    testParts("margin","1px 2px 3px 4px","10px");
+	    testParts("margin","1px 2px 3px 4px","auto");
+	    test.done();
     },
     'Setting a value to 0 should return the string value': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
@@ -366,6 +369,16 @@ module.exports = {
         test.ok('url(http://some/url/here2.png)' === style.backgroundImage, 'background-image wasn\'t url(http://some/url/here2.png): ' + style.backgroundImage);
         style.backgroundImage = 'url("http://some/url/here3.png")';
         test.ok('url(http://some/url/here3.png)' === style.backgroundImage, 'background-image wasn\'t url(http://some/url/here3.png): ' + style.backgroundImage);
+        test.done();
+    },
+    'Make sure setting 0 to a padding or margin works': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.padding = 0;
+        test.equal(style.cssText, 'padding: 0px;', 'padding is not 0px');
+        style.margin = '1em';
+        style.marginTop = '0'
+        test.equal(style.marginTop, '0px', 'margin-top is not 0px');
         test.done();
     }
 };
