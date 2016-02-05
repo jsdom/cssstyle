@@ -2,7 +2,7 @@
     "name": "cssstyle",
     "description": "CSSStyleDeclaration Object Model implementation",
     "keywords": ["CSS", "CSSStyleDeclaration", "StyleSheet"],
-    "version": "0.2.31",
+    "version": "0.2.32",
     "homepage": "https://github.com/chad3814/CSSStyleDeclaration",
     "maintainers": [{
         "name": "Chad Walker",
