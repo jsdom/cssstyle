@@ -281,6 +281,18 @@ module.exports = {
         test.ok('opacity: 1;' === style.cssText, 'cssText is not "opacity: 1;": ' + style.cssText);
         test.done();
     },
+    'Width and height of auto shoud work': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(4);
+        style.width = "auto";
+        test.equal(style.cssText,'width: auto;', 'cssText is not "width: auto;": ' + style.cssText);
+        test.equal(style.width,'auto', 'width is not "auto": ' + style.width);
+        style = new cssstyle.CSSStyleDeclaration();
+        style.height = "auto";
+        test.equal(style.cssText,'height: auto;', 'cssText is not "height: auto;": ' + style.cssText);
+        test.equal(style.height,'auto', 'height is not "auto": ' + style.height);
+        test.done();
+    },
     'Padding and margin should set/clear shorthand properties': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         var parts = ["Top","Right","Bottom","Left"];
