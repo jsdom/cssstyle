@@ -281,7 +281,7 @@ module.exports = {
         test.ok('opacity: 1;' === style.cssText, 'cssText is not "opacity: 1;": ' + style.cssText);
         test.done();
     },
-    'Width and height of auto shoud work': function (test) {
+    'Width and height of auto should work': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(4);
         style.width = "auto";
