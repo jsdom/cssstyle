@@ -380,5 +380,14 @@ module.exports = {
         style.marginTop = '0'
         test.equal(style.marginTop, '0px', 'margin-top is not 0px');
         test.done();
+    },
+    'Make sure setting null to background works': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.background = 'red';
+        test.equal(style.cssText, 'background: red;', 'background is not red');
+        style.background = null;
+        test.equal(style.cssText, '', 'cssText is not empty');
+        test.done();
     }
 };
