@@ -6,7 +6,7 @@
     "CSSStyleDeclaration",
     "StyleSheet"
   ],
-  "version": "0.2.36",
+  "version": "0.2.37",
   "homepage": "https://github.com/chad3814/CSSStyleDeclaration",
   "maintainers": [
     {
@@ -22,6 +22,9 @@
     },
     {
       "name": "Davide P. Cervone"
+    },
+    {
+      "name": "Forbes Lindesay"
     }
   ],
   "repository": "chad3814/CSSStyleDeclaration",
