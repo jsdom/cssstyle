@@ -68,6 +68,15 @@ module.exports = {
         test.ok(0 === style.length, 'length is not 0');
         test.done();
     },
+    'Test From Style String With Multipart Properties': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(3);
+        style.cssText = 'background: url(/sprite.png) -7px -11px no-repeat';
+        test.ok(1 === style.length, 'length is not 1');
+        test.ok('background: url(/sprite.png) -7px -11px no-repeat' === style.cssText, 'cssText is wrong');
+        test.ok('background' === style[0], 'style[0] failed');
+        test.done();
+    },
     'Test From Properties': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(11);
