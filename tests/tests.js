@@ -411,5 +411,14 @@ module.exports = {
         style.background = null;
         test.equal(style.cssText, '', 'cssText is not empty');
         test.done();
+    },
+    'Flex properties should keep their values': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.flexDirection = 'column';
+        test.equal(style.cssText, 'flex-direction: column;', 'flex-direction is not column');
+        style.flexDirection = 'row';
+        test.equal(style.cssText, 'flex-direction: row;', 'flex-direction is not column');
+        test.done();
     }
 };
