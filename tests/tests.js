@@ -393,6 +393,16 @@ module.exports = {
         test.equal(style.marginTop, '0px', 'margin-top is not 0px');
         test.done();
     },
+    'Make sure setting ex units to a padding or margin works': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.padding = '1ex';
+        test.equal(style.cssText, 'padding: 1ex;', 'padding is not 1ex');
+        style.margin = '1em';
+        style.marginTop = '0.5ex'
+        test.equal(style.marginTop, '0.5ex', 'margin-top is not 0.5ex');
+        test.done();
+    },
     'Make sure setting null to background works': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(2);
