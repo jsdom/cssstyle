@@ -7,15 +7,20 @@
     "StyleSheet"
   ],
   "version": "0.2.37",
-  "homepage": "https://github.com/chad3814/CSSStyleDeclaration",
+  "homepage": "https://github.com/jsakas/CSSStyleDeclaration",
   "maintainers": [
+    {
+      "name": "Jon Sakas",
+      "email": "jon.sakas@gmail.com",
+      "url": "http://jon.sakas.co/"
+    }
+  ],
+  "contributors": [
     {
       "name": "Chad Walker",
       "email": "chad@chad-cat-lore-eddie.com",
       "url": "https://github.com/chad3814"
-    }
-  ],
-  "contributors": [
+    },
     {
       "name": "Nikita Vasilyev",
       "email": "me@elv1s.ru"
@@ -27,8 +32,8 @@
       "name": "Forbes Lindesay"
     }
   ],
-  "repository": "chad3814/CSSStyleDeclaration",
-  "bugs": "https://github.com/chad3814/CSSStyleDeclaration/issues",
+  "repository": "jsakas/CSSStyleDeclaration",
+  "bugs": "https://github.com/jsakas/CSSStyleDeclaration/issues",
   "directories": {
     "lib": "./lib"
   },
