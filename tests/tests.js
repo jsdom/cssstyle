@@ -393,6 +393,16 @@ module.exports = {
         test.equal(style.marginTop, '0px', 'margin-top is not 0px');
         test.done();
     },
+    'Make sure setting ex units to a padding or margin works': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.padding = '1ex';
+        test.equal(style.cssText, 'padding: 1ex;', 'padding is not 1ex');
+        style.margin = '1em';
+        style.marginTop = '0.5ex'
+        test.equal(style.marginTop, '0.5ex', 'margin-top is not 0.5ex');
+        test.done();
+    },
     'Make sure setting null to background works': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(2);
@@ -400,6 +410,15 @@ module.exports = {
         test.equal(style.cssText, 'background: red;', 'background is not red');
         style.background = null;
         test.equal(style.cssText, '', 'cssText is not empty');
+        test.done();
+    },
+    'Flex properties should keep their values': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.flexDirection = 'column';
+        test.equal(style.cssText, 'flex-direction: column;', 'flex-direction is not column');
+        style.flexDirection = 'row';
+        test.equal(style.cssText, 'flex-direction: row;', 'flex-direction is not column');
         test.done();
     }
 };
