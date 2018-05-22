@@ -420,5 +420,12 @@ module.exports = {
         style.flexDirection = 'row';
         test.equal(style.cssText, 'flex-direction: row;', 'flex-direction is not column');
         test.done();
+    },
+    'Make sure camelCase properties are not asigned with `.setProperty()`': function(test) {
+      var style = new cssstyle.CSSStyleDeclaration();
+      test.expect(1);
+      style.setProperty('fontSize', '12px');
+      test.equal(style.cssText, '', 'cssText is not empty');
+      test.done();
     }
 };
