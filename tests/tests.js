@@ -425,7 +425,7 @@ module.exports = {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(1);
         style.borderSpacing = 0;
-        test.equal(style.cssText, 'border-spacing: 0;', 'border-spacing is not 0');
+        test.equal(style.cssText, 'border-spacing: 0px;', 'border-spacing is not 0');
         test.done();
     }
 };
