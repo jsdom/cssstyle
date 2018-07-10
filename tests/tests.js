@@ -420,5 +420,12 @@ module.exports = {
         style.flexDirection = 'row';
         test.equal(style.cssText, 'flex-direction: row;', 'flex-direction is not column');
         test.done();
+    },
+    'Support non string entries in border-spacing': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(1);
+        style.borderSpacing = 0;
+        test.equal(style.cssText, 'border-spacing: 0px;', 'border-spacing is not 0');
+        test.done();
     }
 };
