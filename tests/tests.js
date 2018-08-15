@@ -56,9 +56,9 @@ module.exports = {
     'Test From Style String': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(8);
-        style.cssText = 'color: blue; background-color: red; width: 78%';
-        test.ok(3 === style.length, 'length is not 3');
-        test.ok('color: blue; background-color: red; width: 78%;' === style.cssText, 'cssText is wrong');
+        style.cssText = 'color: blue; background-color: red; width: 78%; height: 50vh;';
+        test.ok(4 === style.length, 'length is not 4');
+        test.ok('color: blue; background-color: red; width: 78%; height: 50vh;' === style.cssText, 'cssText is wrong');
         test.ok('blue' === style.getPropertyValue('color'), "getPropertyValue('color') failed");
         test.ok('color' === style.item(0), 'item(0) failed');
         test.ok('background-color' === style[1], 'style[1] failed');
@@ -108,13 +108,17 @@ module.exports = {
     },
     'Test width and height Properties and null and empty strings': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
-        test.expect(7);
+        test.expect(9);
         style.height = 6;
         test.ok('' === style.height, 'height does not remain unset');
         style.width = 0;
         test.ok('0px' === style.width, 'width is not 0px');
         style.height = '34%';
         test.ok('34%' === style.height, 'height is not 34%');
+        style.height = '100vh';
+        test.ok('100vh' === style.height, 'height is not 100vh');
+        style.height = '100vw';
+        test.ok('100vw' === style.height, 'height is not 100vw');
         style.height = '';
         test.ok(style.length === 1, 'length is not 1');
         test.ok('width: 0px;' === style.cssText, 'cssText is not "width: 0px;"');
