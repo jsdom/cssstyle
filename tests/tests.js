@@ -421,6 +421,21 @@ module.exports = {
         test.equal(style.cssText, 'flex-direction: row;', 'flex-direction is not column');
         test.done();
     },
+    'Make sure camelCase properties are not assigned with `.setProperty()`': function(test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(1);
+        style.setProperty('fontSize', '12px');
+        test.equal(style.cssText, '', 'cssText is not empty');
+        test.done();
+    },
+    'Make sure casing is ignored in `.setProperty()`': function(test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.setProperty('FoNt-SiZe', '12px');
+        test.equal(style.fontSize, '12px', 'font-size: 12px');
+        test.equal(style.getPropertyValue('font-size'), '12px', 'font-size: 12px');
+        test.done();
+    },
     'Support non string entries in border-spacing': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
         test.expect(1);

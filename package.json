@@ -50,8 +50,8 @@
     "resolve": "~1.1.7"
   },
   "scripts": {
-    "test": "node ./scripts/generate_properties.js && nodeunit tests",
-    "prepublish": "node ./scripts/generate_properties.js"
+    "test": "node ./scripts/generate_properties.js && node ./scripts/generate_valid_properties.js && nodeunit tests",
+    "prepublish": "node ./scripts/generate_properties.js && node ./scripts/generate_valid_properties.js"
   },
   "license": "MIT"
 }
