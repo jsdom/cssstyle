@@ -51,7 +51,7 @@
     "resolve": "~1.8.1"
   },
   "scripts": {
-    "download": "",
+    "download": "node ./scripts/download_latest_properties.js",
     "test": "node ./scripts/generate_properties.js && node ./scripts/generate_valid_properties.js && nodeunit tests",
     "prepare": "node ./scripts/generate_properties.js && node ./scripts/generate_valid_properties.js"
   },
