@@ -446,5 +446,41 @@ module.exports = {
         style.borderSpacing = 0;
         test.equal(style.cssText, 'border-spacing: 0px;', 'border-spacing is not 0');
         test.done();
+    },
+    'Make sure flex-shrink works': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(3);
+        style.setProperty('flex-shrink', 0);
+        test.equal(style.getPropertyValue('flex-shrink'), '0', 'flex-shrink is not 0');
+        style.setProperty('flex-shrink', 1);
+        test.equal(style.getPropertyValue('flex-shrink'), '1', 'flex-shrink is not 1');
+        test.equal(style.cssText, 'flex-shrink: 1;', 'flex-shrink cssText is incorrect');
+        test.done();
+    },
+    'Make sure flex-grow works': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.setProperty('flex-grow', 2);
+        test.equal(style.getPropertyValue('flex-grow'), '2', 'flex-grow is not 2');
+        test.equal(style.cssText, 'flex-grow: 2;', 'flex-grow cssText is incorrect');
+        test.done();
+    },
+    'Make sure flex-basis works': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(3);
+        style.setProperty('flex-basis', 0);
+        test.equal(style.getPropertyValue('flex-basis'), '0px', 'flex-basis is not 0px');
+        style.setProperty('flex-basis', '250px');
+        test.equal(style.getPropertyValue('flex-basis'), '250px', 'flex-basis is not 250px');
+        test.equal(style.cssText, 'flex-basis: 250px;', 'flex-basis cssText is incorrect');
+        test.done();
+    },
+    'Make sure shorthand flex works': function (test) {
+        var style = new cssstyle.CSSStyleDeclaration();
+        test.expect(2);
+        style.setProperty('flex', '0 1 250px');
+        test.equal(style.getPropertyValue('flex'), '0 1 250px', 'flex is not `0 1 250px`');
+        test.equal(style.cssText, 'flex: 0 1 250px;', '');
+        test.done();
     }
 };
