@@ -467,20 +467,66 @@ module.exports = {
     },
     'Make sure flex-basis works': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
-        test.expect(3);
+        test.expect(5);
+       
         style.setProperty('flex-basis', 0);
         test.equal(style.getPropertyValue('flex-basis'), '0px', 'flex-basis is not 0px');
+
         style.setProperty('flex-basis', '250px');
         test.equal(style.getPropertyValue('flex-basis'), '250px', 'flex-basis is not 250px');
-        test.equal(style.cssText, 'flex-basis: 250px;', 'flex-basis cssText is incorrect');
+        
+        style.setProperty('flex-basis', '10em');
+        test.equal(style.getPropertyValue('flex-basis'), '10em', 'flex-basis is not 10em');
+        
+        style.setProperty('flex-basis', '30%');
+        test.equal(style.getPropertyValue('flex-basis'), '30%', 'flex-basis is not 30%');
+
+        test.equal(style.cssText, 'flex-basis: 30%;', 'flex-basis cssText is incorrect');
+        
         test.done();
     },
     'Make sure shorthand flex works': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
-        test.expect(2);
+        test.expect(19);
+                
+        style.setProperty('flex', 'none');
+        test.equal(style.getPropertyValue('flex-grow'), '0', 'flex-grow is not 0 if flex: none;');
+        test.equal(style.getPropertyValue('flex-shrink'), '0', 'flex-shrink is not 0 if flex: none;');
+        test.equal(style.getPropertyValue('flex-basis'), 'auto', 'flex-basis is not `auto` if flex: none;');
+        style.removeProperty('flex');
+        style.removeProperty('flex-basis');
+
+        style.setProperty('flex', 'auto');
+        test.equal(style.getPropertyValue('flex-grow'), '', 'flex-grow is not empty if flex: auto;');
+        test.equal(style.getPropertyValue('flex-shrink'), '', 'flex-shrink is not empty if flex: auto;');
+        test.equal(style.getPropertyValue('flex-basis'), 'auto', 'flex-basis is not `auto` if flex: auto;');
+        style.removeProperty('flex');
+ 
         style.setProperty('flex', '0 1 250px');
-        test.equal(style.getPropertyValue('flex'), '0 1 250px', 'flex is not `0 1 250px`');
-        test.equal(style.cssText, 'flex: 0 1 250px;', '');
+        test.equal(style.getPropertyValue('flex'), '0 1 250px', 'flex value is not `0 1 250px`');
+        test.equal(style.getPropertyValue('flex-grow'), '0', 'flex-grow is not 0');
+        test.equal(style.getPropertyValue('flex-shrink'), '1', 'flex-shrink is not 1');
+        test.equal(style.getPropertyValue('flex-basis'), '250px', 'flex-basis is not 250px');
+        style.removeProperty('flex');
+
+        style.setProperty('flex', '2');
+        test.equal(style.getPropertyValue('flex-grow'), '2', 'flex-grow is not 2');
+        test.equal(style.getPropertyValue('flex-shrink'), '', 'flex-shrink is not empty');
+        test.equal(style.getPropertyValue('flex-basis'), '', 'flex-basis is not empty');
+        style.removeProperty('flex');
+
+        style.setProperty('flex', '20%');
+        test.equal(style.getPropertyValue('flex-grow'), '', 'flex-grow is not empty');
+        test.equal(style.getPropertyValue('flex-shrink'), '', 'flex-shrink is not empty');
+        test.equal(style.getPropertyValue('flex-basis'), '20%', 'flex-basis is not 20%');
+        style.removeProperty('flex');
+
+        style.setProperty('flex', '2 2');
+        test.equal(style.getPropertyValue('flex-grow'), '2', 'flex-grow is not 2');
+        test.equal(style.getPropertyValue('flex-shrink'), '2', 'flex-shrink is not 2');
+        test.equal(style.getPropertyValue('flex-basis'), '', 'flex-basis is not empty');
+        style.removeProperty('flex');
+        
         test.done();
     }
 };
