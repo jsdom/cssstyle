@@ -477,9 +477,7 @@ module.exports = {
     },
     'Make sure shorthand flex works': function (test) {
         var style = new cssstyle.CSSStyleDeclaration();
-        test.expect(3);
-        style.setProperty('flex', '250px');
-        test.equal(style.getPropertyValue('flex'), '250px', 'flex is not `250px`');
+        test.expect(2);
         style.setProperty('flex', '0 1 250px');
         test.equal(style.getPropertyValue('flex'), '0 1 250px', 'flex is not `0 1 250px`');
         test.equal(style.cssText, 'flex: 0 1 250px;', '');
