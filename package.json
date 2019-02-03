@@ -42,15 +42,17 @@
     "cssom": "0.3.x"
   },
   "devDependencies": {
-    "babel-generator": "~6.11.4",
-    "babel-traverse": "~6.13.0",
-    "babel-types": "~6.13.0",
-    "babylon": "~6.8.4",
-    "nodeunit": "~0.8.0",
+    "babel-generator": "~6.26.1",
+    "babel-traverse": "~6.26.0",
+    "babel-types": "~6.26.0",
+    "babylon": "~6.18.0",
+    "nodeunit": "~0.11.3",
     "npm-run-all": "^4.1.5",
-    "resolve": "~1.1.7"
+    "request": "^2.88.0",
+    "resolve": "~1.8.1"
   },
   "scripts": {
+    "download": "node ./scripts/download_latest_properties.js",
     "test": "node ./scripts/generate_properties.js && node ./scripts/generate_valid_properties.js && nodeunit tests",
     "generate:properties": "node ./scripts/generate_properties.js",
     "generate:valid_properties": "node ./scripts/generate_valid_properties.js",
