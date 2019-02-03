@@ -6,7 +6,7 @@ const t = require('babel-types');
 const generate = require('babel-generator').default;
 const camelToDashed = require('../lib/parsers').camelToDashed;
 
-const dahsedProperties = fs
+const dashedProperties = fs
   .readdirSync(path.resolve(__dirname, '../lib/properties'))
   .filter(propertyFile => propertyFile.substr(-3) === '.js')
   .map(propertyFile => camelToDashed(propertyFile.replace('.js', '')));
@@ -32,7 +32,7 @@ statements.push(
   ]),
 );
 
-dahsedProperties.forEach(property => {
+dashedProperties.forEach(property => {
   statements.push(
     t.expressionStatement(
       t.callExpression(
