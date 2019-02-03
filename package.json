@@ -57,14 +57,13 @@
   },
   "scripts": {
     "download": "node ./scripts/download_latest_properties.js",
+    "generate": "run-p generate:*",
     "generate:implemented_properties": "node ./scripts/generate_implemented_properties.js",
     "generate:properties": "node ./scripts/generate_properties.js",
-    "generate:valid_properties": "node ./scripts/generate_valid_properties.js",
-    "lint": "eslint .",
+    "lint": "npm run generate && eslint .",
     "lint:fix": "eslint . --fix",
-    "prepare": "run-p generate:*",
     "prepublishOnly": "test-ci",
-    "test": "node ./scripts/generate_properties.js && node ./scripts/generate_valid_properties.js && nodeunit tests",
+    "test": "npm run generate && nodeunit tests",
     "test-ci": "npm run lint && npm run test"
   },
   "license": "MIT"

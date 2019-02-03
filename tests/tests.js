@@ -7,15 +7,17 @@ var { camelToDashed, dashedToCamelCase } = require('../lib/parsers');
  *  These are the required properties that are implemented
  *  see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSS2Properties
  **/
-var validProperties = Array.from(require('../lib/validProperties')).map(dashedToCamelCase);
-var dashed_properties = validProperties.map(function(property) {
+var implementedProperties = Array.from(require('../lib/implementedProperties')).map(
+  dashedToCamelCase,
+);
+var dashed_properties = implementedProperties.map(function(property) {
   return camelToDashed(property);
 });
 var allowedProperties = [
   ...require('./css_property_names'),
   ...require('./css_property_names_extra'),
 ];
-var invalidProperties = validProperties.filter(function(property) {
+var invalidProperties = implementedProperties.filter(function(property) {
   return !allowedProperties.includes(property);
 });
 
@@ -32,8 +34,8 @@ module.exports = {
   },
   'Verify Has Properties': function(test) {
     var style = new cssstyle.CSSStyleDeclaration();
-    test.expect(validProperties.length * 2);
-    validProperties.forEach(function(property) {
+    test.expect(implementedProperties.length * 2);
+    implementedProperties.forEach(function(property) {
       test.ok(style.__lookupGetter__(property), 'missing ' + property + ' property');
       test.ok(style.__lookupSetter__(property), 'missing ' + property + ' property');
     });

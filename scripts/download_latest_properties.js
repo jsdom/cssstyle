@@ -67,9 +67,9 @@ request(url, function(error, response, body) {
     );
     out_file.write('/*\n *\n * https://www.w3.org/Style/CSS/all-properties.en.html\n */\n\n');
 
-    const validPropertiesStatements = [];
+    const statements = [];
 
-    validPropertiesStatements.push(
+    statements.push(
       t.expressionStatement(
         t.assignmentExpression(
           '=',
@@ -83,7 +83,7 @@ request(url, function(error, response, body) {
       ),
     );
 
-    out_file.write(generate(t.program(validPropertiesStatements)).code + '\n');
+    out_file.write(generate(t.program(statements)).code + '\n');
 
     out_file.end(function(err) {
       if (err) {
