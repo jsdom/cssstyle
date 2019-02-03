@@ -3,11 +3,11 @@ var cssstyle = require('../lib/CSSStyleDeclaration');
 
 var { camelToDashed, dashedToCamelCase } = require('../lib/parsers');
 
-var allowedProperties = [
-  ...Array.from(require('../lib/allProperties')).map(dashedToCamelCase),
-  ...require('./css_property_names_extra'),
+var dashedProperties = [
+  ...require('../lib/allProperties'),
+  ...require('../lib/allExtraProperties'),
 ];
-var dashedProperties = allowedProperties.map(camelToDashed);
+var allowedProperties = dashedProperties.map(dashedToCamelCase);
 var implementedProperties = Array.from(require('../lib/implementedProperties')).map(
   dashedToCamelCase,
 );
