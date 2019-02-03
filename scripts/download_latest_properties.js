@@ -18,11 +18,13 @@
  * NOTE - Working Group Note
  */
 
-var request = require('request');
 var fs = require('fs');
 var path = require('path');
-var t = require('babel-types');
-var generate = require('babel-generator').default;
+
+var request = require('request');
+
+const { camelToDashed } = require('../lib/parsers');
+
 var url = 'https://www.w3.org/Style/CSS/all-properties.en.json';
 
 console.log('Downloading CSS properties...');
@@ -54,10 +56,9 @@ request(url, function(error, response, body) {
       }
     });
 
-    var out_file = fs.createWriteStream(
-      path.resolve(__dirname, './../tests/css_property_names.js'),
-      { encoding: 'utf-8' },
-    );
+    var out_file = fs.createWriteStream(path.resolve(__dirname, './../lib/allProperties.js'), {
+      encoding: 'utf-8',
+    });
 
     var date_today = new Date();
     out_file.write(
@@ -67,23 +68,12 @@ request(url, function(error, response, body) {
     );
     out_file.write('/*\n *\n * https://www.w3.org/Style/CSS/all-properties.en.html\n */\n\n');
 
-    const statements = [];
+    out_file.write('var allProperties = new Set();\n');
+    out_file.write('module.exports = allProperties;\n');
 
-    statements.push(
-      t.expressionStatement(
-        t.assignmentExpression(
-          '=',
-          t.memberExpression(t.identifier('module'), t.identifier('exports')),
-          t.arrayExpression(
-            CSSpropertyNames.map(function(cssProp) {
-              return t.StringLiteral(cssProp);
-            }),
-          ),
-        ),
-      ),
-    );
-
-    out_file.write(generate(t.program(statements)).code + '\n');
+    CSSpropertyNames.forEach(function(property) {
+      out_file.write('allProperties.add(' + JSON.stringify(camelToDashed(property)) + ');\n');
+    });
 
     out_file.end(function(err) {
       if (err) {

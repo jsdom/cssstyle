@@ -14,7 +14,7 @@ var dashed_properties = implementedProperties.map(function(property) {
   return camelToDashed(property);
 });
 var allowedProperties = [
-  ...require('./css_property_names'),
+  ...Array.from(require('../lib/allProperties')).map(dashedToCamelCase),
   ...require('./css_property_names_extra'),
 ];
 var invalidProperties = implementedProperties.filter(function(property) {
