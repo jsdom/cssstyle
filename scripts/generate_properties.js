@@ -194,6 +194,12 @@ parsedFiles.forEach(function(file) {
         return;
       }
 
+      // rename all top level functions to keep them local to the module
+      if (t.isFunctionDeclaration(path.node) && t.isProgram(path.parent)) {
+        path.scope.rename(path.node.id.name, file.property + '_local_fn_' + path.node.id.name);
+        return;
+      }
+
       // rename all top level variables to keep them local to the module
       if (t.isVariableDeclaration(path.node) && t.isProgram(path.parent)) {
         path.node.declarations.forEach(function(declaration) {
