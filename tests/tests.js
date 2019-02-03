@@ -3,20 +3,14 @@ var cssstyle = require('../lib/CSSStyleDeclaration');
 
 var { camelToDashed, dashedToCamelCase } = require('../lib/parsers');
 
-/**
- *  These are the required properties that are implemented
- *  see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSS2Properties
- **/
-var implementedProperties = Array.from(require('../lib/implementedProperties')).map(
-  dashedToCamelCase,
-);
-var dashed_properties = implementedProperties.map(function(property) {
-  return camelToDashed(property);
-});
 var allowedProperties = [
   ...Array.from(require('../lib/allProperties')).map(dashedToCamelCase),
   ...require('./css_property_names_extra'),
 ];
+var dashedProperties = allowedProperties.map(camelToDashed);
+var implementedProperties = Array.from(require('../lib/implementedProperties')).map(
+  dashedToCamelCase,
+);
 var invalidProperties = implementedProperties.filter(function(property) {
   return !allowedProperties.includes(property);
 });
@@ -32,19 +26,19 @@ module.exports = {
     );
     test.done();
   },
-  'Verify Has Properties': function(test) {
+  'Verify Has All Properties': function(test) {
     var style = new cssstyle.CSSStyleDeclaration();
-    test.expect(implementedProperties.length * 2);
-    implementedProperties.forEach(function(property) {
+    test.expect(allowedProperties.length * 2);
+    allowedProperties.forEach(function(property) {
       test.ok(style.__lookupGetter__(property), 'missing ' + property + ' property');
       test.ok(style.__lookupSetter__(property), 'missing ' + property + ' property');
     });
     test.done();
   },
-  'Verify Has Dashed Properties': function(test) {
+  'Verify Has All Dashed Properties': function(test) {
     var style = new cssstyle.CSSStyleDeclaration();
-    test.expect(dashed_properties.length * 2);
-    dashed_properties.forEach(function(property) {
+    test.expect(dashedProperties.length * 2);
+    dashedProperties.forEach(function(property) {
       test.ok(style.__lookupGetter__(property), 'missing ' + property + ' property');
       test.ok(style.__lookupSetter__(property), 'missing ' + property + ' property');
     });
