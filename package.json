@@ -12,7 +12,7 @@
     {
       "name": "Jon Sakas",
       "email": "jon.sakas@gmail.com",
-      "url": "http://jon.sakas.co/"
+      "url": "https://jon.sakas.co/"
     }
   ],
   "contributors": [
@@ -20,6 +20,11 @@
       "name": "Chad Walker",
       "email": "chad@chad-cat-lore-eddie.com",
       "url": "https://github.com/chad3814"
+    },
+    {
+      "name": "Rafał Ruciński",
+      "email": "fatfisz@gmail.com",
+      "url": "https://fatfisz.com"
     },
     {
       "name": "Nikita Vasilyev",
