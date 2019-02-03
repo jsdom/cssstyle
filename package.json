@@ -54,6 +54,7 @@
   "scripts": {
     "download": "node ./scripts/download_latest_properties.js",
     "test": "node ./scripts/generate_properties.js && node ./scripts/generate_valid_properties.js && nodeunit tests",
+    "generate:implemented_properties": "node ./scripts/generate_implemented_properties.js",
     "generate:properties": "node ./scripts/generate_properties.js",
     "generate:valid_properties": "node ./scripts/generate_valid_properties.js",
     "prepare": "run-p generate:*"

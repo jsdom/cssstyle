@@ -5,10 +5,13 @@ var cssstyle = require('../lib/CSSStyleDeclaration');
 var camelToDashed = require('../lib/parsers').camelToDashed;
 
 /**
- *  These are the required properties
+ *  These are the required properties that are implemented
  *  see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSS2Properties
  **/
-var properties = require('./css_property_names');
+var validProperties = require('../lib/validProperties');
+var properties = require('./css_property_names').filter(function (property) {
+    return validProperties.has(property);
+});
 var dashed_properties = properties.map(function (property) {
     return camelToDashed(property);
 });
