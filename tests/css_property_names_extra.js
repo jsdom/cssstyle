@@ -29,6 +29,7 @@ module.exports = [
   'marks',
   'pointerEvents',
   'shapeRendering',
+  'size',
   'src',
   'stopColor',
   'stopOpacity',
