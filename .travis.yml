@@ -8,4 +8,4 @@ notifications:
 node_js:
   - "node"
 script:
-  - npm test
+  - npm run test-ci

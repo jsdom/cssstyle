@@ -1,7 +1,7 @@
 'use strict';
 var cssstyle = require('../lib/CSSStyleDeclaration');
 
-var { camelToDashed, dashedToCamelCase } = require('../lib/parsers');
+var { dashedToCamelCase } = require('../lib/parsers');
 
 var dashedProperties = [
   ...require('../lib/allProperties'),
