@@ -22,7 +22,7 @@ module.exports = {
       {
         printWidth: 100,
         singleQuote: true,
-        trailingComma: 'all',
+        trailingComma: 'es5',
       },
     ],
     strict: ['warn', 'global'],
