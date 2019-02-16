@@ -6,6 +6,10 @@ cache:
 notifications:
   email: true
 node_js:
-  - "node"
+  - 6
+  - 8
+  - 10
+  - 11
+
 script:
   - npm run test-ci
