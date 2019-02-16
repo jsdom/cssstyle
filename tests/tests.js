@@ -9,7 +9,7 @@ var dashedProperties = [
 ];
 var allowedProperties = dashedProperties.map(dashedToCamelCase);
 var implementedProperties = Array.from(require('../lib/implementedProperties')).map(
-  dashedToCamelCase,
+  dashedToCamelCase
 );
 var invalidProperties = implementedProperties.filter(function(property) {
   return !allowedProperties.includes(property);
@@ -22,7 +22,7 @@ module.exports = {
       invalidProperties.length === 0,
       invalidProperties.length +
         ' invalid properties implemented: ' +
-        Array.from(invalidProperties).join(', '),
+        Array.from(invalidProperties).join(', ')
     );
     test.done();
   },
@@ -72,14 +72,14 @@ module.exports = {
     test.ok(4 === style.length, 'length is not 4');
     test.ok(
       'color: blue; background-color: red; width: 78%; height: 50vh;' === style.cssText,
-      'cssText is wrong',
+      'cssText is wrong'
     );
     test.ok('blue' === style.getPropertyValue('color'), "getPropertyValue('color') failed");
     test.ok('color' === style.item(0), 'item(0) failed');
     test.ok('background-color' === style[1], 'style[1] failed');
     test.ok(
       'red' === style.backgroundColor,
-      'style.backgroundColor failed with "' + style.backgroundColor + '"',
+      'style.backgroundColor failed with "' + style.backgroundColor + '"'
     );
     style.cssText = '';
     test.ok('' === style.cssText, 'cssText is not empty');
@@ -112,11 +112,11 @@ module.exports = {
     test.ok('blue' === style.backgroundColor, 'backgroundColor is not blue');
     test.ok(
       'url(http://www.example.com/some_img.jpg)' === style.backgroundImage,
-      'backgroundImage is wrong',
+      'backgroundImage is wrong'
     );
     test.ok(
       'blue url(http://www.example.com/some_img.jpg)' === style.background,
-      'background is different',
+      'background is different'
     );
     style.border = '0 solid black';
     test.ok('0px' === style.borderWidth, 'borderWidth is not 0px');
@@ -163,7 +163,7 @@ module.exports = {
     test.ok('0px' === style.borderRightWidth, 'borderRightWidth is not 0px');
     test.ok(
       'border-width: 0px;' === style.cssText,
-      'cssText is not "border-width: 0px", "' + style.cssText + '"',
+      'cssText is not "border-width: 0px", "' + style.cssText + '"'
     );
     test.done();
   },
@@ -181,7 +181,7 @@ module.exports = {
     test.ok(4 === style.length, 'length is not 4');
     test.ok(
       'top: 0px; left: 0%; right: 5em; bottom: 12pt;' === style.cssText,
-      'text is not "top: 0px; left: 0%; right: 5em; bottom: 12pt;"',
+      'text is not "top: 0px; left: 0%; right: 5em; bottom: 12pt;"'
     );
     test.done();
   },
@@ -204,12 +204,12 @@ module.exports = {
     style.clip = 'rect(0, 3Em, 2pt, 50%)';
     test.ok(
       'rect(0px, 3em, 2pt, 50%)' === style.clip,
-      'clip is not "rect(0px, 3em, 2pt, 50%)", "' + style.clip + '"',
+      'clip is not "rect(0px, 3em, 2pt, 50%)", "' + style.clip + '"'
     );
     test.ok(2 === style.length, 'length is not 2');
     test.ok(
       'clear: both; clip: rect(0px, 3em, 2pt, 50%);' === style.cssText,
-      'cssText is not "clear: both; clip: rect(0px, 3em, 2pt, 50%);"',
+      'cssText is not "clear: both; clip: rect(0px, 3em, 2pt, 50%);"'
     );
     test.done();
   },
@@ -227,7 +227,7 @@ module.exports = {
     style.color = 'hsla(0, 1%, 2%, 0.5)';
     test.ok(
       'hsla(0, 1%, 2%, 0.5)' === style.color,
-      'color is not hsla(0, 1%, 2%, 0.5) ' + style.color,
+      'color is not hsla(0, 1%, 2%, 0.5) ' + style.color
     );
     style.color = 'hsl(0, 1%, 2%)';
     test.ok('hsl(0, 1%, 2%)' === style.color, 'color is not hsl(0, 1%, 2%) ' + style.color);
@@ -241,68 +241,68 @@ module.exports = {
     style.background = 'rgb(0, 0, 0) url(/something/somewhere.jpg)';
     test.ok(
       'rgb(0, 0, 0)' === style.backgroundColor,
-      'backgroundColor is not rgb(0, 0, 0): ' + style.backgroundColor,
+      'backgroundColor is not rgb(0, 0, 0): ' + style.backgroundColor
     );
     test.ok(
       'url(/something/somewhere.jpg)' === style.backgroundImage,
-      'backgroundImage is not url(/something/somewhere.jpg): ' + style.backgroundImage,
+      'backgroundImage is not url(/something/somewhere.jpg): ' + style.backgroundImage
     );
     test.ok(
       'background: rgb(0, 0, 0) url(/something/somewhere.jpg);' === style.cssText,
-      'cssText is not correct: ' + style.cssText,
+      'cssText is not correct: ' + style.cssText
     );
     style = new cssstyle.CSSStyleDeclaration();
     style.border = '  1px  solid   black  ';
     test.ok(
       '1px solid black' === style.border,
-      'multiple spaces not properly parsed: ' + style.border,
+      'multiple spaces not properly parsed: ' + style.border
     );
     test.done();
   },
   'Setting shorthand properties to an empty string should clear all dependent properties': function(
-    test,
+    test
   ) {
     var style = new cssstyle.CSSStyleDeclaration();
     test.expect(2);
     style.borderWidth = '1px';
     test.ok(
       'border-width: 1px;' === style.cssText,
-      'cssText is not "border-width: 1px;": ' + style.cssText,
+      'cssText is not "border-width: 1px;": ' + style.cssText
     );
     style.border = '';
     test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
     test.done();
   },
   'Setting implicit properties to an empty string should clear all dependent properties': function(
-    test,
+    test
   ) {
     var style = new cssstyle.CSSStyleDeclaration();
     test.expect(2);
     style.borderTopWidth = '1px';
     test.ok(
       'border-top-width: 1px;' === style.cssText,
-      'cssText is not "border-top-width: 1px;": ' + style.cssText,
+      'cssText is not "border-top-width: 1px;": ' + style.cssText
     );
     style.borderWidth = '';
     test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
     test.done();
   },
   'Setting a shorthand property, whose shorthands are implicit properties, to an empty string should clear all dependent properties': function(
-    test,
+    test
   ) {
     var style = new cssstyle.CSSStyleDeclaration();
     test.expect(4);
     style.borderTopWidth = '1px';
     test.ok(
       'border-top-width: 1px;' === style.cssText,
-      'cssText is not "border-top-width: 1px;": ' + style.cssText,
+      'cssText is not "border-top-width: 1px;": ' + style.cssText
     );
     style.border = '';
     test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
     style.borderTop = '1px solid black';
     test.ok(
       'border-top: 1px solid black;' === style.cssText,
-      'cssText is not "border-top: 1px solid black;": ' + style.cssText,
+      'cssText is not "border-top: 1px solid black;": ' + style.cssText
     );
     style.border = '';
     test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
@@ -314,21 +314,21 @@ module.exports = {
     style.borderTopWidth = '1px';
     test.ok(
       'border-top-width: 1px;' === style.cssText,
-      'cssText is not "border-top-width: 1px;": ' + style.cssText,
+      'cssText is not "border-top-width: 1px;": ' + style.cssText
     );
     style.border = 'none';
     test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
     style.borderTopWidth = '1px';
     test.ok(
       'border-top-width: 1px;' === style.cssText,
-      'cssText is not "border-top-width: 1px;": ' + style.cssText,
+      'cssText is not "border-top-width: 1px;": ' + style.cssText
     );
     style.borderTopStyle = 'none';
     test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
     style.borderTopWidth = '1px';
     test.ok(
       'border-top-width: 1px;' === style.cssText,
-      'cssText is not "border-top-width: 1px;": ' + style.cssText,
+      'cssText is not "border-top-width: 1px;": ' + style.cssText
     );
     style.borderTop = 'none';
     test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
@@ -336,12 +336,12 @@ module.exports = {
     style.borderLeftWidth = '1px';
     test.ok(
       'border-top-width: 1px; border-left-width: 1px;' === style.cssText,
-      'cssText is not "border-top-width: 1px; border-left-width: 1px;": ' + style.cssText,
+      'cssText is not "border-top-width: 1px; border-left-width: 1px;": ' + style.cssText
     );
     style.borderTop = 'none';
     test.ok(
       'border-left-width: 1px;' === style.cssText,
-      'cssText is not "border-left-width: 1px;": ' + style.cssText,
+      'cssText is not "border-left-width: 1px;": ' + style.cssText
     );
     test.done();
   },
@@ -353,25 +353,25 @@ module.exports = {
     test.done();
   },
   'Setting values implicit and shorthand properties via cssText and setProperty should propagate to dependent properties': function(
-    test,
+    test
   ) {
     var style = new cssstyle.CSSStyleDeclaration();
     test.expect(4);
     style.cssText = 'border: 1px solid black;';
     test.ok(
       'border: 1px solid black;' === style.cssText,
-      'cssText is not "border: 1px solid black;": ' + style.cssText,
+      'cssText is not "border: 1px solid black;": ' + style.cssText
     );
     test.ok(
       '1px solid black' === style.borderTop,
-      'borderTop is not "1px solid black": ' + style.borderTop,
+      'borderTop is not "1px solid black": ' + style.borderTop
     );
     style.border = '';
     test.ok('' === style.cssText, 'cssText is not "": ' + style.cssText);
     style.setProperty('border', '1px solid black');
     test.ok(
       'border: 1px solid black;' === style.cssText,
-      'cssText is not "border: 1px solid black;": ' + style.cssText,
+      'cssText is not "border: 1px solid black;": ' + style.cssText
     );
     test.done();
   },
@@ -381,7 +381,7 @@ module.exports = {
     style.setProperty('opacity', 0.75);
     test.ok(
       'opacity: 0.75;' === style.cssText,
-      'cssText is not "opacity: 0.75;": ' + style.cssText,
+      'cssText is not "opacity: 0.75;": ' + style.cssText
     );
     style.opacity = '0.50';
     test.ok('opacity: 0.5;' === style.cssText, 'cssText is not "opacity: 0.5;": ' + style.cssText);
@@ -486,17 +486,17 @@ module.exports = {
     style.backgroundImage = 'url(http://some/url/here1.png)';
     test.ok(
       'url(http://some/url/here1.png)' === style.backgroundImage,
-      "background-image wasn't url(http://some/url/here1.png): " + style.backgroundImage,
+      "background-image wasn't url(http://some/url/here1.png): " + style.backgroundImage
     );
     style.backgroundImage = "url('http://some/url/here2.png')";
     test.ok(
       'url(http://some/url/here2.png)' === style.backgroundImage,
-      "background-image wasn't url(http://some/url/here2.png): " + style.backgroundImage,
+      "background-image wasn't url(http://some/url/here2.png): " + style.backgroundImage
     );
     style.backgroundImage = 'url("http://some/url/here3.png")';
     test.ok(
       'url(http://some/url/here3.png)' === style.backgroundImage,
-      "background-image wasn't url(http://some/url/here3.png): " + style.backgroundImage,
+      "background-image wasn't url(http://some/url/here3.png): " + style.backgroundImage
     );
     test.done();
   },
@@ -616,7 +616,7 @@ module.exports = {
     test.equal(
       style.getPropertyValue('flex-basis'),
       'auto',
-      'flex-basis is not `auto` if flex: none;',
+      'flex-basis is not `auto` if flex: none;'
     );
     style.removeProperty('flex');
     style.removeProperty('flex-basis');
@@ -626,12 +626,12 @@ module.exports = {
     test.equal(
       style.getPropertyValue('flex-shrink'),
       '',
-      'flex-shrink is not empty if flex: auto;',
+      'flex-shrink is not empty if flex: auto;'
     );
     test.equal(
       style.getPropertyValue('flex-basis'),
       'auto',
-      'flex-basis is not `auto` if flex: auto;',
+      'flex-basis is not `auto` if flex: auto;'
     );
     style.removeProperty('flex');
 
