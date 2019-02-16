@@ -65,8 +65,8 @@
     "generate": "run-p generate:*",
     "generate:implemented_properties": "node ./scripts/generate_implemented_properties.js",
     "generate:properties": "node ./scripts/generate_properties.js",
-    "lint": "npm run generate && eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "npm run generate && eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix --max-warnings 0",
     "prepublishOnly": "test-ci",
     "test": "npm run generate && nodeunit tests",
     "test-ci": "npm run lint && npm run test"
