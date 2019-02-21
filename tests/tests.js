@@ -215,7 +215,7 @@ module.exports = {
   },
   'Test colors': function(test) {
     var style = new cssstyle.CSSStyleDeclaration();
-    test.expect(7);
+    test.expect(9);
     style.color = 'rgba(0,0,0,0)';
     test.ok('rgba(0, 0, 0, 0)' === style.color, 'color is not rgba(0, 0, 0, 0)');
     style.color = 'rgba(5%, 10%, 20%, 0.4)';
@@ -233,6 +233,10 @@ module.exports = {
     test.ok('hsl(0, 1%, 2%)' === style.color, 'color is not hsl(0, 1%, 2%) ' + style.color);
     style.color = 'rebeccapurple';
     test.ok('rebeccapurple' === style.color, 'color is not rebeccapurple ' + style.color);
+    style.color = 'transparent';
+    test.ok('transparent' === style.color, 'color is not transparent ' + style.color);
+    style.color = 'currentcolor';
+    test.ok('currentcolor' === style.color, 'color is not currentcolor ' + style.color);
     test.done();
   },
   'Test short hand properties with embedded spaces': function(test) {
