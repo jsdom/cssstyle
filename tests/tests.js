@@ -215,7 +215,7 @@ module.exports = {
   },
   'Test colors': function(test) {
     var style = new cssstyle.CSSStyleDeclaration();
-    test.expect(9);
+    test.expect(11);
     style.color = 'rgba(0,0,0,0)';
     test.ok('rgba(0, 0, 0, 0)' === style.color, 'color is not rgba(0, 0, 0, 0)');
     style.color = 'rgba(5%, 10%, 20%, 0.4)';
@@ -237,6 +237,10 @@ module.exports = {
     test.ok('transparent' === style.color, 'color is not transparent ' + style.color);
     style.color = 'currentcolor';
     test.ok('currentcolor' === style.color, 'color is not currentcolor ' + style.color);
+    style.color = '#ffffffff';
+    test.ok('rgba(255, 255, 255, 1)' === style.color, 'color is not rgba(255, 255, 255, 1) ' + style.color);
+    style.color = '#fffa';
+    test.ok('rgba(255, 255, 255, 0.67)' === style.color, 'color is not rgba(255, 255, 255, 0.67) ' + style.color);
     test.done();
   },
   'Test short hand properties with embedded spaces': function(test) {
