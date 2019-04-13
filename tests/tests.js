@@ -238,9 +238,15 @@ module.exports = {
     style.color = 'currentcolor';
     test.ok('currentcolor' === style.color, 'color is not currentcolor ' + style.color);
     style.color = '#ffffffff';
-    test.ok('rgba(255, 255, 255, 1)' === style.color, 'color is not rgba(255, 255, 255, 1) ' + style.color);
+    test.ok(
+      'rgba(255, 255, 255, 1)' === style.color,
+      'color is not rgba(255, 255, 255, 1) ' + style.color
+    );
     style.color = '#fffa';
-    test.ok('rgba(255, 255, 255, 0.67)' === style.color, 'color is not rgba(255, 255, 255, 0.67) ' + style.color);
+    test.ok(
+      'rgba(255, 255, 255, 0.67)' === style.color,
+      'color is not rgba(255, 255, 255, 0.67) ' + style.color
+    );
     test.done();
   },
   'Test short hand properties with embedded spaces': function(test) {
