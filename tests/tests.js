@@ -244,8 +244,8 @@ module.exports = {
     );
     style.color = '#fffa';
     test.ok(
-      'rgba(255, 255, 255, 0.67)' === style.color,
-      'color is not rgba(255, 255, 255, 0.67) ' + style.color
+      'rgba(255, 255, 255, 0.667)' === style.color,
+      'color is not rgba(255, 255, 255, 0.667) ' + style.color
     );
     test.done();
   },
