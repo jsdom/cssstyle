@@ -215,7 +215,7 @@ module.exports = {
   },
   'Test colors': function(test) {
     var style = new cssstyle.CSSStyleDeclaration();
-    test.expect(11);
+    test.expect(12);
     style.color = 'rgba(0,0,0,0)';
     test.ok('rgba(0, 0, 0, 0)' === style.color, 'color is not rgba(0, 0, 0, 0)');
     style.color = 'rgba(5%, 10%, 20%, 0.4)';
@@ -246,6 +246,11 @@ module.exports = {
     test.ok(
       'rgba(255, 255, 255, 0.667)' === style.color,
       'color is not rgba(255, 255, 255, 0.667) ' + style.color
+    );
+    style.color = '#ffffff66';
+    test.ok(
+      'rgba(255, 255, 255, 0.4)' === style.color,
+      'color is not rgba(255, 255, 255, 0.4) ' + style.color
     );
     test.done();
   },
