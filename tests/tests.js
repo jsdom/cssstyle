@@ -682,13 +682,13 @@ module.exports = {
     test.done();
   },
   'Make sure font-size get a valid value': function(test) {
-    var style = new cssstyle.CSSStyleDeclaration();
-    const invalidValue = '1r5px'
-    style.cssText = 'font-size: 15px'
-    test.ok(style.length === 1)
-    style.cssText = `font-size: ${invalidValue}`
-    test.ok(style.length === 0)
-    test.ok(style[0] === undefined)
-    test.done()
-  }
+    const style = new cssstyle.CSSStyleDeclaration();
+    const invalidValue = '1r5px';
+    style.cssText = 'font-size: 15px';
+    test.ok(style.length === 1);
+    style.cssText = `font-size: ${invalidValue}`;
+    test.ok(style.length === 0);
+    test.ok(style[0] === undefined);
+    test.done();
+  },
 };
