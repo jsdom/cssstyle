@@ -57,7 +57,7 @@
     "generate:properties": "node ./scripts/generate_properties.js",
     "lint": "npm run generate && eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix --max-warnings 0",
-    "prepublishOnly": "npm run test-ci",
+    "prepublishOnly": "npm run lint && npm run test",
     "test": "npm run generate && jest",
     "test-ci": "npm run lint && npm run test && codecov",
     "update-authors": "git log --format=\"%aN <%aE>\" | sort -f | uniq > AUTHORS"
