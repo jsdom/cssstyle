@@ -13,6 +13,11 @@
       "name": "Jon Sakas",
       "email": "jon.sakas@gmail.com",
       "url": "https://jon.sakas.co/"
+    },
+    {
+      "name": "Rafał Ruciński",
+      "email": "fatfisz@gmail.com",
+      "url": "https://fatfisz.com"
     }
   ],
   "contributors": [
@@ -20,21 +25,6 @@
       "name": "Chad Walker",
       "email": "chad@chad-cat-lore-eddie.com",
       "url": "https://github.com/chad3814"
-    },
-    {
-      "name": "Rafał Ruciński",
-      "email": "fatfisz@gmail.com",
-      "url": "https://fatfisz.com"
-    },
-    {
-      "name": "Nikita Vasilyev",
-      "email": "me@elv1s.ru"
-    },
-    {
-      "name": "Davide P. Cervone"
-    },
-    {
-      "name": "Forbes Lindesay"
     }
   ],
   "repository": "jsakas/CSSStyleDeclaration",
@@ -69,7 +59,8 @@
     "lint:fix": "eslint . --fix --max-warnings 0",
     "prepublishOnly": "npm run test-ci",
     "test": "npm run generate && nodeunit tests",
-    "test-ci": "npm run lint && npm run test"
+    "test-ci": "npm run lint && npm run test",
+    "update-authors": "git log --format=\"%aN <%aE>\" | sort -f | uniq > AUTHORS"
   },
   "license": "MIT"
 }
