@@ -71,5 +71,8 @@
     "test": "npm run generate && nodeunit tests",
     "test-ci": "npm run lint && npm run test"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=8"
+  }
 }
