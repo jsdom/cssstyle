@@ -17,6 +17,7 @@ module.exports = {
   },
   plugins: ['prettier'],
   rules: {
+    'no-prototype-builtins': 'off',
     'prettier/prettier': [
       'warn',
       {
