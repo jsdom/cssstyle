@@ -14,6 +14,10 @@ module.exports = {
     module: true,
     require: true,
     window: true,
+    describe: true,
+    it: true,
+    test: true,
+    expect: true,
   },
   plugins: ['prettier'],
   rules: {
