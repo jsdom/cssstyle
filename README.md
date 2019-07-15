@@ -2,7 +2,7 @@
 
 A Node JS implementation of the CSS Object Model [CSSStyleDeclaration interface](https://www.w3.org/TR/cssom-1/#the-cssstyledeclaration-interface).
 
-[![NpmVersion](https://img.shields.io/npm/v/cssstyle.svg)](https://www.npmjs.com/package/cssstyle) [![Build Status](https://travis-ci.org/jsakas/CSSStyleDeclaration.svg?branch=master)](https://travis-ci.org/jsakas/CSSStyleDeclaration) [![codecov](https://codecov.io/gh/jsakas/CSSStyleDeclaration/branch/master/graph/badge.svg)](https://codecov.io/gh/jsakas/CSSStyleDeclaration)
+[![NpmVersion](https://img.shields.io/npm/v/cssstyle.svg)](https://www.npmjs.com/package/cssstyle) [![Build Status](https://travis-ci.org/jsdom/cssstyle.svg?branch=master)](https://travis-ci.org/jsdom/cssstyle) [![codecov](https://codecov.io/gh/jsdom/cssstyle/branch/master/graph/badge.svg)](https://codecov.io/gh/jsdom/cssstyle)
 
 ---
 
