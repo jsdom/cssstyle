@@ -32,6 +32,9 @@
   "directories": {
     "lib": "./lib"
   },
+  "files": [
+    "lib/"
+  ],
   "main": "./lib/CSSStyleDeclaration.js",
   "dependencies": {
     "cssom": "~0.3.6"
