@@ -68,12 +68,13 @@ request(url, function(error, response, body) {
     );
     out_file.write('/*\n *\n * https://www.w3.org/Style/CSS/all-properties.en.html\n */\n\n');
 
-    out_file.write('var allProperties = new Set();\n');
-    out_file.write('module.exports = allProperties;\n');
+    out_file.write('module.exports = new Set([\n');
 
     CSSpropertyNames.forEach(function(property) {
-      out_file.write('allProperties.add(' + JSON.stringify(camelToDashed(property)) + ');\n');
+      out_file.write(' ' + JSON.stringify(camelToDashed(property)) + ',\n');
     });
+
+    out_file.write(']);\n');
 
     out_file.end(function(err) {
       if (err) {
