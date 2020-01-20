@@ -67,13 +67,11 @@ request(url, function(error, response, body) {
         '\n\n'
     );
     out_file.write('/*\n *\n * https://www.w3.org/Style/CSS/all-properties.en.html\n */\n\n');
-
-    out_file.write('var allProperties = new Set();\n');
-    out_file.write('module.exports = allProperties;\n');
-
-    CSSpropertyNames.forEach(function(property) {
-      out_file.write('allProperties.add(' + JSON.stringify(camelToDashed(property)) + ');\n');
-    });
+    out_file.write(
+      'module.exports = new Set(' +
+        JSON.stringify(CSSpropertyNames.map(camelToDashed), null, 2) +
+        ');\n'
+    );
 
     out_file.end(function(err) {
       if (err) {
