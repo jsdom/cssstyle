@@ -9,8 +9,15 @@ const camelToDashed = require('../lib/parsers').camelToDashed;
 const dashedProperties = fs
   .readdirSync(path.resolve(__dirname, '../lib/properties'))
   .filter(propertyFile => propertyFile.substr(-3) === '.js')
-  .map(propertyFile => camelToDashed(propertyFile.replace('.js', '')));
-
+  .map(propertyFile => camelToDashed(propertyFile.replace('.js', '')))
+  .map(property => {
+    const isVendorSpecific = /^(o|moz|ms|webkit)-/.test(property);
+    if (isVendorSpecific) {
+      return '-' + property;
+    } else {
+      return property;
+    }
+  });
 const out_file = fs.createWriteStream(path.resolve(__dirname, '../lib/implementedProperties.js'), {
   encoding: 'utf-8',
 });

@@ -255,6 +255,10 @@ parsedFiles.forEach(function(file) {
 var propertyDefinitions = [];
 parsedFiles.forEach(function(file) {
   var dashed = camelToDashed(file.property);
+  var isVendorSpecific = /^(o|moz|ms|webkit)-/.test(dashed);
+  if (isVendorSpecific) {
+    dashed = '-' + dashed;
+  }
   propertyDefinitions.push(
     t.objectProperty(
       t.identifier(file.property),
