@@ -8,7 +8,7 @@ var generate = require('babel-generator').default;
 var traverse = require('babel-traverse').default;
 var resolve = require('resolve');
 
-var camelToDashed = require('../lib/parsers').camelToDashed;
+var { idlAttributeToCSSProperty, cssPropertyToIDLAttribute } = require('../lib/parsers');
 
 var basename = path.basename;
 var dirname = path.dirname;
@@ -56,12 +56,17 @@ function isRequire(node, filename) {
   }
 }
 
+const webkitPropertyName = /^webkit[A-Z]/;
+
 // step 1: parse all files and figure out their dependencies
 var parsedFilesByPath = {};
 property_files.map(function(property) {
   var filename = path.resolve(__dirname, '../lib/properties/' + property);
   var src = fs.readFileSync(filename, 'utf8');
   property = basename(property, '.js');
+  if (webkitPropertyName.test(property)) {
+    property = property[0].toUpperCase() + property.substring(1);
+  }
   var ast = babylon.parse(src);
   var dependencies = [];
   traverse(ast, {
@@ -254,13 +259,21 @@ parsedFiles.forEach(function(file) {
 });
 var propertyDefinitions = [];
 parsedFiles.forEach(function(file) {
-  var dashed = camelToDashed(file.property);
+  var dashed = idlAttributeToCSSProperty(file.property);
   propertyDefinitions.push(
     t.objectProperty(
       t.identifier(file.property),
       t.identifier(file.property + '_export_definition')
     )
   );
+  if (dashed.startsWith('-webkit-')) {
+    propertyDefinitions.push(
+      t.objectProperty(
+        t.identifier(cssPropertyToIDLAttribute(dashed, /* lowercaseFirst = */ true)),
+        t.identifier(file.property + '_export_definition')
+      )
+    );
+  }
   if (file.property !== dashed) {
     propertyDefinitions.push(
       t.objectProperty(t.stringLiteral(dashed), t.identifier(file.property + '_export_definition'))

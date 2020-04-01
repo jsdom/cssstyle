@@ -4,12 +4,18 @@ const fs = require('fs');
 const path = require('path');
 const t = require('babel-types');
 const generate = require('babel-generator').default;
-const camelToDashed = require('../lib/parsers').camelToDashed;
+const { idlAttributeToCSSProperty } = require('../lib/parsers');
 
+const webkitPropertyName = /^webkit[A-Z]/;
 const dashedProperties = fs
   .readdirSync(path.resolve(__dirname, '../lib/properties'))
-  .filter(propertyFile => propertyFile.substr(-3) === '.js')
-  .map(propertyFile => camelToDashed(propertyFile.replace('.js', '')));
+  .filter(propertyFile => path.extname(propertyFile) === '.js')
+  .map(propertyFile => {
+    return idlAttributeToCSSProperty(
+      path.basename(propertyFile, '.js'),
+      /* dashPrefix = */ webkitPropertyName.test(propertyFile)
+    );
+  });
 
 const out_file = fs.createWriteStream(path.resolve(__dirname, '../lib/implementedProperties.js'), {
   encoding: 'utf-8',

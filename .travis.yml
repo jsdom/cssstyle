@@ -9,7 +9,6 @@ install:
     - npm install
     - npm install -g codecov
 node_js:
-  - "8"
   - "10"
   - "12"
 
