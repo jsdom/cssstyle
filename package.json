@@ -37,6 +37,7 @@
   ],
   "main": "./lib/CSSStyleDeclaration.js",
   "dependencies": {
+    "css-font": "^1.2.0",
     "cssom": "~0.3.6"
   },
   "devDependencies": {
