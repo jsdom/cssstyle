@@ -6,6 +6,7 @@ const Transformer = require('webidl2js');
 
 const allProperties = require('../lib/allProperties.js');
 const allExtraProperties = require('../lib/allExtraProperties.js');
+const implementedProperties = require('../lib/implementedProperties.js');
 const { cssPropertyToIDLAttribute } = require('../lib/parsers.js');
 
 const srcDir = path.resolve(__dirname, '../src');
@@ -38,8 +39,12 @@ partial interface CSSStyleDeclaration {
 
   for (const property of propertyNames) {
     const camelCasedAttribute = cssPropertyToIDLAttribute(property);
+    let extAttrs = 'CEReactions';
+    if (!implementedProperties.has(property)) {
+      extAttrs += `,ReflectStyle="${property}"`;
+    }
     genIDL.write(`\
-  [CEReactions] attribute [LegacyNullToEmptyString] CSSOMString _${camelCasedAttribute};
+  [${extAttrs}] attribute [LegacyNullToEmptyString] CSSOMString _${camelCasedAttribute};
 `);
   }
 
@@ -50,8 +55,12 @@ partial interface CSSStyleDeclaration {
   for (const property of propertyNames) {
     if (!property.startsWith('-webkit-')) continue;
     const webkitCasedAttribute = cssPropertyToIDLAttribute(property, /* lowercaseFirst = */ true);
+    let extAttrs = 'CEReactions';
+    if (!implementedProperties.has(property)) {
+      extAttrs += `,ReflectStyle="${property}"`;
+    }
     genIDL.write(`\
-  [CEReactions] attribute [LegacyNullToEmptyString] CSSOMString _${webkitCasedAttribute};
+  [${extAttrs}] attribute [LegacyNullToEmptyString] CSSOMString _${webkitCasedAttribute};
 `);
   }
 
@@ -61,8 +70,12 @@ partial interface CSSStyleDeclaration {
 
   for (const property of propertyNames) {
     if (!property.includes('-')) continue;
+    let extAttrs = 'CEReactions';
+    if (!implementedProperties.has(property)) {
+      extAttrs += `,ReflectStyle="${property}"`;
+    }
     genIDL.write(`\
-  [CEReactions] attribute [LegacyNullToEmptyString] CSSOMString ${property};
+  [${extAttrs}] attribute [LegacyNullToEmptyString] CSSOMString ${property};
 `);
   }
 
@@ -72,6 +85,17 @@ partial interface CSSStyleDeclaration {
 const transformer = new Transformer({
   implSuffix: '-impl',
   // TODO: Add support for `[CEReactions]`
+  processReflect(idl, implName) {
+    const reflectStyle = idl.extAttrs.find(extAttr => extAttr.name === 'ReflectStyle');
+    if (!reflectStyle || !reflectStyle.rhs || reflectStyle.rhs.type !== 'string') {
+      throw new Error(`Internal error: Invalid [ReflectStyle] for attribute ${idl.name}`);
+    }
+
+    return {
+      get: `return ${implName}.getPropertyValue(${reflectStyle.rhs.value});`,
+      set: `${implName}._setProperty(${reflectStyle.rhs.value}, V);`,
+    };
+  },
 });
 
 transformer.addSource(srcDir, implDir);
