@@ -4,21 +4,14 @@ const fs = require('fs');
 const path = require('path');
 const Transformer = require('webidl2js');
 
-const allProperties = require('../lib/allProperties.js');
-const allExtraProperties = require('../lib/allExtraProperties.js');
-const implementedProperties = require('../lib/implementedProperties.js');
 const { cssPropertyToIDLAttribute } = require('../lib/parsers.js');
+const implementedProperties = require('../lib/implementedProperties.js');
+const supportedProperties = require('../lib/supportedProperties.js');
+const webkitProperties = require('../lib/webkitProperties.js');
 
 const srcDir = path.resolve(__dirname, '../src');
 const implDir = path.resolve(__dirname, '../lib');
 const outputDir = implDir;
-
-const propertyNames = [
-  ...allProperties,
-  ...Array.from(allExtraProperties).filter(prop => {
-    return !allProperties.has(prop);
-  }),
-].sort();
 
 // TODO: This should be natively supported by WebIDL2JS's Transformer
 // https://github.com/jsdom/webidl2js/issues/188
@@ -37,7 +30,7 @@ partial interface CSSStyleDeclaration {
   // https://drafts.csswg.org/cssom/#dom-cssstyledeclaration-camel_cased_attribute
 `);
 
-  for (const property of propertyNames) {
+  for (const property of supportedProperties) {
     const camelCasedAttribute = cssPropertyToIDLAttribute(property);
     let extAttrs = 'CEReactions';
     if (!implementedProperties.has(property)) {
@@ -52,8 +45,7 @@ partial interface CSSStyleDeclaration {
   // https://drafts.csswg.org/cssom/#dom-cssstyledeclaration-webkit_cased_attribute
 `);
 
-  for (const property of propertyNames) {
-    if (!property.startsWith('-webkit-')) continue;
+  for (const property of webkitProperties) {
     const webkitCasedAttribute = cssPropertyToIDLAttribute(property, /* lowercaseFirst = */ true);
     let extAttrs = 'CEReactions';
     if (!implementedProperties.has(property)) {
@@ -68,7 +60,7 @@ partial interface CSSStyleDeclaration {
   // https://drafts.csswg.org/cssom/#dom-cssstyledeclaration-dashed_attribute
 `);
 
-  for (const property of propertyNames) {
+  for (const property of supportedProperties) {
     if (!property.includes('-')) continue;
     let extAttrs = 'CEReactions';
     if (!implementedProperties.has(property)) {
