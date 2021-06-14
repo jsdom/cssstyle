@@ -43,10 +43,6 @@
     "webidl-conversions": "^6.1.0"
   },
   "devDependencies": {
-    "babel-generator": "~6.26.1",
-    "babel-traverse": "~6.26.0",
-    "babel-types": "~6.26.0",
-    "babylon": "~6.18.0",
     "eslint": "~6.0.0",
     "eslint-config-prettier": "~6.0.0",
     "eslint-plugin-prettier": "~3.1.0",
@@ -54,7 +50,6 @@
     "npm-run-all": "^4.1.5",
     "prettier": "~1.18.0",
     "request": "^2.88.0",
-    "resolve": "~1.11.1",
     "webidl2js": "^16.2.0"
   },
   "scripts": {
@@ -62,7 +57,6 @@
     "download": "node ./scripts/download_latest_properties.js && eslint lib/allProperties.js --fix",
     "generate": "run-s generate:*",
     "generate:implemented_properties": "node ./scripts/generate_implemented_properties.js",
-    "generate:properties": "node ./scripts/generate_properties.js",
     "generate:webidl2js": "node ./scripts/convert-idl.js",
     "lint": "npm run generate && eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix --max-warnings 0",

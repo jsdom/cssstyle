@@ -31,7 +31,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['lib/implementedProperties.js', 'lib/properties.js'],
+      files: ['lib/implementedProperties.js'],
       rules: {
         'prettier/prettier': 'off',
       },
