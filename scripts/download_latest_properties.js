@@ -47,7 +47,6 @@ const request = https.request(url, response => {
         // Filter out all properties newer than Working Draft
         status !== 'ED' &&
         status !== 'FPWD' &&
-        // TODO: --* css Needs additional logic to this module, so filter it out for now
         property !== '--*' &&
         // Properties are often in multiple specifications
         !properties.includes(property)
