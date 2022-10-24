@@ -36,6 +36,18 @@ propertiesOutputFile.addImportDeclarations(
   })
 );
 
+const allPropertiesBaseClass = propertiesOutputFile.addClass({
+  name: 'AllPropertiesBase',
+  isExported: true,
+  getAccessors: [
+    {
+      name: 'foo',
+      returnType: 'string',
+      statements: "return '123'",
+    },
+  ],
+});
+
 const prototypeExtender = propertiesOutputFile.addFunction({
   name: 'defineProperties',
   isExported: true,
