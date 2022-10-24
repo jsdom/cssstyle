@@ -5,3 +5,5 @@ lib/implementedProperties.ts
 lib/properties.js
 lib/properties.ts
 coverage
+lib/generated
+.idea

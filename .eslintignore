@@ -2,3 +2,4 @@ node_modules
 lib/implementedProperties.ts
 lib/properties.ts
 jest.config.js
+lib/generated
