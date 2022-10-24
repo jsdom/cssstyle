@@ -1,16 +1,13 @@
-'use strict';
+import { CSSStyleDeclaration } from './CSSStyleDeclaration';
+import { ALL_PROPERTIES } from './allProperties';
+import { ALL_EXTRA_PROPERTIES } from './allExtraProperties';
+import * as parsers from './parsers';
+import { IMPLEMENTED_PROPERTIES } from './generated/properties';
 
-var { CSSStyleDeclaration } = require('./CSSStyleDeclaration');
-
-var allProperties = require('./allProperties');
-var allExtraProperties = require('./allExtraProperties');
-var implementedProperties = require('./implementedProperties');
-var parsers = require('./parsers');
-
-var dashedProperties = [...allProperties, ...allExtraProperties];
-var allowedProperties = dashedProperties.map(parsers.dashedToCamelCase);
-implementedProperties = Array.from(implementedProperties).map(parsers.dashedToCamelCase);
-var invalidProperties = implementedProperties.filter(prop => !allowedProperties.includes(prop));
+const dashedProperties = [...Array.from(ALL_PROPERTIES), ...Array.from(ALL_EXTRA_PROPERTIES)];
+const allowedProperties = dashedProperties.map(parsers.dashedToCamelCase);
+const implementedProperties = Array.from(IMPLEMENTED_PROPERTIES).map(parsers.dashedToCamelCase);
+const invalidProperties = implementedProperties.filter((prop) => !allowedProperties.includes(prop));
 
 describe('CSSStyleDeclaration', () => {
   test('has only valid properties implemented', () => {
@@ -18,23 +15,23 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('has all properties', () => {
-    var style = new CSSStyleDeclaration();
-    allProperties.forEach(property => {
-      expect(style.__lookupGetter__(property)).toBeTruthy();
-      expect(style.__lookupSetter__(property)).toBeTruthy();
+    ALL_PROPERTIES.forEach((property) => {
+      const descriptor = Object.getOwnPropertyDescriptor(CSSStyleDeclaration.prototype, property);
+      expect(descriptor?.get).toBeTruthy();
+      expect(descriptor?.set).toBeTruthy();
     });
   });
 
   test('has dashed properties', () => {
-    var style = new CSSStyleDeclaration();
-    dashedProperties.forEach(property => {
-      expect(style.__lookupGetter__(property)).toBeTruthy();
-      expect(style.__lookupSetter__(property)).toBeTruthy();
+    dashedProperties.forEach((property) => {
+      const descriptor = Object.getOwnPropertyDescriptor(CSSStyleDeclaration.prototype, property);
+      expect(descriptor?.get).toBeTruthy();
+      expect(descriptor?.set).toBeTruthy();
     });
   });
 
   test('has all functions', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
 
     expect(typeof style.item).toEqual('function');
     expect(typeof style.getPropertyValue).toEqual('function');
@@ -47,17 +44,29 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('has special properties', () => {
-    var style = new CSSStyleDeclaration();
+    const cssTextDescriptor = Object.getOwnPropertyDescriptor(
+      CSSStyleDeclaration.prototype,
+      'cssText'
+    );
+    const lengthDescriptor = Object.getOwnPropertyDescriptor(
+      CSSStyleDeclaration.prototype,
+      'length'
+    );
+    const parentRuleDescriptor = Object.getOwnPropertyDescriptor(
+      CSSStyleDeclaration.prototype,
+      'parentRule'
+    );
 
-    expect(style.__lookupGetter__('cssText')).toBeTruthy();
-    expect(style.__lookupSetter__('cssText')).toBeTruthy();
-    expect(style.__lookupGetter__('length')).toBeTruthy();
-    expect(style.__lookupSetter__('length')).toBeTruthy();
-    expect(style.__lookupGetter__('parentRule')).toBeTruthy();
+    expect(cssTextDescriptor?.get).toBeTruthy();
+    expect(cssTextDescriptor?.set).toBeTruthy();
+    expect(lengthDescriptor?.get).toBeTruthy();
+    expect(lengthDescriptor?.set).toBeTruthy();
+    expect(parentRuleDescriptor?.get).toBeTruthy();
+    expect(parentRuleDescriptor?.set).toBeFalsy();
   });
 
   test('from style string', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.cssText = 'color: blue; background-color: red; width: 78%; height: 50vh;';
     expect(style.length).toEqual(4);
     expect(style.cssText).toEqual('color: blue; background-color: red; width: 78%; height: 50vh;');
@@ -71,7 +80,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('from properties', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.color = 'blue';
     expect(style.length).toEqual(1);
     expect(style[0]).toEqual('color');
@@ -89,7 +98,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('shorthand properties', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.background = 'blue url(http://www.example.com/some_img.jpg)';
     expect(style.backgroundColor).toEqual('blue');
     expect(style.backgroundImage).toEqual('url(http://www.example.com/some_img.jpg)');
@@ -107,7 +116,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('width and height properties and null and empty strings', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.height = 6;
     expect(style.height).toEqual('');
     style.width = 0;
@@ -127,7 +136,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('implicit properties', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderWidth = 0;
     expect(style.length).toEqual(1);
     expect(style.borderWidth).toEqual('0px');
@@ -139,7 +148,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('top, left, right, bottom properties', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.top = 0;
     style.left = '0%';
     style.right = '5em';
@@ -153,7 +162,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('clear and clip properties', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.clear = 'none';
     expect(style.clear).toEqual('none');
     style.clear = 'lfet';
@@ -174,7 +183,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('colors', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.color = 'rgba(0,0,0,0)';
     expect(style.color).toEqual('rgba(0, 0, 0, 0)');
     style.color = 'rgba(5%, 10%, 20%, 0.4)';
@@ -202,7 +211,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('short hand properties with embedded spaces', () => {
-    var style = new CSSStyleDeclaration();
+    let style = new CSSStyleDeclaration();
     style.background = 'rgb(0, 0, 0) url(/something/somewhere.jpg)';
     expect(style.backgroundColor).toEqual('rgb(0, 0, 0)');
     expect(style.backgroundImage).toEqual('url(/something/somewhere.jpg)');
@@ -213,7 +222,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('setting shorthand properties to an empty string should clear all dependent properties', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderWidth = '1px';
     expect(style.cssText).toEqual('border-width: 1px;');
     style.border = '';
@@ -221,7 +230,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('setting implicit properties to an empty string should clear all dependent properties', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderTopWidth = '1px';
     expect(style.cssText).toEqual('border-top-width: 1px;');
     style.borderWidth = '';
@@ -229,7 +238,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('setting a shorthand property, whose shorthands are implicit properties, to an empty string should clear all dependent properties', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderTopWidth = '1px';
     expect(style.cssText).toEqual('border-top-width: 1px;');
     style.border = '';
@@ -241,7 +250,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('setting border values to "none" should clear dependent values', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderTopWidth = '1px';
     expect(style.cssText).toEqual('border-top-width: 1px;');
     style.border = 'none';
@@ -262,13 +271,13 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('setting border to 0 should be okay', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.border = 0;
     expect(style.cssText).toEqual('border: 0px;');
   });
 
   test('setting values implicit and shorthand properties via csstext and setproperty should propagate to dependent properties', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.cssText = 'border: 1px solid black;';
     expect(style.cssText).toEqual('border: 1px solid black;');
     expect(style.borderTop).toEqual('1px solid black');
@@ -279,7 +288,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('setting opacity should work', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty('opacity', 0.75);
     expect(style.cssText).toEqual('opacity: 0.75;');
     style.opacity = '0.50';
@@ -289,7 +298,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('width and height of auto should work', () => {
-    var style = new CSSStyleDeclaration();
+    let style = new CSSStyleDeclaration();
     style.width = 'auto';
     expect(style.cssText).toEqual('width: auto;');
     expect(style.width).toEqual('auto');
@@ -300,12 +309,12 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('padding and margin should set/clear shorthand properties', () => {
-    var style = new CSSStyleDeclaration();
-    var parts = ['Top', 'Right', 'Bottom', 'Left'];
-    var testParts = function(name, v, V) {
+    const style = new CSSStyleDeclaration();
+    const parts = ['Top', 'Right', 'Bottom', 'Left'];
+    const testParts = function (name: string, v: string, V: readonly string[]) {
       style[name] = v;
-      for (var i = 0; i < 4; i++) {
-        var part = name + parts[i];
+      for (let i = 0; i < 4; i++) {
+        const part = name + parts[i];
         expect(style[part]).toEqual(V[i]);
       }
 
@@ -327,11 +336,11 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('padding and margin shorthands should set main properties', () => {
-    var style = new CSSStyleDeclaration();
-    var parts = ['Top', 'Right', 'Bottom', 'Left'];
-    var testParts = function(name, v, V) {
-      var expected;
-      for (var i = 0; i < 4; i++) {
+    const style = new CSSStyleDeclaration();
+    const parts = ['Top', 'Right', 'Bottom', 'Left'];
+    const testParts = function (name: string, v: string, V: string) {
+      let expected;
+      for (let i = 0; i < 4; i++) {
         style[name] = v;
         style[name + parts[i]] = V;
         expected = v.split(/ /);
@@ -347,26 +356,26 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('setting a value to 0 should return the string value', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty('fill-opacity', 0);
     expect(style.fillOpacity).toEqual('0');
   });
 
   test('onchange callback should be called when the csstext changes', () => {
-    var style = new CSSStyleDeclaration(function(cssText) {
+    const style = new CSSStyleDeclaration(function (cssText) {
       expect(cssText).toEqual('opacity: 0;');
     });
     style.setProperty('opacity', 0);
   });
 
   test('setting float should work the same as cssfloat', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.float = 'left';
     expect(style.cssFloat).toEqual('left');
   });
 
   test('setting improper css to csstext should not throw', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.cssText = 'color: ';
     expect(style.cssText).toEqual('');
     style.color = 'black';
@@ -375,7 +384,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('url parsing works with quotes', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.backgroundImage = 'url(http://some/url/here1.png)';
     expect(style.backgroundImage).toEqual('url(http://some/url/here1.png)');
     style.backgroundImage = "url('http://some/url/here2.png')";
@@ -385,7 +394,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('setting 0 to a padding or margin works', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.padding = 0;
     expect(style.cssText).toEqual('padding: 0px;');
     style.margin = '1em';
@@ -394,7 +403,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('setting ex units to a padding or margin works', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.padding = '1ex';
     expect(style.cssText).toEqual('padding: 1ex;');
     style.margin = '1em';
@@ -403,7 +412,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('setting null to background works', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.background = 'red';
     expect(style.cssText).toEqual('background: red;');
     style.background = null;
@@ -411,7 +420,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('flex properties should keep their values', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.flexDirection = 'column';
     expect(style.cssText).toEqual('flex-direction: column;');
     style.flexDirection = 'row';
@@ -419,33 +428,33 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('camelcase properties are not assigned with `.setproperty()`', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty('fontSize', '12px');
     expect(style.cssText).toEqual('');
   });
 
   test('casing is ignored in `.setproperty()`', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty('FoNt-SiZe', '12px');
     expect(style.fontSize).toEqual('12px');
     expect(style.getPropertyValue('font-size')).toEqual('12px');
   });
 
   test('support non string entries in border-spacing', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderSpacing = 0;
     expect(style.cssText).toEqual('border-spacing: 0px;');
   });
 
   test('float should be valid property for `.setproperty()`', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty('float', 'left');
     expect(style.float).toEqual('left');
     expect(style.getPropertyValue('float')).toEqual('left');
   });
 
   test('flex-shrink works', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty('flex-shrink', 0);
     expect(style.getPropertyValue('flex-shrink')).toEqual('0');
     style.setProperty('flex-shrink', 1);
@@ -454,14 +463,14 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('flex-grow works', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty('flex-grow', 2);
     expect(style.getPropertyValue('flex-grow')).toEqual('2');
     expect(style.cssText).toEqual('flex-grow: 2;');
   });
 
   test('flex-basis works', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty('flex-basis', 0);
     expect(style.getPropertyValue('flex-basis')).toEqual('0px');
     style.setProperty('flex-basis', '250px');
@@ -474,7 +483,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('shorthand flex works', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty('flex', 'none');
     expect(style.getPropertyValue('flex-grow')).toEqual('0');
     expect(style.getPropertyValue('flex-shrink')).toEqual('0');
@@ -510,7 +519,7 @@ describe('CSSStyleDeclaration', () => {
   });
 
   test('font-size get a valid value', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     const invalidValue = '1r5px';
     style.cssText = 'font-size: 15px';
     expect(1).toEqual(style.length);

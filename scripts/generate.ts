@@ -36,25 +36,13 @@ propertiesOutputFile.addImportDeclarations(
   })
 );
 
-const allPropertiesBaseClass = propertiesOutputFile.addClass({
-  name: 'AllPropertiesBase',
-  isExported: true,
-  getAccessors: [
-    {
-      name: 'foo',
-      returnType: 'string',
-      statements: "return '123'",
-    },
-  ],
-});
-
-const prototypeExtender = propertiesOutputFile.addFunction({
+const defineProperties = propertiesOutputFile.addFunction({
   name: 'defineProperties',
   isExported: true,
   parameters: [{ name: 'prototype', type: 'object' }],
   returnType: 'void',
 });
-prototypeExtender.setBodyText((writer) => {
+defineProperties.setBodyText((writer) => {
   writer.write('Object.defineProperties(prototype, {');
   writer.hangingIndent(() => {
     for (const source of propertiesSources) {
@@ -69,17 +57,7 @@ prototypeExtender.setBodyText((writer) => {
   writer.write('})');
 });
 
-propertiesOutputFile.saveSync();
-
-const implementedPropertiesOutputFile = project.createSourceFile(
-  IMPLEMENTED_PROPERTIES_OUTPUT_FILE_PATH,
-  '',
-  {
-    overwrite: true,
-  }
-);
-
-implementedPropertiesOutputFile.addStatements((writer) => {
+propertiesOutputFile.addStatements((writer) => {
   writer.write('export const IMPLEMENTED_PROPERTIES = new Set([');
   writer.hangingIndent(() => {
     for (const source of propertiesSources) {
@@ -89,6 +67,6 @@ implementedPropertiesOutputFile.addStatements((writer) => {
   writer.write('])');
 });
 
-implementedPropertiesOutputFile.saveSync();
+propertiesOutputFile.saveSync();
 
 console.log('Done');

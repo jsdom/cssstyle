@@ -8,13 +8,12 @@ import { dashedToCamelCase } from './parsers';
 import { getBasicPropertyDescriptor } from './utils/getBasicPropertyDescriptor';
 import { ALL_PROPERTIES } from './allProperties';
 import { ALL_EXTRA_PROPERTIES } from './allExtraProperties';
-import { defineProperties } from './generated/properties';
-import { IMPLEMENTED_PROPERTIES } from './generated/implemented-properties';
+import { defineProperties, IMPLEMENTED_PROPERTIES } from './generated/properties';
 
 /**
  * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration
  */
-class CSSStyleDeclaration implements Record<string, unknown> {
+export class CSSStyleDeclaration implements Record<string, unknown> {
   [x: string]: unknown;
 
   private _values: Record<string, string>;
@@ -53,8 +52,9 @@ class CSSStyleDeclaration implements Record<string, unknown> {
    * @param {string} value
    * @param {string} [priority=null] "important" or null
    * @see http://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSStyleDeclaration-setProperty
+   * @see https://w3c.github.io/csswg-drafts/cssom/#dom-cssstyledeclaration-setproperty
    */
-  setProperty(name: string, value: string | null | undefined, priority: string | undefined): void {
+  setProperty(name: string, value: unknown, priority?: string): void {
     if (value === undefined) {
       return;
     }
@@ -73,10 +73,12 @@ class CSSStyleDeclaration implements Record<string, unknown> {
     }
 
     this[lowercaseName] = value;
-    this._importants[lowercaseName] = priority;
+    if (typeof priority === 'string') {
+      this._importants[lowercaseName] = priority;
+    }
   }
 
-  _setProperty(name: string, value: string | null | undefined, priority?: string): void {
+  _setProperty(name: string, value: unknown, priority?: string): void {
     if (value === undefined) {
       return;
     }
@@ -96,7 +98,7 @@ class CSSStyleDeclaration implements Record<string, unknown> {
       this[this._length] = name;
       this._length++;
     }
-    this._values[name] = value;
+    this._values[name] = value.toString();
     this._importants[name] = priority;
     this._onChange(this.cssText);
   }
