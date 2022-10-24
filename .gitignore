@@ -7,3 +7,4 @@ lib/properties.ts
 coverage
 lib/generated
 .idea
+dist

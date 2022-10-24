@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": {},
-  "include": ["./lib/typings.d.ts", "**/*.ts"],
+  "compilerOptions": {
+    "outDir": "./dist"
+  },
+  "include": ["./lib/typings.d.ts", "./**/*.ts"],
   "exclude": ["**/*.test.ts", "scripts"]
 }

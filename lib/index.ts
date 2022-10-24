@@ -1,0 +1,1 @@
+export { CSSStyleDeclaration } from './CSSStyleDeclaration';

@@ -35,12 +35,12 @@
   "repository": "jsdom/cssstyle",
   "bugs": "https://github.com/jsdom/cssstyle/issues",
   "directories": {
-    "lib": "./lib"
+    "lib": "./dist"
   },
   "files": [
-    "lib/"
+    "dist/"
   ],
-  "main": "lib/CSSStyleDeclaration.ts",
+  "main": "./dist/index.js",
   "dependencies": {
     "cssom": "~0.3.6"
   },
@@ -73,10 +73,10 @@
     "typescript": "^4.8.4"
   },
   "scripts": {
+    "build": "tsc --project ./tsconfig.dist.json --noEmit false",
     "download": "ts-node --project ./tsconfig.scripts.json ./scripts/download_latest_properties.ts && eslint lib/allProperties.ts --fix",
     "generate": "run-p generate:*",
     "generate:properties": "ts-node --project ./tsconfig.scripts.json ./scripts/generate.ts",
-    "g": "ts-node --project ./tsconfig.scripts.json scripts/generate.ts",
     "lint": "npm run generate && eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix --max-warnings 0",
     "prepublishOnly": "npm run lint && npm run test",
