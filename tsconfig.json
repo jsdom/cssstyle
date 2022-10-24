@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "types": [],
+    "noEmit": true,
+    "lib": ["ESNext"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "strict": true,
+    "target": "ES5",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true
+  },
+  "files": [],
+  "include": [],
+  "exclude": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    { "path": "./tsconfig.scripts.json" },
+    { "path": "./tsconfig.spec.json" }
+  ]
+}

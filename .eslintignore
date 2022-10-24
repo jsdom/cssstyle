@@ -1,4 +1,4 @@
 node_modules
-lib/implementedProperties.js
-lib/properties.js
+lib/implementedProperties.ts
+lib/properties.ts
 jest.config.js

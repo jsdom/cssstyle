@@ -2,12 +2,14 @@
  * These are commonly used parsers for CSS Values they take a string *
  * to parse and return a string after it's been converted, if needed *
  ********************************************************************/
-'use strict';
 
-const namedColors = require('./named_colors.json');
-const { hslToRgb } = require('./utils/colorSpace');
+import namedColorsSource from './named_colors.json';
 
-exports.TYPES = {
+import { hslToRgb } from './utils/colorSpace';
+
+const namedColors: readonly unknown[] = namedColorsSource;
+
+export const TYPES = {
   INTEGER: 1,
   NUMBER: 2,
   LENGTH: 3,
@@ -19,107 +21,123 @@ exports.TYPES = {
   KEYWORD: 9,
   NULL_OR_EMPTY_STR: 10,
   CALC: 11,
-};
+  UNKNOWN: 12,
+} as const;
+
+type ValueType =
+  | { readonly kind: typeof TYPES.INTEGER; readonly value: string }
+  | { readonly kind: typeof TYPES.NUMBER; readonly value: string }
+  | { readonly kind: typeof TYPES.LENGTH; readonly value: string }
+  | { readonly kind: typeof TYPES.PERCENT; readonly value: string }
+  | { readonly kind: typeof TYPES.URL; readonly value: string }
+  | { readonly kind: typeof TYPES.COLOR; readonly value: string }
+  | { readonly kind: typeof TYPES.STRING; readonly value: string }
+  | { readonly kind: typeof TYPES.ANGLE; readonly value: string }
+  | { readonly kind: typeof TYPES.KEYWORD; readonly value: string }
+  | { readonly kind: typeof TYPES.NULL_OR_EMPTY_STR; readonly value: '' | null }
+  | { readonly kind: typeof TYPES.CALC; readonly value: string }
+  | { readonly kind: typeof TYPES.UNKNOWN };
 
 // rough regular expressions
-var integerRegEx = /^[-+]?[0-9]+$/;
-var numberRegEx = /^[-+]?[0-9]*\.?[0-9]+$/;
-var lengthRegEx = /^(0|[-+]?[0-9]*\.?[0-9]+(in|cm|em|mm|pt|pc|px|ex|rem|vh|vw|ch))$/;
-var percentRegEx = /^[-+]?[0-9]*\.?[0-9]+%$/;
-var urlRegEx = /^url\(\s*([^)]*)\s*\)$/;
-var stringRegEx = /^("[^"]*"|'[^']*')$/;
-var colorRegEx1 = /^#([0-9a-fA-F]{3,4}){1,2}$/;
-var colorRegEx2 = /^rgb\(([^)]*)\)$/;
-var colorRegEx3 = /^rgba\(([^)]*)\)$/;
-var calcRegEx = /^calc\(([^)]*)\)$/;
-var colorRegEx4 = /^hsla?\(\s*(-?\d+|-?\d*.\d+)\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)%\s*(,\s*(-?\d+|-?\d*.\d+)\s*)?\)/;
-var angleRegEx = /^([-+]?[0-9]*\.?[0-9]+)(deg|grad|rad)$/;
+const integerRegEx = /^[-+]?[0-9]+$/;
+const numberRegEx = /^[-+]?[0-9]*\.?[0-9]+$/;
+const lengthRegEx = /^(0|[-+]?[0-9]*\.?[0-9]+(in|cm|em|mm|pt|pc|px|ex|rem|vh|vw|ch))$/;
+const percentRegEx = /^[-+]?[0-9]*\.?[0-9]+%$/;
+const urlRegEx = /^url\(\s*([^)]*)\s*\)$/;
+const stringRegEx = /^("[^"]*"|'[^']*')$/;
+const colorRegEx1 = /^#([0-9a-fA-F]{3,4}){1,2}$/;
+const colorRegEx2 = /^rgb\(([^)]*)\)$/;
+const colorRegEx3 = /^rgba\(([^)]*)\)$/;
+const calcRegEx = /^calc\(([^)]*)\)$/;
+const colorRegEx4 =
+  /^hsla?\(\s*(-?\d+|-?\d*.\d+)\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)%\s*(,\s*(-?\d+|-?\d*.\d+)\s*)?\)/;
+const angleRegEx = /^([-+]?[0-9]*\.?[0-9]+)(deg|grad|rad)$/;
 
 // This will return one of the above types based on the passed in string
-exports.valueType = function valueType(val) {
-  if (val === '' || val === null) {
-    return exports.TYPES.NULL_OR_EMPTY_STR;
+export function valueType(value: unknown): ValueType {
+  if (value === '' || value === null) {
+    return { kind: TYPES.NULL_OR_EMPTY_STR, value: value };
   }
-  if (typeof val === 'number') {
-    val = val.toString();
-  }
-
-  if (typeof val !== 'string') {
-    return undefined;
+  if (typeof value === 'number') {
+    value = value.toString();
   }
 
-  if (integerRegEx.test(val)) {
-    return exports.TYPES.INTEGER;
-  }
-  if (numberRegEx.test(val)) {
-    return exports.TYPES.NUMBER;
-  }
-  if (lengthRegEx.test(val)) {
-    return exports.TYPES.LENGTH;
-  }
-  if (percentRegEx.test(val)) {
-    return exports.TYPES.PERCENT;
-  }
-  if (urlRegEx.test(val)) {
-    return exports.TYPES.URL;
-  }
-  if (calcRegEx.test(val)) {
-    return exports.TYPES.CALC;
-  }
-  if (stringRegEx.test(val)) {
-    return exports.TYPES.STRING;
-  }
-  if (angleRegEx.test(val)) {
-    return exports.TYPES.ANGLE;
-  }
-  if (colorRegEx1.test(val)) {
-    return exports.TYPES.COLOR;
+  if (typeof value !== 'string') {
+    return { kind: TYPES.UNKNOWN };
   }
 
-  var res = colorRegEx2.exec(val);
-  var parts;
+  if (integerRegEx.test(value)) {
+    return { kind: TYPES.INTEGER, value };
+  }
+  if (numberRegEx.test(value)) {
+    return { kind: TYPES.NUMBER, value };
+  }
+  if (lengthRegEx.test(value)) {
+    return { kind: TYPES.LENGTH, value };
+  }
+  if (percentRegEx.test(value)) {
+    return { kind: TYPES.PERCENT, value };
+  }
+  if (urlRegEx.test(value)) {
+    return { kind: TYPES.URL, value };
+  }
+  if (calcRegEx.test(value)) {
+    return { kind: TYPES.CALC, value };
+  }
+  if (stringRegEx.test(value)) {
+    return { kind: TYPES.STRING, value };
+  }
+  if (angleRegEx.test(value)) {
+    return { kind: TYPES.ANGLE, value };
+  }
+  if (colorRegEx1.test(value)) {
+    return { kind: TYPES.COLOR, value };
+  }
+
+  let res = colorRegEx2.exec(value);
+  let parts;
   if (res !== null) {
     parts = res[1].split(/\s*,\s*/);
     if (parts.length !== 3) {
-      return undefined;
+      return { kind: TYPES.UNKNOWN };
     }
     if (
       parts.every(percentRegEx.test.bind(percentRegEx)) ||
       parts.every(integerRegEx.test.bind(integerRegEx))
     ) {
-      return exports.TYPES.COLOR;
+      return { kind: TYPES.COLOR, value };
     }
-    return undefined;
+    return { kind: TYPES.UNKNOWN };
   }
-  res = colorRegEx3.exec(val);
+  res = colorRegEx3.exec(value);
   if (res !== null) {
     parts = res[1].split(/\s*,\s*/);
     if (parts.length !== 4) {
-      return undefined;
+      return { kind: TYPES.UNKNOWN };
     }
     if (
       parts.slice(0, 3).every(percentRegEx.test.bind(percentRegEx)) ||
       parts.slice(0, 3).every(integerRegEx.test.bind(integerRegEx))
     ) {
       if (numberRegEx.test(parts[3])) {
-        return exports.TYPES.COLOR;
+        return { kind: TYPES.COLOR, value };
       }
     }
-    return undefined;
+    return { kind: TYPES.UNKNOWN };
   }
 
-  if (colorRegEx4.test(val)) {
-    return exports.TYPES.COLOR;
+  if (colorRegEx4.test(value)) {
+    return { kind: TYPES.COLOR, value };
   }
 
   // could still be a color, one of the standard keyword colors
-  val = val.toLowerCase();
+  const lowerCaseValue = value.toLowerCase();
 
-  if (namedColors.includes(val)) {
-    return exports.TYPES.COLOR;
+  if (namedColors.includes(lowerCaseValue)) {
+    return { kind: TYPES.COLOR, value: lowerCaseValue };
   }
 
-  switch (val) {
+  switch (lowerCaseValue) {
     // the following are deprecated in CSS3
     case 'activeborder':
     case 'activecaption':
@@ -149,87 +167,90 @@ exports.valueType = function valueType(val) {
     case 'window':
     case 'windowframe':
     case 'windowtext':
-      return exports.TYPES.COLOR;
+      return { kind: TYPES.COLOR, value: lowerCaseValue };
     default:
-      return exports.TYPES.KEYWORD;
+      return { kind: TYPES.KEYWORD, value: lowerCaseValue };
   }
-};
+}
 
-exports.parseInteger = function parseInteger(val) {
-  var type = exports.valueType(val);
-  if (type === exports.TYPES.NULL_OR_EMPTY_STR) {
-    return val;
+export function parseInteger(val: unknown): string | null | undefined {
+  const type = valueType(val);
+  if (type.kind === TYPES.NULL_OR_EMPTY_STR) {
+    return type.value;
   }
-  if (type !== exports.TYPES.INTEGER) {
+  if (type.kind !== TYPES.INTEGER) {
     return undefined;
   }
-  return String(parseInt(val, 10));
-};
+  return String(parseInt(type.value, 10));
+}
 
-exports.parseNumber = function parseNumber(val) {
-  var type = exports.valueType(val);
-  if (type === exports.TYPES.NULL_OR_EMPTY_STR) {
-    return val;
+export function parseNumber(val: unknown): string | null | undefined {
+  const type = valueType(val);
+  if (type.kind === TYPES.NULL_OR_EMPTY_STR) {
+    return type.value;
   }
-  if (type !== exports.TYPES.NUMBER && type !== exports.TYPES.INTEGER) {
+  if (type.kind !== TYPES.NUMBER && type.kind !== TYPES.INTEGER) {
     return undefined;
   }
-  return String(parseFloat(val));
-};
+  return String(parseFloat(type.value));
+}
 
-exports.parseLength = function parseLength(val) {
+export function parseLength(val: unknown): string | null | undefined {
   if (val === 0 || val === '0') {
     return '0px';
   }
-  var type = exports.valueType(val);
-  if (type === exports.TYPES.NULL_OR_EMPTY_STR) {
-    return val;
+  const type = valueType(val);
+  if (type.kind === TYPES.NULL_OR_EMPTY_STR) {
+    return type.value;
   }
-  if (type !== exports.TYPES.LENGTH) {
+  if (type.kind !== TYPES.LENGTH) {
     return undefined;
   }
-  return val;
-};
+  return type.value;
+}
 
-exports.parsePercent = function parsePercent(val) {
+export function parsePercent(val: unknown): string | null | undefined {
   if (val === 0 || val === '0') {
     return '0%';
   }
-  var type = exports.valueType(val);
-  if (type === exports.TYPES.NULL_OR_EMPTY_STR) {
-    return val;
+  const type = valueType(val);
+  if (type.kind === TYPES.NULL_OR_EMPTY_STR) {
+    return type.value;
   }
-  if (type !== exports.TYPES.PERCENT) {
+  if (type.kind !== TYPES.PERCENT) {
     return undefined;
   }
-  return val;
-};
+  return type.value;
+}
 
 // either a length or a percent
-exports.parseMeasurement = function parseMeasurement(val) {
-  var type = exports.valueType(val);
-  if (type === exports.TYPES.CALC) {
-    return val;
+export function parseMeasurement(val: unknown): string | null | undefined {
+  const type = valueType(val);
+  if (type.kind === TYPES.CALC) {
+    return type.value;
   }
 
-  var length = exports.parseLength(val);
+  const length = parseLength(val);
   if (length !== undefined) {
     return length;
   }
-  return exports.parsePercent(val);
-};
+  return parsePercent(val);
+}
 
-exports.parseUrl = function parseUrl(val) {
-  var type = exports.valueType(val);
-  if (type === exports.TYPES.NULL_OR_EMPTY_STR) {
-    return val;
+export function parseUrl(val: unknown): string | null | undefined {
+  const type = valueType(val);
+  if (type.kind === TYPES.NULL_OR_EMPTY_STR) {
+    return type.value;
   }
-  var res = urlRegEx.exec(val);
+  if (typeof val !== 'string') {
+    return undefined;
+  }
+  const res = urlRegEx.exec(val);
   // does it match the regex?
   if (!res) {
     return undefined;
   }
-  var str = res[1];
+  let str = res[1];
   // if it starts with single or double quotes, does it end with the same?
   if ((str[0] === '"' || str[0] === "'") && str[0] !== str[str.length - 1]) {
     return undefined;
@@ -238,7 +259,7 @@ exports.parseUrl = function parseUrl(val) {
     str = str.substr(1, str.length - 2);
   }
 
-  var i;
+  let i;
   for (i = 0; i < str.length; i++) {
     switch (str[i]) {
       case '(':
@@ -256,53 +277,57 @@ exports.parseUrl = function parseUrl(val) {
   }
 
   return 'url(' + str + ')';
-};
+}
 
-exports.parseString = function parseString(val) {
-  var type = exports.valueType(val);
-  if (type === exports.TYPES.NULL_OR_EMPTY_STR) {
-    return val;
+export function parseString(val: unknown): string | null | undefined {
+  const type = valueType(val);
+  if (type.kind === TYPES.NULL_OR_EMPTY_STR) {
+    return type.value;
   }
-  if (type !== exports.TYPES.STRING) {
+  if (type.kind !== TYPES.STRING) {
     return undefined;
   }
-  var i;
-  for (i = 1; i < val.length - 1; i++) {
-    switch (val[i]) {
-      case val[0]:
+  let i;
+  for (i = 1; i < type.value.length - 1; i++) {
+    switch (type.value[i]) {
+      case type.value[0]:
         return undefined;
       case '\\':
         i++;
-        while (i < val.length - 1 && /[0-9A-Fa-f]/.test(val[i])) {
+        while (i < type.value.length - 1 && /[0-9A-Fa-f]/.test(type.value[i])) {
           i++;
         }
         break;
     }
   }
-  if (i >= val.length) {
+  if (i >= type.value.length) {
     return undefined;
   }
-  return val;
-};
+  return type.value;
+}
 
-exports.parseColor = function parseColor(val) {
-  var type = exports.valueType(val);
-  if (type === exports.TYPES.NULL_OR_EMPTY_STR) {
-    return val;
+export function parseColor(value: unknown): string | null | undefined {
+  const type = valueType(value);
+  if (type.kind === TYPES.NULL_OR_EMPTY_STR) {
+    return type.value;
   }
-  var red,
+  if (type.kind === TYPES.UNKNOWN) {
+    return undefined;
+  }
+  const val = type.value;
+  let red,
     green,
     blue,
     hue,
     saturation,
     lightness,
     alpha = 1;
-  var parts;
-  var res = colorRegEx1.exec(val);
+  let parts;
+  let res = colorRegEx1.exec(val);
   // is it #aaa, #ababab, #aaaa, #abababaa
   if (res) {
-    var defaultHex = val.substr(1);
-    var hex = val.substr(1);
+    const defaultHex = val.substr(1);
+    let hex = val.substr(1);
     if (hex.length === 3 || hex.length === 4) {
       hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
 
@@ -314,8 +339,8 @@ exports.parseColor = function parseColor(val) {
     green = parseInt(hex.substr(2, 2), 16);
     blue = parseInt(hex.substr(4, 2), 16);
     if (hex.length === 8) {
-      var hexAlpha = hex.substr(6, 2);
-      var hexAlphaToRgbaAlpha = Number((parseInt(hexAlpha, 16) / 255).toFixed(3));
+      const hexAlpha = hex.substr(6, 2);
+      const hexAlphaToRgbaAlpha = Number((parseInt(hexAlpha, 16) / 255).toFixed(3));
 
       return 'rgba(' + red + ', ' + green + ', ' + blue + ', ' + hexAlphaToRgbaAlpha + ')';
     }
@@ -380,7 +405,7 @@ exports.parseColor = function parseColor(val) {
   res = colorRegEx4.exec(val);
   if (res) {
     const [, _hue, _saturation, _lightness, _alphaString = ''] = res;
-    const _alpha = parseFloat(_alphaString.replace(',', '').trim());
+    const _alpha = parseFloat(_alphaString.replace(',', '').trim()).toString();
     if (!_hue || !_saturation || !_lightness) {
       return undefined;
     }
@@ -398,22 +423,27 @@ exports.parseColor = function parseColor(val) {
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
   }
 
-  if (type === exports.TYPES.COLOR) {
-    return val;
+  if (type.kind === TYPES.COLOR) {
+    return type.value;
   }
-  return undefined;
-};
 
-exports.parseAngle = function parseAngle(val) {
-  var type = exports.valueType(val);
-  if (type === exports.TYPES.NULL_OR_EMPTY_STR) {
-    return val;
+  return undefined;
+}
+
+export function parseAngle(value: unknown): string | null | undefined {
+  const type = valueType(value);
+  if (type.kind === TYPES.NULL_OR_EMPTY_STR) {
+    return type.value;
   }
-  if (type !== exports.TYPES.ANGLE) {
+  if (type.kind !== TYPES.ANGLE) {
     return undefined;
   }
-  var res = angleRegEx.exec(val);
-  var flt = parseFloat(res[1]);
+  const val = type.value;
+  const res = angleRegEx.exec(val);
+  if (res === null) {
+    return undefined;
+  }
+  let flt = parseFloat(res[1]);
   if (res[2] === 'rad') {
     flt *= 180 / Math.PI;
   } else if (res[2] === 'grad') {
@@ -427,31 +457,34 @@ exports.parseAngle = function parseAngle(val) {
     flt -= 360;
   }
   return flt + 'deg';
-};
+}
 
-exports.parseKeyword = function parseKeyword(val, valid_keywords) {
-  var type = exports.valueType(val);
-  if (type === exports.TYPES.NULL_OR_EMPTY_STR) {
-    return val;
+export function parseKeyword(
+  value: unknown,
+  valid_keywords: readonly string[]
+): string | null | undefined {
+  const type = valueType(value);
+  if (type.kind === TYPES.NULL_OR_EMPTY_STR) {
+    return type.value;
   }
-  if (type !== exports.TYPES.KEYWORD) {
+  if (type.kind !== TYPES.KEYWORD) {
     return undefined;
   }
-  val = val.toString().toLowerCase();
-  var i;
+  const val = type.value.toString().toLowerCase();
+  let i;
   for (i = 0; i < valid_keywords.length; i++) {
     if (valid_keywords[i].toLowerCase() === val) {
       return valid_keywords[i];
     }
   }
   return undefined;
-};
+}
 
 // utility to translate from border-width to borderWidth
-var dashedToCamelCase = function(dashed) {
-  var i;
-  var camel = '';
-  var nextCap = false;
+export function dashedToCamelCase(dashed: string): string {
+  let i;
+  let camel = '';
+  let nextCap = false;
   for (i = 0; i < dashed.length; i++) {
     if (dashed[i] !== '-') {
       camel += nextCap ? dashed[i].toUpperCase() : dashed[i];
@@ -461,21 +494,20 @@ var dashedToCamelCase = function(dashed) {
     }
   }
   return camel;
-};
-exports.dashedToCamelCase = dashedToCamelCase;
+}
 
-var is_space = /\s/;
-var opening_deliminators = ['"', "'", '('];
-var closing_deliminators = ['"', "'", ')'];
+const is_space = /\s/;
+const opening_deliminators = ['"', "'", '('];
+const closing_deliminators = ['"', "'", ')'];
 // this splits on whitespace, but keeps quoted and parened parts together
-var getParts = function(str) {
-  var deliminator_stack = [];
-  var length = str.length;
-  var i;
-  var parts = [];
-  var current_part = '';
-  var opening_index;
-  var closing_index;
+function getParts(str: string): readonly string[] {
+  const deliminator_stack = [];
+  const length = str.length;
+  let i;
+  const parts: string[] = [];
+  let current_part = '';
+  let opening_index;
+  let closing_index;
   for (i = 0; i < length; i++) {
     opening_index = opening_deliminators.indexOf(str[i]);
     closing_index = closing_deliminators.indexOf(str[i]);
@@ -509,19 +541,26 @@ var getParts = function(str) {
     parts.push(current_part);
   }
   return parts;
-};
+}
 
+interface ShorthandForEntry {
+  readonly isValid: (part: string, index: number) => boolean;
+}
+type ShorthandFor = Record<string, ShorthandForEntry>;
 /*
  * this either returns undefined meaning that it isn't valid
  * or returns an object where the keys are dashed short
  * hand properties and the values are the values to set
  * on them
  */
-exports.shorthandParser = function parse(v, shorthand_for) {
-  var obj = {};
-  var type = exports.valueType(v);
-  if (type === exports.TYPES.NULL_OR_EMPTY_STR) {
-    Object.keys(shorthand_for).forEach(function(property) {
+export function shorthandParser(
+  v: unknown,
+  shorthand_for: ShorthandFor
+): Record<string, unknown> | undefined {
+  const obj: Record<string, string> = {};
+  const type = valueType(v);
+  if (type.kind === TYPES.NULL_OR_EMPTY_STR) {
+    Object.keys(shorthand_for).forEach(function (property) {
       obj[property] = '';
     });
     return obj;
@@ -538,11 +577,11 @@ exports.shorthandParser = function parse(v, shorthand_for) {
   if (v.toLowerCase() === 'inherit') {
     return {};
   }
-  var parts = getParts(v);
-  var valid = true;
-  parts.forEach(function(part, i) {
-    var part_valid = false;
-    Object.keys(shorthand_for).forEach(function(property) {
+  const parts = getParts(v);
+  let valid = true;
+  parts.forEach(function (part, i) {
+    let part_valid = false;
+    Object.keys(shorthand_for).forEach(function (property) {
       if (shorthand_for[property].isValid(part, i)) {
         part_valid = true;
         obj[property] = part;
@@ -554,19 +593,23 @@ exports.shorthandParser = function parse(v, shorthand_for) {
     return undefined;
   }
   return obj;
-};
+}
 
-exports.shorthandSetter = function(property, shorthand_for) {
-  return function(v) {
-    var obj = exports.shorthandParser(v, shorthand_for);
+interface ShorthandSetterThis extends Record<PropertyKey, unknown> {
+  readonly removeProperty: (property: string) => void;
+  readonly _setProperty: (property: string, value: string) => void;
+}
+export function shorthandSetter(property: string, shorthand_for: ShorthandFor) {
+  return function (this: ShorthandSetterThis, v: unknown): void {
+    const obj = shorthandParser(v, shorthand_for);
     if (obj === undefined) {
       return;
     }
     //console.log('shorthandSetter for:', property, 'obj:', obj);
-    Object.keys(obj).forEach(function(subprop) {
+    Object.keys(obj).forEach(function (this: ShorthandSetterThis, subprop) {
       // in case subprop is an implicit property, this will clear
       // *its* subpropertiesX
-      var camel = dashedToCamelCase(subprop);
+      const camel = dashedToCamelCase(subprop);
       this[camel] = obj[subprop];
       // in case it gets translated into something else (0 -> 0px)
       obj[subprop] = this[camel];
@@ -576,7 +619,7 @@ exports.shorthandSetter = function(property, shorthand_for) {
         this._values[subprop] = obj[subprop];
       }
     }, this);
-    Object.keys(shorthand_for).forEach(function(subprop) {
+    Object.keys(shorthand_for).forEach(function (this: ShorthandSetterThis, subprop) {
       if (!obj.hasOwnProperty(subprop)) {
         this.removeProperty(subprop);
         delete this._values[subprop];
@@ -587,49 +630,63 @@ exports.shorthandSetter = function(property, shorthand_for) {
     // if it already exists, then call the shorthandGetter, if it's an empty
     // string, don't set the property
     this.removeProperty(property);
-    var calculated = exports.shorthandGetter(property, shorthand_for).call(this);
+    const calculated = shorthandGetter(property, shorthand_for).call(this);
     if (calculated !== '') {
       this._setProperty(property, calculated);
     }
   };
-};
+}
 
-exports.shorthandGetter = function(property, shorthand_for) {
-  return function() {
+interface ShorthandSetterThis {
+  readonly _values: Record<string, unknown>;
+  readonly getPropertyValue: (property: string) => string;
+}
+export function shorthandGetter(property: string, shorthand_for: ShorthandFor) {
+  return function (this: ShorthandSetterThis): string {
     if (this._values[property] !== undefined) {
       return this.getPropertyValue(property);
     }
     return Object.keys(shorthand_for)
-      .map(function(subprop) {
+      .map(function (this: ShorthandSetterThis, subprop) {
         return this.getPropertyValue(subprop);
       }, this)
-      .filter(function(value) {
+      .filter(function (value) {
         return value !== '';
       })
       .join(' ');
   };
-};
+}
 
+interface ImplicitSetterThis {
+  readonly _setProperty: (property: string, value: string) => void;
+  readonly removeProperty: (property: string) => void;
+  readonly _values: Record<string, string>;
+}
 // isValid(){1,4} | inherit
 // if one, it applies to all
 // if two, the first applies to the top and bottom, and the second to left and right
 // if three, the first applies to the top, the second to left and right, the third bottom
 // if four, top, right, bottom, left
-exports.implicitSetter = function(property_before, property_after, isValid, parser) {
+export function implicitSetter(
+  property_before: string,
+  property_after: string,
+  isValid: (value: unknown) => boolean,
+  parser: (value: string) => string
+) {
   property_after = property_after || '';
   if (property_after !== '') {
     property_after = '-' + property_after;
   }
-  var part_names = ['top', 'right', 'bottom', 'left'];
+  const part_names = ['top', 'right', 'bottom', 'left'];
 
-  return function(v) {
+  return function (this: ImplicitSetterThis, v: unknown): string | undefined {
     if (typeof v === 'number') {
       v = v.toString();
     }
     if (typeof v !== 'string') {
       return undefined;
     }
-    var parts;
+    let parts;
     if (v.toLowerCase() === 'inherit' || v === '') {
       parts = [v];
     } else {
@@ -643,7 +700,7 @@ exports.implicitSetter = function(property_before, property_after, isValid, pars
       return undefined;
     }
 
-    parts = parts.map(function(part) {
+    parts = parts.map(function (part) {
       return parser(part);
     });
     this._setProperty(property_before + property_after, parts.join(' '));
@@ -657,8 +714,8 @@ exports.implicitSetter = function(property_before, property_after, isValid, pars
       parts[3] = parts[1];
     }
 
-    for (var i = 0; i < 4; i++) {
-      var property = property_before + '-' + part_names[i] + property_after;
+    for (let i = 0; i < 4; i++) {
+      const property = property_before + '-' + part_names[i] + property_after;
       this.removeProperty(property);
       if (parts[i] !== '') {
         this._values[property] = parts[i];
@@ -666,19 +723,29 @@ exports.implicitSetter = function(property_before, property_after, isValid, pars
     }
     return v;
   };
-};
+}
 
+interface SubImplicitSetterThis {
+  readonly _setProperty: (property: string, value: string) => void;
+  readonly _values: Record<string, unknown>;
+  readonly removeProperty: (property: string) => void;
+}
 //
 //  Companion to implicitSetter, but for the individual parts.
 //  This sets the individual value, and checks to see if all four
 //  sub-parts are set.  If so, it sets the shorthand version and removes
 //  the individual parts from the cssText.
 //
-exports.subImplicitSetter = function(prefix, part, isValid, parser) {
-  var property = prefix + '-' + part;
-  var subparts = [prefix + '-top', prefix + '-right', prefix + '-bottom', prefix + '-left'];
+export function subImplicitSetter(
+  prefix: string,
+  part: string,
+  isValid: (value: string) => boolean,
+  parser: (value: string) => string
+) {
+  const property = prefix + '-' + part;
+  const subparts = [prefix + '-top', prefix + '-right', prefix + '-bottom', prefix + '-left'];
 
-  return function(v) {
+  return function (this: SubImplicitSetterThis, v: unknown): string | undefined {
     if (typeof v === 'number') {
       v = v.toString();
     }
@@ -688,35 +755,34 @@ exports.subImplicitSetter = function(prefix, part, isValid, parser) {
     if (!isValid(v)) {
       return undefined;
     }
-    v = parser(v);
-    this._setProperty(property, v);
-    var parts = [];
-    for (var i = 0; i < 4; i++) {
+    const parsed = parser(v);
+    this._setProperty(property, parsed);
+    const parts = [];
+    for (let i = 0; i < 4; i++) {
       if (this._values[subparts[i]] == null || this._values[subparts[i]] === '') {
         break;
       }
       parts.push(this._values[subparts[i]]);
     }
     if (parts.length === 4) {
-      for (i = 0; i < 4; i++) {
+      for (let i = 0; i < 4; i++) {
         this.removeProperty(subparts[i]);
         this._values[subparts[i]] = parts[i];
       }
       this._setProperty(prefix, parts.join(' '));
     }
-    return v;
+    return parsed;
   };
-};
+}
 
-var camel_to_dashed = /[A-Z]/g;
-var first_segment = /^\([^-]\)-/;
-var vendor_prefixes = ['o', 'moz', 'ms', 'webkit'];
-exports.camelToDashed = function(camel_case) {
-  var match;
-  var dashed = camel_case.replace(camel_to_dashed, '-$&').toLowerCase();
-  match = dashed.match(first_segment);
+const camel_to_dashed = /[A-Z]/g;
+const first_segment = /^\([^-]\)-/;
+const vendor_prefixes = ['o', 'moz', 'ms', 'webkit'];
+export function camelToDashed(camel_case: string): string {
+  let dashed = camel_case.replace(camel_to_dashed, '-$&').toLowerCase();
+  const match = dashed.match(first_segment);
   if (match && vendor_prefixes.indexOf(match[1]) !== -1) {
     dashed = '-' + dashed;
   }
   return dashed;
-};
+}

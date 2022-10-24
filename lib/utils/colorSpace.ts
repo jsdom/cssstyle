@@ -1,6 +1,4 @@
-'use strict';
-
-const hueToRgb = (t1, t2, hue) => {
+const hueToRgb = (t1: number, t2: number, hue: number): number => {
   if (hue < 0) hue += 6;
   if (hue >= 6) hue -= 6;
 
@@ -11,7 +9,11 @@ const hueToRgb = (t1, t2, hue) => {
 };
 
 // https://www.w3.org/TR/css-color-4/#hsl-to-rgb
-exports.hslToRgb = (hue, sat, light) => {
+export const hslToRgb = (
+  hue: number,
+  sat: number,
+  light: number
+): readonly [r: number, g: number, b: number] => {
   const t2 = light <= 0.5 ? light * (sat + 1) : light + sat - light * sat;
   const t1 = light * 2 - t2;
   const r = hueToRgb(t1, t2, hue + 2);

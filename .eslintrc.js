@@ -1,8 +1,7 @@
-'use strict';
-
 module.exports = {
   root: true,
-  extends: ['eslint:recommended', 'prettier'],
+  extends: ['eslint:recommended', 'prettier', 'plugin:@typescript-eslint/recommended'],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2018,
   },
@@ -19,7 +18,7 @@ module.exports = {
     test: true,
     expect: true,
   },
-  plugins: ['prettier'],
+  plugins: ['prettier', '@typescript-eslint'],
   rules: {
     'no-prototype-builtins': 'off',
     'prettier/prettier': [

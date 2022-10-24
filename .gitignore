@@ -1,5 +1,7 @@
 node_modules
 npm-debug.log
 lib/implementedProperties.js
+lib/implementedProperties.ts
 lib/properties.js
+lib/properties.ts
 coverage
