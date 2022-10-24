@@ -16,7 +16,7 @@ import { defineProperties, IMPLEMENTED_PROPERTIES } from './generated/properties
 export class CSSStyleDeclaration implements Record<string, unknown> {
   [x: string]: unknown;
 
-  private _values: Record<string, string>;
+  _values: Record<string, string>;
   private _importants: Record<string, string | undefined>;
   private _length: number;
   private readonly _onChange: (cssText: string) => void;

@@ -6,7 +6,7 @@
 import namedColorsSource from './named_colors.json';
 
 import { hslToRgb } from './utils/colorSpace';
-import { BasicPropertyDescriptorThis } from './utils/getBasicPropertyDescriptor';
+import { CSSStyleDeclaration } from './CSSStyleDeclaration';
 
 const namedColors: readonly unknown[] = namedColorsSource;
 
@@ -597,13 +597,13 @@ export function shorthandParser(
 }
 
 export function shorthandSetter(property: string, shorthand_for: ShorthandFor) {
-  return function (this: BasicPropertyDescriptorThis, v: unknown): void {
+  return function (this: CSSStyleDeclaration, v: unknown): void {
     const obj = shorthandParser(v, shorthand_for);
     if (obj === undefined) {
       return;
     }
     //console.log('shorthandSetter for:', property, 'obj:', obj);
-    Object.keys(obj).forEach(function (this: BasicPropertyDescriptorThis, subprop) {
+    Object.keys(obj).forEach(function (this: CSSStyleDeclaration, subprop) {
       // in case subprop is an implicit property, this will clear
       // *its* subpropertiesX
       const camel = dashedToCamelCase(subprop);
@@ -613,10 +613,10 @@ export function shorthandSetter(property: string, shorthand_for: ShorthandFor) {
       this.removeProperty(subprop);
       // don't add in empty properties
       if (obj[subprop] !== '') {
-        this._values[subprop] = obj[subprop];
+        this._values[subprop] = obj[subprop] as string; // todo what should be the value?
       }
     }, this);
-    Object.keys(shorthand_for).forEach(function (this: BasicPropertyDescriptorThis, subprop) {
+    Object.keys(shorthand_for).forEach(function (this: CSSStyleDeclaration, subprop) {
       if (!obj.hasOwnProperty(subprop)) {
         this.removeProperty(subprop);
         delete this._values[subprop];
@@ -635,12 +635,12 @@ export function shorthandSetter(property: string, shorthand_for: ShorthandFor) {
 }
 
 export function shorthandGetter(property: string, shorthand_for: ShorthandFor) {
-  return function (this: BasicPropertyDescriptorThis): string {
+  return function (this: CSSStyleDeclaration): string {
     if (this._values[property] !== undefined) {
       return this.getPropertyValue(property);
     }
     return Object.keys(shorthand_for)
-      .map(function (this: BasicPropertyDescriptorThis, subprop) {
+      .map(function (this: CSSStyleDeclaration, subprop) {
         return this.getPropertyValue(subprop);
       }, this)
       .filter(function (value) {
@@ -667,7 +667,7 @@ export function implicitSetter(
   }
   const part_names = ['top', 'right', 'bottom', 'left'];
 
-  return function (this: BasicPropertyDescriptorThis, v: unknown): string | undefined {
+  return function (this: CSSStyleDeclaration, v: unknown): string | undefined {
     if (typeof v === 'number') {
       v = v.toString();
     }
@@ -706,7 +706,7 @@ export function implicitSetter(
       const property = property_before + '-' + part_names[i] + property_after;
       this.removeProperty(property);
       if (parts[i] !== '') {
-        this._values[property] = parts[i];
+        this._values[property] = parts[i] as string; // todo what should be the value??
       }
     }
     return v;
@@ -728,7 +728,7 @@ export function subImplicitSetter(
   const property = prefix + '-' + part;
   const subparts = [prefix + '-top', prefix + '-right', prefix + '-bottom', prefix + '-left'];
 
-  return function (this: BasicPropertyDescriptorThis, v: unknown): string | null | undefined {
+  return function (this: CSSStyleDeclaration, v: unknown): string | null | undefined {
     if (typeof v === 'number') {
       v = v.toString();
     }
