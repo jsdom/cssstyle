@@ -25,6 +25,11 @@
       "name": "Chad Walker",
       "email": "chad@chad-cat-lore-eddie.com",
       "url": "https://github.com/chad3814"
+    },
+    {
+      "name": "Kirill Agalakov",
+      "email": "raveclassic@gmail.com",
+      "url": "https://github.com/raveclassic"
     }
   ],
   "repository": "jsdom/cssstyle",
@@ -35,7 +40,7 @@
   "files": [
     "lib/"
   ],
-  "main": "./lib/CSSStyleDeclaration.js",
+  "main": "lib/CSSStyleDeclaration.ts",
   "dependencies": {
     "cssom": "~0.3.6"
   },
@@ -44,6 +49,7 @@
     "@types/babel-generator": "^6.25.5",
     "@types/babel-traverse": "^6.25.7",
     "@types/babylon": "^6.16.6",
+    "@types/cssom": "^0.4.1",
     "@types/node": "^18.11.4",
     "@types/request": "^2.48.8",
     "@types/resolve": "^1.20.2",
@@ -69,8 +75,8 @@
     "download": "ts-node --project ./tsconfig.scripts.json ./scripts/download_latest_properties.ts && eslint lib/allProperties.ts --fix",
     "generate": "run-p generate:*",
     "generate:implemented_properties": "node ./scripts/generate_implemented_properties.js",
-    "generate:properties": "node scripts/generate_properties.ts",
-    "g": "ts-node --project ./tsconfig.scripts.json ./scripts/generate_properties.ts",
+    "generate:properties": "node scripts/generate.ts",
+    "g": "ts-node --project ./tsconfig.scripts.json scripts/generate.ts",
     "lint": "npm run generate && eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix --max-warnings 0",
     "prepublishOnly": "npm run lint && npm run test",

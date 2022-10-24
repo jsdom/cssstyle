@@ -74,7 +74,7 @@ request(url, function (error, response, body) {
     );
     out_file.write('/*\n *\n * https://www.w3.org/Style/CSS/all-properties.en.html\n */\n\n');
     out_file.write(
-      'export default new Set(' +
+      'export const ALL_PROPERTIES = new Set(' +
         JSON.stringify(CSSPropertyNames.map(camelToDashed), null, 2) +
         ');\n'
     );

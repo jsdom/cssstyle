@@ -5,7 +5,7 @@
  * https://www.w3.org/Style/CSS/all-properties.en.html
  */
 
-export default new Set([
+export const ALL_PROPERTIES = new Set([
   '-webkit-line-clamp',
   'accent-color',
   'align-content',

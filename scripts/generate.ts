@@ -37,7 +37,8 @@ propertiesOutputFile.addImportDeclarations(
 );
 
 const prototypeExtender = propertiesOutputFile.addFunction({
-  isDefaultExport: true,
+  name: 'defineProperties',
+  isExported: true,
   parameters: [{ name: 'prototype', type: 'object' }],
   returnType: 'void',
 });
@@ -67,7 +68,7 @@ const implementedPropertiesOutputFile = project.createSourceFile(
 );
 
 implementedPropertiesOutputFile.addStatements((writer) => {
-  writer.write('export default new Set([');
+  writer.write('export const IMPLEMENTED_PROPERTIES = new Set([');
   writer.hangingIndent(() => {
     for (const source of propertiesSources) {
       writer.writeLine(`'${camelToDashed(source.getBaseNameWithoutExtension())}',`);

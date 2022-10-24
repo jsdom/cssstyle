@@ -1,11 +1,9 @@
-'use strict';
-
 /**
  * This file contains all implemented properties that are not a part of any
  * current specifications or drafts, but are handled by browsers nevertheless.
  */
 
-module.exports = [
+export const ALL_WEBKIT_PROPERTIES = [
   'animation',
   'animation-delay',
   'animation-direction',
@@ -191,4 +189,4 @@ module.exports = [
   'wrap-through',
   'writing-mode',
   'zoom',
-].map(prop => 'webkit-' + prop);
+].map((prop) => 'webkit-' + prop);

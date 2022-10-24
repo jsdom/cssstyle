@@ -1,13 +1,13 @@
-'use strict';
-
 /**
  * This file contains all implemented properties that are not a part of any
  * current specifications or drafts, but are handled by browsers nevertheless.
  */
 
-var allWebkitProperties = require('./allWebkitProperties');
+// const allWebkitProperties = require('./allWebkitProperties');
 
-module.exports = new Set(
+import { ALL_WEBKIT_PROPERTIES } from './allWebkitProperties';
+
+export const ALL_EXTRA_PROPERTIES = new Set(
   [
     'background-position-x',
     'background-position-y',
@@ -63,5 +63,5 @@ module.exports = new Set(
     'text-underline-width',
     'unicode-range',
     'vector-effect',
-  ].concat(allWebkitProperties)
+  ].concat(ALL_WEBKIT_PROPERTIES)
 );
