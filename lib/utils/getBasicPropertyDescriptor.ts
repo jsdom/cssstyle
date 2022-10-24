@@ -1,6 +1,9 @@
-interface BasicPropertyDescriptorThis {
+export interface BasicPropertyDescriptorThis extends Record<PropertyKey, unknown> {
   readonly _setProperty: (name: string, value: unknown) => void;
+  readonly setProperty: (name: string, value: unknown) => void;
   readonly getPropertyValue: (name: string) => string;
+  readonly removeProperty: (property: string) => void;
+  readonly _values: Record<string, unknown>;
 }
 
 export interface BasicPropertyDescriptor {

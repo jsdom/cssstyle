@@ -46,10 +46,10 @@ prototypeExtender.setBodyText((writer) => {
   writer.hangingIndent(() => {
     for (const source of propertiesSources) {
       const propertyFileName = source.getBaseNameWithoutExtension();
-      writer.writeLine(`${propertyFileName}: ${propertyFileName}Module.definition`);
+      writer.writeLine(`${propertyFileName}: ${propertyFileName}Module.definition,`);
       const dashed = camelToDashed(propertyFileName);
       if (dashed !== propertyFileName) {
-        writer.writeLine(`${dashed}: ${propertyFileName}Module.definition`);
+        writer.writeLine(`'${dashed}': ${propertyFileName}Module.definition,`);
       }
     }
   });
@@ -70,7 +70,7 @@ implementedPropertiesOutputFile.addStatements((writer) => {
   writer.write('export default new Set([');
   writer.hangingIndent(() => {
     for (const source of propertiesSources) {
-      writer.writeLine(`"${camelToDashed(source.getBaseNameWithoutExtension())}",`);
+      writer.writeLine(`'${camelToDashed(source.getBaseNameWithoutExtension())}',`);
     }
   });
   writer.write('])');

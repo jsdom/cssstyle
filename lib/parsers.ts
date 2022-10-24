@@ -6,6 +6,7 @@
 import namedColorsSource from './named_colors.json';
 
 import { hslToRgb } from './utils/colorSpace';
+import { BasicPropertyDescriptorThis } from './utils/getBasicPropertyDescriptor';
 
 const namedColors: readonly unknown[] = namedColorsSource;
 
@@ -24,7 +25,7 @@ export const TYPES = {
   UNKNOWN: 12,
 } as const;
 
-type ValueType =
+export type ValueType =
   | { readonly kind: typeof TYPES.INTEGER; readonly value: string }
   | { readonly kind: typeof TYPES.NUMBER; readonly value: string }
   | { readonly kind: typeof TYPES.LENGTH; readonly value: string }
@@ -595,18 +596,14 @@ export function shorthandParser(
   return obj;
 }
 
-interface ShorthandSetterThis extends Record<PropertyKey, unknown> {
-  readonly removeProperty: (property: string) => void;
-  readonly _setProperty: (property: string, value: string) => void;
-}
 export function shorthandSetter(property: string, shorthand_for: ShorthandFor) {
-  return function (this: ShorthandSetterThis, v: unknown): void {
+  return function (this: BasicPropertyDescriptorThis, v: unknown): void {
     const obj = shorthandParser(v, shorthand_for);
     if (obj === undefined) {
       return;
     }
     //console.log('shorthandSetter for:', property, 'obj:', obj);
-    Object.keys(obj).forEach(function (this: ShorthandSetterThis, subprop) {
+    Object.keys(obj).forEach(function (this: BasicPropertyDescriptorThis, subprop) {
       // in case subprop is an implicit property, this will clear
       // *its* subpropertiesX
       const camel = dashedToCamelCase(subprop);
@@ -619,7 +616,7 @@ export function shorthandSetter(property: string, shorthand_for: ShorthandFor) {
         this._values[subprop] = obj[subprop];
       }
     }, this);
-    Object.keys(shorthand_for).forEach(function (this: ShorthandSetterThis, subprop) {
+    Object.keys(shorthand_for).forEach(function (this: BasicPropertyDescriptorThis, subprop) {
       if (!obj.hasOwnProperty(subprop)) {
         this.removeProperty(subprop);
         delete this._values[subprop];
@@ -637,17 +634,13 @@ export function shorthandSetter(property: string, shorthand_for: ShorthandFor) {
   };
 }
 
-interface ShorthandSetterThis {
-  readonly _values: Record<string, unknown>;
-  readonly getPropertyValue: (property: string) => string;
-}
 export function shorthandGetter(property: string, shorthand_for: ShorthandFor) {
-  return function (this: ShorthandSetterThis): string {
+  return function (this: BasicPropertyDescriptorThis): string {
     if (this._values[property] !== undefined) {
       return this.getPropertyValue(property);
     }
     return Object.keys(shorthand_for)
-      .map(function (this: ShorthandSetterThis, subprop) {
+      .map(function (this: BasicPropertyDescriptorThis, subprop) {
         return this.getPropertyValue(subprop);
       }, this)
       .filter(function (value) {
@@ -657,11 +650,6 @@ export function shorthandGetter(property: string, shorthand_for: ShorthandFor) {
   };
 }
 
-interface ImplicitSetterThis {
-  readonly _setProperty: (property: string, value: string) => void;
-  readonly removeProperty: (property: string) => void;
-  readonly _values: Record<string, string>;
-}
 // isValid(){1,4} | inherit
 // if one, it applies to all
 // if two, the first applies to the top and bottom, and the second to left and right
@@ -670,8 +658,8 @@ interface ImplicitSetterThis {
 export function implicitSetter(
   property_before: string,
   property_after: string,
-  isValid: (value: unknown) => boolean,
-  parser: (value: string) => string
+  isValid: (value: string) => boolean,
+  parser: (value: string) => string | null | undefined
 ) {
   property_after = property_after || '';
   if (property_after !== '') {
@@ -679,7 +667,7 @@ export function implicitSetter(
   }
   const part_names = ['top', 'right', 'bottom', 'left'];
 
-  return function (this: ImplicitSetterThis, v: unknown): string | undefined {
+  return function (this: BasicPropertyDescriptorThis, v: unknown): string | undefined {
     if (typeof v === 'number') {
       v = v.toString();
     }
@@ -725,11 +713,6 @@ export function implicitSetter(
   };
 }
 
-interface SubImplicitSetterThis {
-  readonly _setProperty: (property: string, value: string) => void;
-  readonly _values: Record<string, unknown>;
-  readonly removeProperty: (property: string) => void;
-}
 //
 //  Companion to implicitSetter, but for the individual parts.
 //  This sets the individual value, and checks to see if all four
@@ -740,12 +723,12 @@ export function subImplicitSetter(
   prefix: string,
   part: string,
   isValid: (value: string) => boolean,
-  parser: (value: string) => string
+  parser: (value: string) => string | null | undefined
 ) {
   const property = prefix + '-' + part;
   const subparts = [prefix + '-top', prefix + '-right', prefix + '-bottom', prefix + '-left'];
 
-  return function (this: SubImplicitSetterThis, v: unknown): string | undefined {
+  return function (this: BasicPropertyDescriptorThis, v: unknown): string | null | undefined {
     if (typeof v === 'number') {
       v = v.toString();
     }
