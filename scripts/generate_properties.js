@@ -20,7 +20,7 @@ function getUniqueIndex() {
 
 var property_files = fs
   .readdirSync(path.resolve(__dirname, '../lib/properties'))
-  .filter(function(property) {
+  .filter(function (property) {
     return property.substr(-3) === '.js';
   });
 var out_file = fs.createWriteStream(path.resolve(__dirname, '../lib/properties.js'), {
@@ -58,7 +58,7 @@ function isRequire(node, filename) {
 
 // step 1: parse all files and figure out their dependencies
 var parsedFilesByPath = {};
-property_files.map(function(property) {
+property_files.map(function (property) {
   var filename = path.resolve(__dirname, '../lib/properties/' + property);
   var src = fs.readFileSync(filename, 'utf8');
   property = basename(property, '.js');
@@ -89,10 +89,7 @@ function addFile(filename, dependencyPath) {
   if (dependencyPath.indexOf(filename) !== -1) {
     throw new Error(
       'Circular dependency: ' +
-        dependencyPath
-          .slice(dependencyPath.indexOf(filename))
-          .concat([filename])
-          .join(' -> ')
+        dependencyPath.slice(dependencyPath.indexOf(filename)).concat([filename]).join(' -> ')
     );
   }
   var file = parsedFilesByPath[filename];
@@ -102,14 +99,14 @@ function addFile(filename, dependencyPath) {
   if (!file) {
     externalDependencies.push(filename);
   } else {
-    file.dependencies.forEach(function(dependency) {
+    file.dependencies.forEach(function (dependency) {
       addFile(dependency, dependencyPath.concat([filename]));
     });
     parsedFiles.push(parsedFilesByPath[filename]);
   }
   addedFiles[filename] = true;
 }
-Object.keys(parsedFilesByPath).forEach(function(filename) {
+Object.keys(parsedFilesByPath).forEach(function (filename) {
   addFile(filename, []);
 });
 // Step 3: add files to output
@@ -117,7 +114,7 @@ Object.keys(parsedFilesByPath).forEach(function(filename) {
 // and updating require calls as appropriate
 var moduleExportsByPath = {};
 var statements = [];
-externalDependencies.forEach(function(filename, i) {
+externalDependencies.forEach(function (filename, i) {
   var id = t.identifier(
     'external_dependency_' + basename(filename, '.js').replace(/[^A-Za-z]/g, '') + '_' + i
   );
@@ -166,7 +163,7 @@ function getRequireValue(node, file) {
     return e.defaultExports;
   }
 }
-parsedFiles.forEach(function(file) {
+parsedFiles.forEach(function (file) {
   var namedExports = {};
   var localVariableMap = {};
 
@@ -202,7 +199,7 @@ parsedFiles.forEach(function(file) {
 
       // rename all top level variables to keep them local to the module
       if (t.isVariableDeclaration(path.node) && t.isProgram(path.parent)) {
-        path.node.declarations.forEach(function(declaration) {
+        path.node.declarations.forEach(function (declaration) {
           path.scope.rename(
             declaration.id.name,
             file.property + '_local_var_' + declaration.id.name
@@ -234,7 +231,7 @@ parsedFiles.forEach(function(file) {
     },
   });
   var defaultExports = t.objectExpression(
-    Object.keys(namedExports).map(function(name) {
+    Object.keys(namedExports).map(function (name) {
       return t.objectProperty(t.identifier(name), namedExports[name]);
     })
   );
@@ -245,7 +242,7 @@ parsedFiles.forEach(function(file) {
   statements.push(
     t.variableDeclaration(
       'var',
-      Object.keys(namedExports).map(function(name) {
+      Object.keys(namedExports).map(function (name) {
         return t.variableDeclarator(namedExports[name]);
       })
     )
@@ -253,7 +250,7 @@ parsedFiles.forEach(function(file) {
   statements.push.apply(statements, file.ast.program.body);
 });
 var propertyDefinitions = [];
-parsedFiles.forEach(function(file) {
+parsedFiles.forEach(function (file) {
   var dashed = camelToDashed(file.property);
   propertyDefinitions.push(
     t.objectProperty(
@@ -285,7 +282,7 @@ statements.push(
   )
 );
 out_file.write(generate(t.program(statements)).code + '\n');
-out_file.end(function(err) {
+out_file.end(function (err) {
   if (err) {
     throw err;
   }
