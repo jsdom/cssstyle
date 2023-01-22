@@ -8,8 +8,8 @@ const camelToDashed = require('../lib/parsers').camelToDashed;
 
 const dashedProperties = fs
   .readdirSync(path.resolve(__dirname, '../lib/properties'))
-  .filter(propertyFile => propertyFile.substr(-3) === '.js')
-  .map(propertyFile => camelToDashed(propertyFile.replace('.js', '')));
+  .filter((propertyFile) => propertyFile.substr(-3) === '.js')
+  .map((propertyFile) => camelToDashed(propertyFile.replace('.js', '')));
 
 const out_file = fs.createWriteStream(path.resolve(__dirname, '../lib/implementedProperties.js'), {
   encoding: 'utf-8',
@@ -32,7 +32,7 @@ statements.push(
   ])
 );
 
-dashedProperties.forEach(property => {
+dashedProperties.forEach((property) => {
   statements.push(
     t.expressionStatement(
       t.callExpression(
@@ -54,7 +54,7 @@ statements.push(
 );
 
 out_file.write(generate(t.program(statements)).code + '\n');
-out_file.end(function(err) {
+out_file.end(function (err) {
   if (err) {
     throw err;
   }
