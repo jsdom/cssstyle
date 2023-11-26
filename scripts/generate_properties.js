@@ -252,6 +252,10 @@ parsedFiles.forEach(function (file) {
 var propertyDefinitions = [];
 parsedFiles.forEach(function (file) {
   var dashed = camelToDashed(file.property);
+  var isWebkit = /^-webkit-/.test(dashed);
+  if (isWebkit) {
+    dashed = '-' + dashed;
+  }
   propertyDefinitions.push(
     t.objectProperty(
       t.identifier(file.property),
