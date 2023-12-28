@@ -21,8 +21,6 @@
 var fs = require('fs');
 var path = require('path');
 
-var fetch = require('minipass-fetch');
-
 const { camelToDashed } = require('../lib/parsers');
 
 var url = 'https://www.w3.org/Style/CSS/all-properties.en.json';
