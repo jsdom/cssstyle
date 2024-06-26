@@ -727,9 +727,19 @@ describe('CSSStyleDeclaration', () => {
     assert.strictEqual(style.getPropertyValue('--fOo'), 'purple');
   });
 
-  it('supports calc', () => {
-    const style = new CSSStyleDeclaration();
-    style.setProperty('width', 'calc(100% - 100px)');
-    assert.strictEqual(style.getPropertyValue('width'), 'calc(100% - 100px)');
-  });
+  for (const property of [
+    'width',
+    'height',
+    'margin',
+    'margin-top',
+    'bottom',
+    'right',
+    'padding',
+  ]) {
+    it(`supports calc for ${property}`, () => {
+      const style = new CSSStyleDeclaration();
+      style.setProperty(property, 'calc(100% - 100px)');
+      assert.strictEqual(style.getPropertyValue(property), 'calc(100% - 100px)');
+    });
+  }
 });
