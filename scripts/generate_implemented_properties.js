@@ -9,8 +9,8 @@ const { idlAttributeToCSSProperty } = require('../lib/parsers');
 const webkitPropertyName = /^webkit[A-Z]/;
 const dashedProperties = fs
   .readdirSync(path.resolve(__dirname, '../lib/properties'))
-  .filter(propertyFile => path.extname(propertyFile) === '.js')
-  .map(propertyFile => {
+  .filter((propertyFile) => path.extname(propertyFile) === '.js')
+  .map((propertyFile) => {
     return idlAttributeToCSSProperty(
       path.basename(propertyFile, '.js'),
       /* dashPrefix = */ webkitPropertyName.test(propertyFile)
@@ -38,7 +38,7 @@ statements.push(
   ])
 );
 
-dashedProperties.forEach(property => {
+dashedProperties.forEach((property) => {
   statements.push(
     t.expressionStatement(
       t.callExpression(
@@ -60,7 +60,7 @@ statements.push(
 );
 
 out_file.write(generate(t.program(statements)).code + '\n');
-out_file.end(function(err) {
+out_file.end(function (err) {
   if (err) {
     throw err;
   }
