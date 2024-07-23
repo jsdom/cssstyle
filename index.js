@@ -1,7 +1,7 @@
 'use strict';
 const webidlWrapper = require('./webidl2js-wrapper.js');
 
-const sharedGlobalObject = {};
+const sharedGlobalObject = { Object, String, Number, Array, TypeError };
 webidlWrapper.install(sharedGlobalObject, ['Window']);
 
 const origCSSStyleDeclaration = sharedGlobalObject.CSSStyleDeclaration;
