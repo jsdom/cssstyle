@@ -1,4 +1,6 @@
 /*
+!index.js
+!webidl2js-wrapper.js
 !lib/
 lib/Function.js
 lib/VoidFunction.js
