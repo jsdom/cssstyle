@@ -15,7 +15,7 @@ const outputDir = implDir;
 
 const propertyNames = [
   ...allProperties,
-  ...Array.from(allExtraProperties).filter(prop => {
+  ...Array.from(allExtraProperties).filter((prop) => {
     return !allProperties.has(prop);
   }),
 ].sort();
@@ -86,7 +86,7 @@ const transformer = new Transformer({
   implSuffix: '-impl',
   // TODO: Add support for `[CEReactions]`
   processReflect(idl, implName) {
-    const reflectStyle = idl.extAttrs.find(extAttr => extAttr.name === 'ReflectStyle');
+    const reflectStyle = idl.extAttrs.find((extAttr) => extAttr.name === 'ReflectStyle');
     if (!reflectStyle || !reflectStyle.rhs || reflectStyle.rhs.type !== 'string') {
       throw new Error(`Internal error: Invalid [ReflectStyle] for attribute ${idl.name}`);
     }
@@ -99,9 +99,9 @@ const transformer = new Transformer({
 });
 
 transformer.addSource(srcDir, implDir);
-new Promise(resolve => genIDL.on('finish', resolve))
+new Promise((resolve) => genIDL.on('finish', resolve))
   .then(() => transformer.generate(outputDir))
-  .catch(err => {
+  .catch((err) => {
     console.error(err.stack);
     process.exit(1);
   });

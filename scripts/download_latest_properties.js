@@ -71,7 +71,11 @@ async function main() {
   out_file.write('/*\n *\n * https://www.w3.org/Style/CSS/all-properties.en.html\n */\n\n');
   out_file.write(
     'module.exports = new Set(' +
-      JSON.stringify(CSSpropertyNames.map((p) => idlAttributeToCSSProperty(p)), null, 2) +
+      JSON.stringify(
+        CSSpropertyNames.map((p) => idlAttributeToCSSProperty(p)),
+        null,
+        2
+      ) +
       ');\n'
   );
 
