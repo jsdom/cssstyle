@@ -37,7 +37,7 @@
   ],
   "main": "./lib/CSSStyleDeclaration.js",
   "dependencies": {
-    "rrweb-cssom": "^0.6.0"
+    "rrweb-cssom": "^0.7.1"
   },
   "devDependencies": {
     "@babel/generator": "^7.25.6",
