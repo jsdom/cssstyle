@@ -1,76 +1,78 @@
 'use strict';
 
-const parsers = require('./parsers');
+const { describe, it } = require('node:test');
+const assert = require('node:assert/strict');
+const parsers = require('../lib/parsers');
 
 describe('valueType', () => {
   it('returns color for red', () => {
     let input = 'red';
     let output = parsers.valueType(input);
 
-    expect(output).toEqual(parsers.TYPES.COLOR);
+    assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
   it('returns color for #nnnnnn', () => {
     let input = '#fefefe';
     let output = parsers.valueType(input);
 
-    expect(output).toEqual(parsers.TYPES.COLOR);
+    assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
   it('returns color for rgb(n, n, n)', () => {
     let input = 'rgb(10, 10, 10)';
     let output = parsers.valueType(input);
 
-    expect(output).toEqual(parsers.TYPES.COLOR);
+    assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
   it('returns color for rgb(p, p, p)', () => {
     let input = 'rgb(10%, 10%, 10%)';
     let output = parsers.valueType(input);
 
-    expect(output).toEqual(parsers.TYPES.COLOR);
+    assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
   it('returns color for rgba(n, n, n, n)', () => {
     let input = 'rgba(10, 10, 10, 1)';
     let output = parsers.valueType(input);
 
-    expect(output).toEqual(parsers.TYPES.COLOR);
+    assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
   it('returns color for rgba(n, n, n, n) with decimal alpha', () => {
     let input = 'rgba(10, 10, 10, 0.5)';
     let output = parsers.valueType(input);
 
-    expect(output).toEqual(parsers.TYPES.COLOR);
+    assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
   it('returns color for rgba(p, p, p, n)', () => {
     let input = 'rgba(10%, 10%, 10%, 1)';
     let output = parsers.valueType(input);
 
-    expect(output).toEqual(parsers.TYPES.COLOR);
+    assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
   it('returns color for rgba(p, p, p, n) with decimal alpha', () => {
     let input = 'rgba(10%, 10%, 10%, 0.5)';
     let output = parsers.valueType(input);
 
-    expect(output).toEqual(parsers.TYPES.COLOR);
+    assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
   it('returns length for 100ch', () => {
     let input = '100ch';
     let output = parsers.valueType(input);
 
-    expect(output).toEqual(parsers.TYPES.LENGTH);
+    assert.strictEqual(output, parsers.TYPES.LENGTH);
   });
 
   it('returns calc from calc(100px * 2)', () => {
     let input = 'calc(100px * 2)';
     let output = parsers.valueType(input);
 
-    expect(output).toEqual(parsers.TYPES.CALC);
+    assert.strictEqual(output, parsers.TYPES.CALC);
   });
 });
 describe('parseInteger', () => {
@@ -99,22 +101,28 @@ describe('parseColor', () => {
     let input = 'hsla(0, 1%, 2%)';
     let output = parsers.parseColor(input);
 
-    expect(output).toEqual('rgb(5, 5, 5)');
+    assert.strictEqual(output, 'rgb(5, 5, 5)');
   });
+
   it('should convert hsla to rgba values', () => {
     let input = 'hsla(0, 1%, 2%, 0.5)';
     let output = parsers.parseColor(input);
 
-    expect(output).toEqual('rgba(5, 5, 5, 0.5)');
+    assert.strictEqual(output, 'rgba(5, 5, 5, 0.5)');
   });
-  it.each([
-    [120, 'rgb(0, 255, 0)'],
-    [240, 'rgb(0, 0, 255)'],
-  ])('should convert not zero hsl with non zero hue %s to %s', (hue, rgbValue) => {
-    let input = 'hsl(' + hue + ', 100%, 50%)';
+
+  it('should convert not zero hsl with non zero hue 120 to rgb(0, 255, 0)', () => {
+    let input = 'hsl(120, 100%, 50%)';
     let output = parsers.parseColor(input);
-    expect(output).toEqual(rgbValue);
+    assert.strictEqual(output, 'rgb(0, 255, 0)');
   });
+
+  it('should convert not zero hsl with non zero hue 240 to rgb(0, 0, 255)', () => {
+    let input = 'hsl(240, 100%, 50%)';
+    let output = parsers.parseColor(input);
+    assert.strictEqual(output, 'rgb(0, 0, 255)');
+  });
+
   it.todo('Add more tests');
 });
 describe('parseAngle', () => {
