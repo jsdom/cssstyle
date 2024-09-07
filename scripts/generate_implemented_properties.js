@@ -2,8 +2,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const t = require('babel-types');
-const generate = require('babel-generator').default;
+const t = require('@babel/types');
+const generate = require('@babel/generator').default;
 const camelToDashed = require('../lib/parsers').camelToDashed;
 
 const dashedProperties = fs
