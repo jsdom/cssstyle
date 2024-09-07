@@ -2,10 +2,10 @@
 
 var fs = require('fs');
 var path = require('path');
-var babylon = require('babylon');
-var t = require('babel-types');
-var generate = require('babel-generator').default;
-var traverse = require('babel-traverse').default;
+var parser = require('@babel/parser');
+var t = require('@babel/types');
+var generate = require('@babel/generator').default;
+var traverse = require('@babel/traverse').default;
 var resolve = require('resolve');
 
 var camelToDashed = require('../lib/parsers').camelToDashed;
@@ -62,7 +62,7 @@ property_files.map(function (property) {
   var filename = path.resolve(__dirname, '../lib/properties/' + property);
   var src = fs.readFileSync(filename, 'utf8');
   property = basename(property, '.js');
-  var ast = babylon.parse(src);
+  var ast = parser.parse(src);
   var dependencies = [];
   traverse(ast, {
     enter(path) {
