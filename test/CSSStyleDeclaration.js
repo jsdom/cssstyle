@@ -157,6 +157,15 @@ describe('CSSStyleDeclaration', () => {
     assert.strictEqual(style.cssText, 'top: 0px; left: 0%; right: 5em; bottom: 12pt;');
   });
 
+  it('top, left, right, bottom properties should accept "auto"', () => {
+    var style = new CSSStyleDeclaration();
+    style.cssText = `top: auto; right: auto; bottom: auto; left: auto;`;
+    assert.strictEqual(style.top, 'auto');
+    assert.strictEqual(style.right, 'auto');
+    assert.strictEqual(style.bottom, 'auto');
+    assert.strictEqual(style.left, 'auto');
+  });
+
   it('clear and clip properties', () => {
     var style = new CSSStyleDeclaration();
     style.clear = 'none';
