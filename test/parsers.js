@@ -132,6 +132,13 @@ describe('parseColor', () => {
     assert.strictEqual(output, 'rgb(128, 0, 128)');
   });
 
+  it('should convert modern rgb with none values to rgb values', () => {
+    let input = 'rgb(128 0 none)';
+    let output = parsers.parseColor(input);
+
+    assert.strictEqual(output, 'rgb(128, 0, 0)');
+  });
+
   it('should convert modern rgba to rgba values', () => {
     let input = 'rgba(127.5 0 127.5 / .5)';
     let output = parsers.parseColor(input);
