@@ -183,9 +183,9 @@ describe('CSSStyleDeclaration', () => {
     style.color = 'rgba(0,0,0,0)';
     assert.strictEqual(style.color, 'rgba(0, 0, 0, 0)');
     style.color = 'rgba(5%, 10%, 20%, 0.4)';
-    assert.strictEqual(style.color, 'rgba(12, 25, 51, 0.4)');
+    assert.strictEqual(style.color, 'rgba(13, 26, 51, 0.4)');
     style.color = 'rgb(33%, 34%, 33%)';
-    assert.strictEqual(style.color, 'rgb(84, 86, 84)');
+    assert.strictEqual(style.color, 'rgb(84, 87, 84)');
     style.color = 'rgba(300, 200, 100, 1.5)';
     assert.strictEqual(style.color, 'rgb(255, 200, 100)');
     style.color = 'hsla(0, 1%, 2%, 0.5)';
@@ -199,11 +199,17 @@ describe('CSSStyleDeclaration', () => {
     style.color = 'currentcolor';
     assert.strictEqual(style.color, 'currentcolor');
     style.color = '#ffffffff';
-    assert.strictEqual(style.color, 'rgba(255, 255, 255, 1)');
+    assert.strictEqual(style.color, 'rgb(255, 255, 255)');
     style.color = '#fffa';
     assert.strictEqual(style.color, 'rgba(255, 255, 255, 0.667)');
     style.color = '#ffffff66';
     assert.strictEqual(style.color, 'rgba(255, 255, 255, 0.4)');
+  });
+
+  it('invalid hex color value', () => {
+    var style = new CSSStyleDeclaration();
+    style.color = '#1234567';
+    assert.strictEqual(style.color, '');
   });
 
   it('short hand properties with embedded spaces', () => {

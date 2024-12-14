@@ -161,10 +161,17 @@ describe('parseColor', () => {
   });
 
   it('should normalize color-mix values', () => {
-    let input = 'color-mix(in srgb, rgb(255 0 0), #0000ff)';
+    let input = 'color-mix(in srgb, rgb(255 0 0), #0000ff 40%)';
     let output = parsers.parseColor(input);
 
-    assert.strictEqual(output, 'color-mix(in srgb, rgb(255, 0, 0), rgb(0, 0, 255))');
+    assert.strictEqual(output, 'color-mix(in srgb, rgb(255, 0, 0) 60%, rgb(0, 0, 255))');
+  });
+
+  it('should not remove comments, trim or lower case letters if var() is used', () => {
+    let input = 'var( --custom-Color /* comment */)';
+    let output = parsers.parseColor(input);
+
+    assert.strictEqual(output, 'var( --custom-Color /* comment */)');
   });
 
   it.todo('Add more tests');
