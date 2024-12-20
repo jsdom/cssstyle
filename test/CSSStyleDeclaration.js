@@ -748,4 +748,85 @@ describe('CSSStyleDeclaration', () => {
       assert.strictEqual(style.getPropertyValue(property), 'calc(100% - 100px)');
     });
   }
+
+  it('supports nested calc', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'calc(100% - calc(200px - 100px))');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(100% - 100px)');
+  });
+
+  it('supports nested calc', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'calc(100% * calc(2 / 3))');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(66.6667%)');
+  });
+
+  it('supports var', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'var(--foo)');
+    assert.strictEqual(style.getPropertyValue('width'), 'var(--foo)');
+  });
+
+  it('supports var with fallback', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'var(--foo, 100px)');
+    assert.strictEqual(style.getPropertyValue('width'), 'var(--foo, 100px)');
+  });
+
+  it('supports var with var fallback', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'var(--foo, var(--bar))');
+    assert.strictEqual(style.getPropertyValue('width'), 'var(--foo, var(--bar))');
+  });
+
+  it('supports calc with var inside', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'calc(100% - var(--foo))');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(100% - var(--foo))');
+  });
+
+  it('supports var with calc inside', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'var(--foo, calc(var(--bar) + 3px))');
+    assert.strictEqual(style.getPropertyValue('width'), 'var(--foo, calc(var(--bar) + 3px))');
+  });
+
+  it('supports color var', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('color', 'var(--foo)');
+    assert.strictEqual(style.getPropertyValue('color'), 'var(--foo)');
+  });
+
+  it('should not normalize if var() is included', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'calc( /* comment */ 100% - calc(var(--foo) *2 ))');
+    assert.strictEqual(
+      style.getPropertyValue('width'),
+      'calc( /* comment */ 100% - calc(var(--foo) *2 ))'
+    );
+  });
+
+  it('supports abs', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'abs(1 + 2 + 3)');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(6)');
+  });
+
+  it('supports abs inside calc', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'calc(abs(1) + abs(2))');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(3)');
+  });
+
+  it('supports sign', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'sign(.1)');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(1)');
+  });
+
+  it('supports sign inside calc', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'calc(sign(.1) + sign(.2))');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(2)');
+  });
 });
