@@ -805,4 +805,28 @@ describe('CSSStyleDeclaration', () => {
       'calc( /* comment */ 100% - calc(var(--foo) *2 ))'
     );
   });
+
+  it('supports abs', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'abs(1 + 2 + 3)');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(6)');
+  });
+
+  it('supports abs inside calc', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'calc(abs(1) + abs(2))');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(3)');
+  });
+
+  it('supports sign', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'sign(.1)');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(1)');
+  });
+
+  it('supports sign inside calc', () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty('width', 'calc(sign(.1) + sign(.2))');
+    assert.strictEqual(style.getPropertyValue('width'), 'calc(2)');
+  });
 });
