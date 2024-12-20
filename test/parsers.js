@@ -74,7 +74,43 @@ describe('valueType', () => {
 
     assert.strictEqual(output, parsers.TYPES.CALC);
   });
+
+  it('returns calc from calc(100px *  calc(2 * 1))', () => {
+    let input = 'calc(100px * calc(2 * 1))';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.CALC);
+  });
+
+  it('returns calc from calc(100px *  var(--foo))', () => {
+    let input = 'calc(100px *  var(--foo))';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.CALC);
+  });
+
+  it('returns var from var(--foo)', () => {
+    let input = 'var(--foo)';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.KEYWORD);
+  });
+
+  it('returns var from var(--foo, var(--bar))', () => {
+    let input = 'var(--foo, var(--bar))';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.KEYWORD);
+  });
+
+  it('returns var from var(--foo, calc(var(--bar) * 2))', () => {
+    let input = 'var(--foo, calc(var(--bar) * 2))';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.KEYWORD);
+  });
 });
+
 describe('parseInteger', () => {
   it.todo('test');
 });
