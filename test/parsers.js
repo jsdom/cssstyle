@@ -61,6 +61,13 @@ describe('valueType', () => {
     assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
+  it('returns color for transparent keyword', () => {
+    let input = 'transparent';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.COLOR);
+  });
+
   it('returns length for 100ch', () => {
     let input = '100ch';
     let output = parsers.valueType(input);
@@ -243,6 +250,13 @@ describe('parseColor', () => {
     let output = parsers.parseColor(input);
 
     assert.strictEqual(output, 'var( --custom-Color /* comment */)');
+  });
+
+  it('should output transparent keyword', () => {
+    let input = 'transparent';
+    let output = parsers.parseColor(input);
+
+    assert.strictEqual(output, 'transparent');
   });
 
   it.todo('Add more tests');
