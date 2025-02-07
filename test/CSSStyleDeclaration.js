@@ -278,6 +278,12 @@ describe('CSSStyleDeclaration', () => {
     assert.strictEqual(style.cssText, 'border: 0px;');
   });
 
+  it('setting borderColor to var() should be okay', () => {
+    var style = new CSSStyleDeclaration();
+    style.borderColor = 'var(--foo)';
+    assert.strictEqual(style.cssText, 'border-color: var(--foo);');
+  });
+
   it('setting values implicit and shorthand properties via csstext and setproperty should propagate to dependent properties', () => {
     var style = new CSSStyleDeclaration();
     style.cssText = 'border: 1px solid black;';
