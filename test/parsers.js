@@ -253,6 +253,89 @@ describe('parseAngle', () => {
 describe('parseKeyword', () => {
   it.todo('test');
 });
+describe('parseImage', () => {
+  it('should return value', () => {
+    let input = 'none';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'none');
+  });
+
+  it('should return value', () => {
+    let input = 'inherit';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'inherit');
+  });
+
+  it('should return undefined', () => {
+    let input = 'foo';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return undefined for negative radii', () => {
+    let input = 'radial-gradient(circle -10px at center, red, blue)';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return empty string', () => {
+    let input = '';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, '');
+  });
+
+  it('should return value', () => {
+    let input = 'url(example.png)';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'url(example.png)');
+  });
+
+  it('should return value', () => {
+    let input = 'url(example.png), url("example2.png")';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'url(example.png), url(example2.png)');
+  });
+
+  it('should return value', () => {
+    let input = 'none, url(example.png)';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'none, url(example.png)');
+  });
+
+  it('should return value', () => {
+    let input = 'linear-gradient(green, blue), url(example.png)';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'linear-gradient(green, blue), url(example.png)');
+  });
+
+  it('should return value as is if var() is included', () => {
+    let input = 'radial-gradient(transparent, /* comment */ var(--custom-color)), url(example.png)';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(
+      output,
+      'radial-gradient(transparent, /* comment */ var(--custom-color)), url(example.png)'
+    );
+  });
+
+  it('should return value as is if var() is included and even if invalid image type is included', () => {
+    let input = 'radial-gradient(transparent, var(--custom-color)), red';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'radial-gradient(transparent, var(--custom-color)), red');
+  });
+
+  it.todo('test');
+});
 describe('dashedToCamelCase', () => {
   it.todo('test');
 });
