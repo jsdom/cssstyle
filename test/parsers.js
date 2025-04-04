@@ -260,11 +260,11 @@ describe('parseColor', () => {
   });
 
   it('does not fail with undefined input', () => {
-    let input = undefined
+    let input = undefined;
     let output = parsers.parseColor(input);
 
     assert.strictEqual(output, undefined);
-  })
+  });
 
   it.todo('Add more tests');
 });
