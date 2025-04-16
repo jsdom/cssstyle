@@ -37,7 +37,7 @@
   ],
   "main": "./lib/CSSStyleDeclaration.js",
   "dependencies": {
-    "@asamuzakjp/css-color": "^3.1.1",
+    "@asamuzakjp/css-color": "^3.1.2",
     "rrweb-cssom": "^0.8.0"
   },
   "devDependencies": {
