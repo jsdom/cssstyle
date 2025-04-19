@@ -176,6 +176,133 @@ describe('parseMeasurement', () => {
   it.todo('test');
 });
 describe('parseUrl', () => {
+  it('should return undefined', () => {
+    let input = 'url(var(--foo))';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return quoted url string', () => {
+    let input = 'url(sample.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("sample.png")');
+  });
+
+  it('should return quoted url string', () => {
+    let input = "url('sample.png')";
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("sample.png")');
+  });
+
+  it('should return quoted url string', () => {
+    let input = 'url("sample.png")';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("sample.png")');
+  });
+
+  it('should return quoted url string without escape', () => {
+    let input = 'url(sample\\-escaped.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("sample-escaped.png")');
+  });
+
+  it('should return quoted url string with escape', () => {
+    let input = 'url(sample\\\\-escaped.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("sample\\\\-escaped.png")');
+  });
+
+  it('should return undefined', () => {
+    let input = 'url(sample unescaped -space.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return quoted url string without escape', () => {
+    let input = 'url(sample\\ escaped\\ -space.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("sample escaped -space.png")');
+  });
+
+  it('should return undefined', () => {
+    let input = 'url(sample\tunescaped\t-tab.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return quoted url string without escape', () => {
+    let input = 'url(sample\\\tescaped\\\t-tab.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("sample\tescaped\t-tab.png")');
+  });
+
+  it('should return undefined', () => {
+    let input = 'url(sample\nunescaped\n-lf.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return quoted url string without escape', () => {
+    let input = 'url(sample\\\nescaped\\\n-lf.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("sample\nescaped\n-lf.png")');
+  });
+
+  it('should return undefined', () => {
+    let input = "url(sample'unescaped'-quote.png)";
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return quoted url string without escape', () => {
+    let input = "url(sample\\'escaped\\'-quote.png)";
+    let output = parsers.parseUrl(input);
+
+    // prettier-ignore
+    assert.strictEqual(output, "url(\"sample'escaped'-quote.png\")");
+  });
+
+  it('should return undefined', () => {
+    let input = 'url(sample"unescaped"-double-quote.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return quoted url string with escape', () => {
+    let input = 'url(sample\\"escaped\\"-double-quote.png)';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("sample\\"escaped\\"-double-quote.png")');
+  });
+
+  it('should return quoted empty url string', () => {
+    let input = 'url()';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("")');
+  });
+
+  it('should return quoted empty url string', () => {
+    let input = 'url("")';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, 'url("")');
+  });
+
   it.todo('test');
 });
 describe('parseString', () => {
@@ -314,28 +441,28 @@ describe('parseImage', () => {
     let input = 'url(example.png)';
     let output = parsers.parseImage(input);
 
-    assert.strictEqual(output, 'url(example.png)');
+    assert.strictEqual(output, 'url("example.png")');
   });
 
   it('should return value', () => {
     let input = 'url(example.png), url("example2.png")';
     let output = parsers.parseImage(input);
 
-    assert.strictEqual(output, 'url(example.png), url(example2.png)');
+    assert.strictEqual(output, 'url("example.png"), url("example2.png")');
   });
 
   it('should return value', () => {
     let input = 'none, url(example.png)';
     let output = parsers.parseImage(input);
 
-    assert.strictEqual(output, 'none, url(example.png)');
+    assert.strictEqual(output, 'none, url("example.png")');
   });
 
   it('should return value', () => {
     let input = 'linear-gradient(green, blue), url(example.png)';
     let output = parsers.parseImage(input);
 
-    assert.strictEqual(output, 'linear-gradient(green, blue), url(example.png)');
+    assert.strictEqual(output, 'linear-gradient(green, blue), url("example.png")');
   });
 
   it('should return value as is if var() is included', () => {
