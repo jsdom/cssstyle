@@ -97,8 +97,8 @@ describe('CSSStyleDeclaration', () => {
     var style = new CSSStyleDeclaration();
     style.background = 'blue url(http://www.example.com/some_img.jpg)';
     assert.strictEqual(style.backgroundColor, 'blue');
-    assert.strictEqual(style.backgroundImage, 'url(http://www.example.com/some_img.jpg)');
-    assert.strictEqual(style.background, 'blue url(http://www.example.com/some_img.jpg)');
+    assert.strictEqual(style.backgroundImage, 'url("http://www.example.com/some_img.jpg")');
+    assert.strictEqual(style.background, 'blue url("http://www.example.com/some_img.jpg")');
     style.border = '0 solid black';
     assert.strictEqual(style.borderWidth, '0px');
     assert.strictEqual(style.borderStyle, 'solid');
@@ -225,8 +225,8 @@ describe('CSSStyleDeclaration', () => {
     var style = new CSSStyleDeclaration();
     style.background = 'rgb(0, 0, 0) url(/something/somewhere.jpg)';
     assert.strictEqual(style.backgroundColor, 'rgb(0, 0, 0)');
-    assert.strictEqual(style.backgroundImage, 'url(/something/somewhere.jpg)');
-    assert.strictEqual(style.cssText, 'background: rgb(0, 0, 0) url(/something/somewhere.jpg);');
+    assert.strictEqual(style.backgroundImage, 'url("/something/somewhere.jpg")');
+    assert.strictEqual(style.cssText, 'background: rgb(0, 0, 0) url("/something/somewhere.jpg");');
     style = new CSSStyleDeclaration();
     style.border = '  1px  solid   black  ';
     assert.strictEqual(style.border, '1px solid black');
@@ -546,11 +546,11 @@ describe('CSSStyleDeclaration', () => {
   it('url parsing works with quotes', () => {
     var style = new CSSStyleDeclaration();
     style.backgroundImage = 'url(http://some/url/here1.png)';
-    assert.strictEqual(style.backgroundImage, 'url(http://some/url/here1.png)');
+    assert.strictEqual(style.backgroundImage, 'url("http://some/url/here1.png")');
     style.backgroundImage = "url('http://some/url/here2.png')";
-    assert.strictEqual(style.backgroundImage, 'url(http://some/url/here2.png)');
+    assert.strictEqual(style.backgroundImage, 'url("http://some/url/here2.png")');
     style.backgroundImage = 'url("http://some/url/here3.png")';
-    assert.strictEqual(style.backgroundImage, 'url(http://some/url/here3.png)');
+    assert.strictEqual(style.backgroundImage, 'url("http://some/url/here3.png")');
   });
 
   it('setting 0 to a padding or margin works', () => {
