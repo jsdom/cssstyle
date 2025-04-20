@@ -173,6 +173,13 @@ describe('parseMeasurement', () => {
     assert.strictEqual(output, 'calc(20% + 10px)');
   });
 
+  it('should return serialized value', () => {
+    let input = 'calc(10px + 100vh)';
+    let output = parsers.parseMeasurement(input);
+
+    assert.strictEqual(output, 'calc(10px + 100vh)');
+  });
+
   it.todo('test');
 });
 describe('parseUrl', () => {
