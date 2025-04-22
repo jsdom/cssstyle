@@ -5,6 +5,154 @@ const assert = require('node:assert/strict');
 const parsers = require('../lib/parsers');
 
 describe('valueType', () => {
+  it('returns null or empty string for null', () => {
+    let input = null;
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.NULL_OR_EMPTY_STR);
+  });
+
+  it('returns null or empty string for empty string', () => {
+    let input = '';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.NULL_OR_EMPTY_STR);
+  });
+
+  it('returns undefined for undefined', () => {
+    let input = undefined;
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('returns integer for 1', () => {
+    let input = 1;
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.INTEGER);
+  });
+
+  it('returns number for 1.1', () => {
+    let input = 1.1;
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.NUMBER);
+  });
+
+  it('returns length for 100ch', () => {
+    let input = '100ch';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.LENGTH);
+  });
+
+  it('returns percent for 10%', () => {
+    let input = '10%';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.PERCENT);
+  });
+
+  it('returns url for url(https://example.com)', () => {
+    let input = 'url(https://example.com)';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.URL);
+  });
+
+  it('returns url for url("https://example.com")', () => {
+    let input = 'url("https://example.com")';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.URL);
+  });
+
+  it('returns url for url(foo.png)', () => {
+    let input = 'url(foo.png)';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.URL);
+  });
+
+  it('returns url for url("foo.png")', () => {
+    let input = 'url("foo.png")';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.URL);
+  });
+
+  // FIXME: Should return undefined in this case?
+  it('returns var for url(var(--foo))', () => {
+    let input = 'url(var(--foo))';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.VAR);
+  });
+
+  it('returns var from calc(100px *  var(--foo))', () => {
+    let input = 'calc(100px *  var(--foo))';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.VAR);
+  });
+
+  it('returns var from var(--foo)', () => {
+    let input = 'var(--foo)';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.VAR);
+  });
+
+  it('returns var from var(--foo, var(--bar))', () => {
+    let input = 'var(--foo, var(--bar))';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.VAR);
+  });
+
+  it('returns var from var(--foo, calc(var(--bar) * 2))', () => {
+    let input = 'var(--foo, calc(var(--bar) * 2))';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.VAR);
+  });
+
+  it('returns calc from calc(100px * 2)', () => {
+    let input = 'calc(100px * 2)';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.CALC);
+  });
+
+  it('returns calc from calc(100px *  calc(2 * 1))', () => {
+    let input = 'calc(100px * calc(2 * 1))';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.CALC);
+  });
+
+  it('returns string from "foo"', () => {
+    let input = '"foo"';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.STRING);
+  });
+
+  it("returns string from 'foo'", () => {
+    let input = "'foo'";
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.STRING);
+  });
+
+  it('returns angle for 90deg', () => {
+    let input = '90deg';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.ANGLE);
+  });
+
   it('returns color for red', () => {
     let input = 'red';
     let output = parsers.valueType(input);
@@ -68,53 +216,25 @@ describe('valueType', () => {
     assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
-  it('returns length for 100ch', () => {
-    let input = '100ch';
+  it('returns gradient for linear-gradient(red, blue)', () => {
+    let input = 'linear-gradient(red, blue)';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.LENGTH);
+    assert.strictEqual(output, parsers.TYPES.GRADIENT);
   });
 
-  it('returns var from calc(100px *  var(--foo))', () => {
-    let input = 'calc(100px *  var(--foo))';
+  it('returns color for legacy activeborder', () => {
+    let input = 'ActiveBorder';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.VAR);
+    assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
-  it('returns var from var(--foo)', () => {
-    let input = 'var(--foo)';
+  it('returns keyword for else', () => {
+    let input = 'foo';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.VAR);
-  });
-
-  it('returns var from var(--foo, var(--bar))', () => {
-    let input = 'var(--foo, var(--bar))';
-    let output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.VAR);
-  });
-
-  it('returns var from var(--foo, calc(var(--bar) * 2))', () => {
-    let input = 'var(--foo, calc(var(--bar) * 2))';
-    let output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.VAR);
-  });
-
-  it('returns calc from calc(100px * 2)', () => {
-    let input = 'calc(100px * 2)';
-    let output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.CALC);
-  });
-
-  it('returns calc from calc(100px *  calc(2 * 1))', () => {
-    let input = 'calc(100px * calc(2 * 1))';
-    let output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.CALC);
+    assert.strictEqual(output, parsers.TYPES.KEYWORD);
   });
 });
 
