@@ -82,12 +82,11 @@ describe('valueType', () => {
     assert.strictEqual(output, parsers.TYPES.URL);
   });
 
-  // FIXME: Should return undefined in this case?
-  it('returns var for url(var(--foo))', () => {
+  it('returns undefined for url(var(--foo))', () => {
     let input = 'url(var(--foo))';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.VAR);
+    assert.strictEqual(output, undefined);
   });
 
   it('returns var from calc(100px *  var(--foo))', () => {
