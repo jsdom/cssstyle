@@ -328,6 +328,13 @@ describe('parseNumber', () => {
 
     assert.strictEqual(output, '0.5');
   });
+
+  it('should return calculated value', () => {
+    let input = 'calc(2 / 3)';
+    let output = parsers.parseLength(input);
+
+    assert.strictEqual(output, 'calc(0.666667)');
+  });
 });
 
 describe('parseLength', () => {
