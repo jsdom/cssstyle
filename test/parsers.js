@@ -900,9 +900,37 @@ describe('parseImage', () => {
 
   it.todo('test');
 });
+
 describe('dashedToCamelCase', () => {
-  it.todo('test');
+  it('should not camelize custom property', () => {
+    let input = '--foo-bar-baz';
+    let output = parsers.dashedToCamelCase(input);
+
+    assert.strictEqual(output, '--foo-bar-baz');
+  });
+
+  it('should camelize value', () => {
+    let input = 'foo-bar-baz';
+    let output = parsers.dashedToCamelCase(input);
+
+    assert.strictEqual(output, 'fooBarBaz');
+  });
+
+  it('should camelize vendor prefixed value', () => {
+    let input = '-webkit-foo';
+    let output = parsers.dashedToCamelCase(input);
+
+    assert.strictEqual(output, 'webkitFoo');
+  });
+
+  it('should not camelize snake cased value', () => {
+    let input = 'foo_bar_baz';
+    let output = parsers.dashedToCamelCase(input);
+
+    assert.strictEqual(output, 'foo_bar_baz');
+  });
 });
+
 describe('shorthandParser', () => {
   it.todo('test');
 });
