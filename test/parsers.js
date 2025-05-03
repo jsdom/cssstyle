@@ -542,11 +542,11 @@ describe('parseInheritingMeasurement', () => {
 });
 
 describe('parseUrl', () => {
-  it('should return null', () => {
+  it('should return empty string', () => {
     let input = null;
     let output = parsers.parseUrl(input);
 
-    assert.strictEqual(output, null);
+    assert.strictEqual(output, '');
   });
 
   it('should return empty string', () => {
@@ -696,11 +696,11 @@ describe('parseString', () => {
 });
 
 describe('parseColor', () => {
-  it('should return null', () => {
+  it('should return empty string', () => {
     let input = null;
     let output = parsers.parseColor(input);
 
-    assert.strictEqual(output, null);
+    assert.strictEqual(output, '');
   });
 
   it('should return empty string', () => {
@@ -715,6 +715,13 @@ describe('parseColor', () => {
     let output = parsers.parseColor(input);
 
     assert.strictEqual(output, undefined);
+  });
+
+  it('should return inherit', () => {
+    let input = 'inherit';
+    let output = parsers.parseColor(input);
+
+    assert.strictEqual(output, 'inherit');
   });
 
   it('should convert hsl to rgb values', () => {
@@ -814,24 +821,36 @@ describe('parseAngle', () => {
 });
 
 describe('parseKeyword', () => {
-  it.todo('test');
-});
-
-describe('parseImage', () => {
-  it('should return value', () => {
-    let input = 'none';
-    let output = parsers.parseImage(input);
-
-    assert.strictEqual(output, 'none');
-  });
-
   it('should return value', () => {
     let input = 'inherit';
-    let output = parsers.parseImage(input);
+    let output = parsers.parseKeyword(input);
 
     assert.strictEqual(output, 'inherit');
   });
 
+  it('should return value', () => {
+    let input = 'foo';
+    let output = parsers.parseKeyword(input, ['foo', 'bar']);
+
+    assert.strictEqual(output, 'foo');
+  });
+
+  it('should return value', () => {
+    let input = 'Bar';
+    let output = parsers.parseKeyword(input, ['foo', 'bar']);
+
+    assert.strictEqual(output, 'bar');
+  });
+
+  it('should return undefined', () => {
+    let input = 'baz';
+    let output = parsers.parseKeyword(input, ['foo', 'bar']);
+
+    assert.strictEqual(output, undefined);
+  });
+});
+
+describe('parseImage', () => {
   it('should return empty string', () => {
     let input = '';
     let output = parsers.parseImage(input);
@@ -839,11 +858,11 @@ describe('parseImage', () => {
     assert.strictEqual(output, '');
   });
 
-  it('should return null', () => {
+  it('should return empty string', () => {
     let input = null;
     let output = parsers.parseImage(input);
 
-    assert.strictEqual(output, null);
+    assert.strictEqual(output, '');
   });
 
   it('should return undefined', () => {
@@ -851,6 +870,20 @@ describe('parseImage', () => {
     let output = parsers.parseImage(input);
 
     assert.strictEqual(output, undefined);
+  });
+
+  it('should return none', () => {
+    let input = 'none';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'none');
+  });
+
+  it('should return inherit', () => {
+    let input = 'inherit';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'inherit');
   });
 
   it('should return undefined for negative radii', () => {
@@ -944,8 +977,93 @@ describe('dashedToCamelCase', () => {
 });
 
 describe('shorthandParser', () => {
+  const flexGrow = require('../lib/properties/flexGrow');
+  const flexShrink = require('../lib/properties/flexShrink');
+  const flexBasis = require('../lib/properties/flexBasis');
+  const shorthandFor = {
+    'flex-grow': flexGrow,
+    'flex-shrink': flexShrink,
+    'flex-basis': flexBasis,
+  };
+
+  it('should return undefined for keyword', () => {
+    let input = 'none';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return object', () => {
+    let input = '0 0 auto';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-grow': '0',
+      'flex-shrink': '0',
+      'flex-basis': 'auto',
+    });
+  });
+
+  it('should return object', () => {
+    let input = '0 1 auto';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-grow': '0',
+      'flex-shrink': '1',
+      'flex-basis': 'auto',
+    });
+  });
+
+  it('should return object', () => {
+    let input = '2';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-grow': '2',
+    });
+  });
+
+  it('should return object', () => {
+    let input = '2 1';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-grow': '2',
+      'flex-shrink': '1',
+    });
+  });
+
+  it('should return object', () => {
+    let input = '10px';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-basis': '10px',
+    });
+  });
+
+  it('should return object', () => {
+    let input = '2 10px';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-grow': '2',
+      'flex-basis': '10px',
+    });
+  });
+
+  // FIXME:
+  it.skip('should return undefined', () => {
+    let input = '2 10px 20px';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, undefined);
+  });
+
   it.todo('test');
 });
+
 describe('shorthandSetter', () => {
   it.todo('test');
 });
@@ -958,6 +1076,33 @@ describe('implicitSetter', () => {
 describe('subImplicitSetter', () => {
   it.todo('test');
 });
+
 describe('camelToDashed', () => {
-  it.todo('test');
+  it('should return dashed value', () => {
+    let input = 'fooBarBaz';
+    let output = parsers.camelToDashed(input);
+
+    assert.strictEqual(output, 'foo-bar-baz');
+  });
+
+  it('should return dashed value', () => {
+    let input = 'FooBarBaz';
+    let output = parsers.camelToDashed(input);
+
+    assert.strictEqual(output, 'foo-bar-baz');
+  });
+
+  it('should return dashed value', () => {
+    let input = 'webkitFooBar';
+    let output = parsers.camelToDashed(input);
+
+    assert.strictEqual(output, '-webkit-foo-bar');
+  });
+
+  it('should return dashed value', () => {
+    let input = 'WebkitFooBar';
+    let output = parsers.camelToDashed(input);
+
+    assert.strictEqual(output, '-webkit-foo-bar');
+  });
 });
