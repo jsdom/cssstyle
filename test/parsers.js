@@ -89,18 +89,18 @@ describe('valueType', () => {
     assert.strictEqual(output, parsers.TYPES.UNIDENT);
   });
 
-  it('returns var for url(var(--foo))', () => {
+  it('returns unidentified for url(var(--foo))', () => {
     let input = 'url(var(--foo))';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.VAR);
+    assert.strictEqual(output, parsers.TYPES.UNIDENT);
   });
 
-  it('returns var from calc(100px *  var(--foo))', () => {
+  it('returns calc from calc(100px *  var(--foo))', () => {
     let input = 'calc(100px *  var(--foo))';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.VAR);
+    assert.strictEqual(output, parsers.TYPES.CALC);
   });
 
   it('returns var from var(--foo)', () => {
@@ -800,6 +800,13 @@ describe('parseColor', () => {
 
     assert.strictEqual(output, 'transparent');
   });
+
+  it('should return value as is with var()', () => {
+    let input = 'rgb(var(--my-var, 0, 0, 0))';
+    let output = parsers.parseColor(input);
+
+    assert.strictEqual(output, 'rgb(var(--my-var, 0, 0, 0))');
+  });
 });
 
 describe('parseAngle', () => {
@@ -887,18 +894,23 @@ describe('parseImage', () => {
 
     assert.strictEqual(
       output,
-      'radial-gradient(transparent, /* comment */ var(--custom-color)), url(example.png)'
+      'radial-gradient(transparent, /* comment */ var(--custom-color)), url("example.png")'
     );
   });
 
-  it('should return value as is if var() is included and even if invalid image type is included', () => {
+  it('should return undefined if invalid image type is included', () => {
     let input = 'radial-gradient(transparent, var(--custom-color)), red';
     let output = parsers.parseImage(input);
 
-    assert.strictEqual(output, 'radial-gradient(transparent, var(--custom-color)), red');
+    assert.strictEqual(output, undefined);
   });
 
-  it.todo('test');
+  it('should return undefined if value is not image type', () => {
+    let input = 'rgb(var(--my-var, 0, 0, 0))';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, undefined);
+  });
 });
 
 describe('dashedToCamelCase', () => {
