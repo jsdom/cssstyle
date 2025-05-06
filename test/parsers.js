@@ -23,18 +23,25 @@ describe('valueType', () => {
     let input = undefined;
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, undefined);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
   });
 
-  it('returns integer for 1', () => {
+  it('returns number for 1', () => {
     let input = 1;
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.INTEGER);
+    assert.strictEqual(output, parsers.TYPES.NUMBER);
   });
 
   it('returns number for 1.1', () => {
     let input = 1.1;
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.NUMBER);
+  });
+
+  it('returns number for ".1"', () => {
+    let input = '.1';
     let output = parsers.valueType(input);
 
     assert.strictEqual(output, parsers.TYPES.NUMBER);
@@ -54,46 +61,46 @@ describe('valueType', () => {
     assert.strictEqual(output, parsers.TYPES.PERCENT);
   });
 
-  it('returns url for url(https://example.com)', () => {
+  it('returns unidentified for url(https://example.com)', () => {
     let input = 'url(https://example.com)';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.URL);
+    assert.strictEqual(output, parsers.TYPES.UNIDENT);
   });
 
-  it('returns url for url("https://example.com")', () => {
+  it('returns unidentified for url("https://example.com")', () => {
     let input = 'url("https://example.com")';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.URL);
+    assert.strictEqual(output, parsers.TYPES.UNIDENT);
   });
 
-  it('returns url for url(foo.png)', () => {
+  it('returns unidentified for url(foo.png)', () => {
     let input = 'url(foo.png)';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.URL);
+    assert.strictEqual(output, parsers.TYPES.UNIDENT);
   });
 
-  it('returns url for url("foo.png")', () => {
+  it('returns unidentified for url("foo.png")', () => {
     let input = 'url("foo.png")';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.URL);
+    assert.strictEqual(output, parsers.TYPES.UNIDENT);
   });
 
-  it('returns undefined for url(var(--foo))', () => {
+  it('returns unidentified for url(var(--foo))', () => {
     let input = 'url(var(--foo))';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, undefined);
+    assert.strictEqual(output, parsers.TYPES.UNIDENT);
   });
 
-  it('returns var from calc(100px *  var(--foo))', () => {
+  it('returns calc from calc(100px *  var(--foo))', () => {
     let input = 'calc(100px *  var(--foo))';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.VAR);
+    assert.strictEqual(output, parsers.TYPES.CALC);
   });
 
   it('returns var from var(--foo)', () => {
@@ -215,11 +222,18 @@ describe('valueType', () => {
     assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
-  it('returns gradient for linear-gradient(red, blue)', () => {
+  it('returns unidentified for linear-gradient(red, blue)', () => {
     let input = 'linear-gradient(red, blue)';
     let output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.GRADIENT);
+    assert.strictEqual(output, parsers.TYPES.UNIDENT);
+  });
+
+  it('returns color for accentcolor', () => {
+    let input = 'AccentColor';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
   it('returns color for legacy activeborder', () => {
@@ -229,27 +243,196 @@ describe('valueType', () => {
     assert.strictEqual(output, parsers.TYPES.COLOR);
   });
 
-  it('returns keyword for else', () => {
+  it('returns keyword for foo', () => {
     let input = 'foo';
     let output = parsers.valueType(input);
 
     assert.strictEqual(output, parsers.TYPES.KEYWORD);
   });
+
+  it('returns keyword for foo-bar', () => {
+    let input = 'foo-bar';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.KEYWORD);
+  });
+
+  it('returns unidentified for foo(bar)', () => {
+    let input = 'foo(bar)';
+    let output = parsers.valueType(input);
+
+    assert.strictEqual(output, parsers.TYPES.UNIDENT);
+  });
 });
 
-describe('parseInteger', () => {
-  it.todo('test');
-});
 describe('parseNumber', () => {
-  it.todo('test');
+  it('should return null', () => {
+    let input = null;
+    let output = parsers.parseNumber(input);
+
+    assert.strictEqual(output, null);
+  });
+
+  it('should return empty string', () => {
+    let input = '';
+    let output = parsers.parseNumber(input);
+
+    assert.strictEqual(output, '');
+  });
+
+  it('should return undefined', () => {
+    let input = 'foo';
+    let output = parsers.parseNumber(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return undefined', () => {
+    let input = undefined;
+    let output = parsers.parseNumber(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return "1"', () => {
+    let input = 1;
+    let output = parsers.parseNumber(input);
+
+    assert.strictEqual(output, '1');
+  });
+
+  it('should return "1"', () => {
+    let input = '1';
+    let output = parsers.parseNumber(input);
+
+    assert.strictEqual(output, '1');
+  });
+
+  it('should return "0.5"', () => {
+    let input = 0.5;
+    let output = parsers.parseNumber(input);
+
+    assert.strictEqual(output, '0.5');
+  });
+
+  it('should return "0.5"', () => {
+    let input = '0.5';
+    let output = parsers.parseNumber(input);
+
+    assert.strictEqual(output, '0.5');
+  });
+
+  it('should return "0.5"', () => {
+    let input = '.5';
+    let output = parsers.parseNumber(input);
+
+    assert.strictEqual(output, '0.5');
+  });
+
+  it('should return calculated value', () => {
+    let input = 'calc(2 / 3)';
+    let output = parsers.parseLength(input);
+
+    assert.strictEqual(output, 'calc(0.666667)');
+  });
 });
+
 describe('parseLength', () => {
-  it.todo('test');
+  it('should return null', () => {
+    let input = null;
+    let output = parsers.parseLength(input);
+
+    assert.strictEqual(output, null);
+  });
+
+  it('should return empty string', () => {
+    let input = '';
+    let output = parsers.parseLength(input);
+
+    assert.strictEqual(output, '');
+  });
+
+  it('should return value as is', () => {
+    let input = 'var(/* comment */ --foo)';
+    let output = parsers.parseLength(input);
+
+    assert.strictEqual(output, 'var(/* comment */ --foo)');
+  });
+
+  it('should return calculated value', () => {
+    let input = 'calc(2em / 3)';
+    let output = parsers.parseLength(input);
+
+    assert.strictEqual(output, 'calc(0.666667em)');
+  });
+
+  it('should return serialized value', () => {
+    let input = 'calc(10px + 20%)';
+    let output = parsers.parseLength(input);
+
+    assert.strictEqual(output, 'calc(20% + 10px)');
+  });
+
+  it('should return serialized value', () => {
+    let input = 'calc(100vh + 10px)';
+    let output = parsers.parseLength(input);
+
+    assert.strictEqual(output, 'calc(10px + 100vh)');
+  });
 });
+
 describe('parsePercent', () => {
-  it.todo('test');
+  it('should return null', () => {
+    let input = null;
+    let output = parsers.parsePercent(input);
+
+    assert.strictEqual(output, null);
+  });
+
+  it('should return empty string', () => {
+    let input = '';
+    let output = parsers.parsePercent(input);
+
+    assert.strictEqual(output, '');
+  });
+
+  it('should return value as is', () => {
+    let input = 'var(/* comment */ --foo)';
+    let output = parsers.parsePercent(input);
+
+    assert.strictEqual(output, 'var(/* comment */ --foo)');
+  });
+
+  it('should return calculated value', () => {
+    let input = 'calc(100% / 3)';
+    let output = parsers.parsePercent(input);
+
+    assert.strictEqual(output, 'calc(33.3333%)');
+  });
+
+  it('should return serialized value', () => {
+    let input = 'calc(10px + 20%)';
+    let output = parsers.parsePercent(input);
+
+    assert.strictEqual(output, 'calc(20% + 10px)');
+  });
 });
+
 describe('parseMeasurement', () => {
+  it('should return null', () => {
+    let input = null;
+    let output = parsers.parseMeasurement(input);
+
+    assert.strictEqual(output, null);
+  });
+
+  it('should return empty string', () => {
+    let input = '';
+    let output = parsers.parseMeasurement(input);
+
+    assert.strictEqual(output, '');
+  });
+
   it('should return value with em unit', () => {
     let input = '1em';
     let output = parsers.parseMeasurement(input);
@@ -293,17 +476,95 @@ describe('parseMeasurement', () => {
   });
 
   it('should return serialized value', () => {
-    let input = 'calc(10px + 100vh)';
+    let input = 'calc(100vh + 10px)';
     let output = parsers.parseMeasurement(input);
 
     assert.strictEqual(output, 'calc(10px + 100vh)');
   });
 
-  it.todo('test');
+  it('should return 0px for 0', () => {
+    let input = 0;
+    let output = parsers.parseMeasurement(input);
+
+    assert.strictEqual(output, '0px');
+  });
+
+  it('should return 0px for "0"', () => {
+    let input = '0';
+    let output = parsers.parseMeasurement(input);
+
+    assert.strictEqual(output, '0px');
+  });
 });
+
+describe('parseInheritingMeasurement', () => {
+  it('should return auto', () => {
+    let input = 'auto';
+    let output = parsers.parseInheritingMeasurement(input);
+
+    assert.strictEqual(output, 'auto');
+  });
+
+  it('should return auto', () => {
+    let input = 'AUTO';
+    let output = parsers.parseInheritingMeasurement(input);
+
+    assert.strictEqual(output, 'auto');
+  });
+
+  it('should return inherit', () => {
+    let input = 'inherit';
+    let output = parsers.parseInheritingMeasurement(input);
+
+    assert.strictEqual(output, 'inherit');
+  });
+
+  it('should return inherit', () => {
+    let input = 'INHERIT';
+    let output = parsers.parseInheritingMeasurement(input);
+
+    assert.strictEqual(output, 'inherit');
+  });
+
+  it('should return value with em unit', () => {
+    let input = '1em';
+    let output = parsers.parseInheritingMeasurement(input);
+
+    assert.strictEqual(output, '1em');
+  });
+
+  it('should return value with percent', () => {
+    let input = '100%';
+    let output = parsers.parseInheritingMeasurement(input);
+
+    assert.strictEqual(output, '100%');
+  });
+});
+
 describe('parseUrl', () => {
+  it('should return empty string', () => {
+    let input = null;
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, '');
+  });
+
+  it('should return empty string', () => {
+    let input = '';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, '');
+  });
+
   it('should return undefined', () => {
     let input = 'url(var(--foo))';
+    let output = parsers.parseUrl(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return undefined', () => {
+    let input = undefined;
     let output = parsers.parseUrl(input);
 
     assert.strictEqual(output, undefined);
@@ -428,13 +689,41 @@ describe('parseUrl', () => {
 
     assert.strictEqual(output, 'url("")');
   });
-
-  it.todo('test');
 });
+
 describe('parseString', () => {
   it.todo('test');
 });
+
 describe('parseColor', () => {
+  it('should return empty string', () => {
+    let input = null;
+    let output = parsers.parseColor(input);
+
+    assert.strictEqual(output, '');
+  });
+
+  it('should return empty string', () => {
+    let input = '';
+    let output = parsers.parseColor(input);
+
+    assert.strictEqual(output, '');
+  });
+
+  it('should return undefined', () => {
+    let input = undefined;
+    let output = parsers.parseColor(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return inherit', () => {
+    let input = 'inherit';
+    let output = parsers.parseColor(input);
+
+    assert.strictEqual(output, 'inherit');
+  });
+
   it('should convert hsl to rgb values', () => {
     let input = 'hsla(0, 1%, 2%)';
     let output = parsers.parseColor(input);
@@ -519,27 +808,61 @@ describe('parseColor', () => {
     assert.strictEqual(output, 'transparent');
   });
 
-  it.todo('Add more tests');
+  it('should return value as is with var()', () => {
+    let input = 'rgb(var(--my-var, 0, 0, 0))';
+    let output = parsers.parseColor(input);
+
+    assert.strictEqual(output, 'rgb(var(--my-var, 0, 0, 0))');
+  });
 });
+
 describe('parseAngle', () => {
   it.todo('test');
 });
-describe('parseKeyword', () => {
-  it.todo('test');
-});
-describe('parseImage', () => {
-  it('should return value', () => {
-    let input = 'none';
-    let output = parsers.parseImage(input);
 
-    assert.strictEqual(output, 'none');
+describe('parseKeyword', () => {
+  it('should return value', () => {
+    let input = 'inherit';
+    let output = parsers.parseKeyword(input);
+
+    assert.strictEqual(output, 'inherit');
   });
 
   it('should return value', () => {
-    let input = 'inherit';
+    let input = 'foo';
+    let output = parsers.parseKeyword(input, ['foo', 'bar']);
+
+    assert.strictEqual(output, 'foo');
+  });
+
+  it('should return value', () => {
+    let input = 'Bar';
+    let output = parsers.parseKeyword(input, ['foo', 'bar']);
+
+    assert.strictEqual(output, 'bar');
+  });
+
+  it('should return undefined', () => {
+    let input = 'baz';
+    let output = parsers.parseKeyword(input, ['foo', 'bar']);
+
+    assert.strictEqual(output, undefined);
+  });
+});
+
+describe('parseImage', () => {
+  it('should return empty string', () => {
+    let input = '';
     let output = parsers.parseImage(input);
 
-    assert.strictEqual(output, 'inherit');
+    assert.strictEqual(output, '');
+  });
+
+  it('should return empty string', () => {
+    let input = null;
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, '');
   });
 
   it('should return undefined', () => {
@@ -549,18 +872,25 @@ describe('parseImage', () => {
     assert.strictEqual(output, undefined);
   });
 
+  it('should return none', () => {
+    let input = 'none';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'none');
+  });
+
+  it('should return inherit', () => {
+    let input = 'inherit';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, 'inherit');
+  });
+
   it('should return undefined for negative radii', () => {
     let input = 'radial-gradient(circle -10px at center, red, blue)';
     let output = parsers.parseImage(input);
 
     assert.strictEqual(output, undefined);
-  });
-
-  it('should return empty string', () => {
-    let input = '';
-    let output = parsers.parseImage(input);
-
-    assert.strictEqual(output, '');
   });
 
   it('should return value', () => {
@@ -597,25 +927,143 @@ describe('parseImage', () => {
 
     assert.strictEqual(
       output,
-      'radial-gradient(transparent, /* comment */ var(--custom-color)), url(example.png)'
+      'radial-gradient(transparent, /* comment */ var(--custom-color)), url("example.png")'
     );
   });
 
-  it('should return value as is if var() is included and even if invalid image type is included', () => {
+  it('should return undefined if invalid image type is included', () => {
     let input = 'radial-gradient(transparent, var(--custom-color)), red';
     let output = parsers.parseImage(input);
 
-    assert.strictEqual(output, 'radial-gradient(transparent, var(--custom-color)), red');
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return undefined if value is not image type', () => {
+    let input = 'rgb(var(--my-var, 0, 0, 0))';
+    let output = parsers.parseImage(input);
+
+    assert.strictEqual(output, undefined);
+  });
+});
+
+describe('dashedToCamelCase', () => {
+  it('should not camelize custom property', () => {
+    let input = '--foo-bar-baz';
+    let output = parsers.dashedToCamelCase(input);
+
+    assert.strictEqual(output, '--foo-bar-baz');
+  });
+
+  it('should camelize value', () => {
+    let input = 'foo-bar-baz';
+    let output = parsers.dashedToCamelCase(input);
+
+    assert.strictEqual(output, 'fooBarBaz');
+  });
+
+  it('should camelize vendor prefixed value', () => {
+    let input = '-webkit-foo';
+    let output = parsers.dashedToCamelCase(input);
+
+    assert.strictEqual(output, 'webkitFoo');
+  });
+
+  it('should not camelize snake cased value', () => {
+    let input = 'foo_bar_baz';
+    let output = parsers.dashedToCamelCase(input);
+
+    assert.strictEqual(output, 'foo_bar_baz');
+  });
+});
+
+describe('shorthandParser', () => {
+  const flexGrow = require('../lib/properties/flexGrow');
+  const flexShrink = require('../lib/properties/flexShrink');
+  const flexBasis = require('../lib/properties/flexBasis');
+  const shorthandFor = {
+    'flex-grow': flexGrow,
+    'flex-shrink': flexShrink,
+    'flex-basis': flexBasis,
+  };
+
+  it('should return undefined for keyword', () => {
+    let input = 'none';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it('should return object', () => {
+    let input = '0 0 auto';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-grow': '0',
+      'flex-shrink': '0',
+      'flex-basis': 'auto',
+    });
+  });
+
+  it('should return object', () => {
+    let input = '0 1 auto';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-grow': '0',
+      'flex-shrink': '1',
+      'flex-basis': 'auto',
+    });
+  });
+
+  it('should return object', () => {
+    let input = '2';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-grow': '2',
+    });
+  });
+
+  it('should return object', () => {
+    let input = '2 1';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-grow': '2',
+      'flex-shrink': '1',
+    });
+  });
+
+  it('should return object', () => {
+    let input = '10px';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-basis': '10px',
+    });
+  });
+
+  it('should return object', () => {
+    let input = '2 10px';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, {
+      'flex-grow': '2',
+      'flex-basis': '10px',
+    });
+  });
+
+  // FIXME:
+  it.skip('should return undefined', () => {
+    let input = '2 10px 20px';
+    let output = parsers.shorthandParser(input, shorthandFor);
+
+    assert.deepEqual(output, undefined);
   });
 
   it.todo('test');
 });
-describe('dashedToCamelCase', () => {
-  it.todo('test');
-});
-describe('shorthandParser', () => {
-  it.todo('test');
-});
+
 describe('shorthandSetter', () => {
   it.todo('test');
 });
@@ -628,6 +1076,33 @@ describe('implicitSetter', () => {
 describe('subImplicitSetter', () => {
   it.todo('test');
 });
+
 describe('camelToDashed', () => {
-  it.todo('test');
+  it('should return dashed value', () => {
+    let input = 'fooBarBaz';
+    let output = parsers.camelToDashed(input);
+
+    assert.strictEqual(output, 'foo-bar-baz');
+  });
+
+  it('should return dashed value', () => {
+    let input = 'FooBarBaz';
+    let output = parsers.camelToDashed(input);
+
+    assert.strictEqual(output, 'foo-bar-baz');
+  });
+
+  it('should return dashed value', () => {
+    let input = 'webkitFooBar';
+    let output = parsers.camelToDashed(input);
+
+    assert.strictEqual(output, '-webkit-foo-bar');
+  });
+
+  it('should return dashed value', () => {
+    let input = 'WebkitFooBar';
+    let output = parsers.camelToDashed(input);
+
+    assert.strictEqual(output, '-webkit-foo-bar');
+  });
 });
