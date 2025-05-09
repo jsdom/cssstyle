@@ -7,11 +7,11 @@ var { CSSStyleDeclaration } = require('../lib/CSSStyleDeclaration');
 var allProperties = require('../lib/allProperties');
 var allExtraProperties = require('../lib/allExtraProperties');
 var implementedProperties = require('../lib/implementedProperties');
-var parsers = require('../lib/parsers');
+var camelize = require('../lib/utils/camelize');
 
 var dashedProperties = [...allProperties, ...allExtraProperties];
-var allowedProperties = dashedProperties.map(parsers.dashedToCamelCase);
-implementedProperties = Array.from(implementedProperties).map(parsers.dashedToCamelCase);
+var allowedProperties = dashedProperties.map(camelize.dashedToCamelCase);
+implementedProperties = Array.from(implementedProperties).map(camelize.dashedToCamelCase);
 var invalidProperties = implementedProperties.filter((prop) => !allowedProperties.includes(prop));
 
 describe('CSSStyleDeclaration', () => {

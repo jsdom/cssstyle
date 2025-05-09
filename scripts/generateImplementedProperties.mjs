@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { camelToDashed } from '../lib/parsers.js';
+import { camelCaseToDashed } from '../lib/utils/camelize.js';
 
 const dashedProperties = fs
   .readdirSync(resolve('../lib/properties'))
   .filter((propertyFile) => path.extname(propertyFile) === '.js')
-  .map((propertyFile) => camelToDashed(path.basename(propertyFile, '.js')));
+  .map((propertyFile) => camelCaseToDashed(path.basename(propertyFile, '.js')));
 
 const outputFile = resolve('../lib/implementedProperties.js');
 

@@ -946,36 +946,6 @@ describe('parseImage', () => {
   });
 });
 
-describe('dashedToCamelCase', () => {
-  it('should not camelize custom property', () => {
-    let input = '--foo-bar-baz';
-    let output = parsers.dashedToCamelCase(input);
-
-    assert.strictEqual(output, '--foo-bar-baz');
-  });
-
-  it('should camelize value', () => {
-    let input = 'foo-bar-baz';
-    let output = parsers.dashedToCamelCase(input);
-
-    assert.strictEqual(output, 'fooBarBaz');
-  });
-
-  it('should camelize vendor prefixed value', () => {
-    let input = '-webkit-foo';
-    let output = parsers.dashedToCamelCase(input);
-
-    assert.strictEqual(output, 'webkitFoo');
-  });
-
-  it('should not camelize snake cased value', () => {
-    let input = 'foo_bar_baz';
-    let output = parsers.dashedToCamelCase(input);
-
-    assert.strictEqual(output, 'foo_bar_baz');
-  });
-});
-
 describe('shorthandParser', () => {
   const flexGrow = require('../lib/properties/flexGrow');
   const flexShrink = require('../lib/properties/flexShrink');
@@ -1075,34 +1045,4 @@ describe('implicitSetter', () => {
 });
 describe('subImplicitSetter', () => {
   it.todo('test');
-});
-
-describe('camelToDashed', () => {
-  it('should return dashed value', () => {
-    let input = 'fooBarBaz';
-    let output = parsers.camelToDashed(input);
-
-    assert.strictEqual(output, 'foo-bar-baz');
-  });
-
-  it('should return dashed value', () => {
-    let input = 'FooBarBaz';
-    let output = parsers.camelToDashed(input);
-
-    assert.strictEqual(output, 'foo-bar-baz');
-  });
-
-  it('should return dashed value', () => {
-    let input = 'webkitFooBar';
-    let output = parsers.camelToDashed(input);
-
-    assert.strictEqual(output, '-webkit-foo-bar');
-  });
-
-  it('should return dashed value', () => {
-    let input = 'WebkitFooBar';
-    let output = parsers.camelToDashed(input);
-
-    assert.strictEqual(output, '-webkit-foo-bar');
-  });
 });

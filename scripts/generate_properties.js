@@ -7,8 +7,7 @@ var t = require('@babel/types');
 var generate = require('@babel/generator').default;
 var traverse = require('@babel/traverse').default;
 var resolve = require('resolve');
-
-var camelToDashed = require('../lib/parsers').camelToDashed;
+var { camelCaseToDashed } = require('../lib/utils/camelize');
 
 var basename = path.basename;
 var dirname = path.dirname;
@@ -251,7 +250,7 @@ parsedFiles.forEach(function (file) {
 });
 var propertyDefinitions = [];
 parsedFiles.forEach(function (file) {
-  var dashed = camelToDashed(file.property);
+  var dashed = camelCaseToDashed(file.property);
   propertyDefinitions.push(
     t.objectProperty(
       t.identifier(file.property),
