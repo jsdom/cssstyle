@@ -2,25 +2,25 @@
 
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
-var { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
-
-var allExtraProperties = require("../lib/allExtraProperties");
-var allProperties = require("../lib/generated/allProperties");
-var implementedProperties = require("../lib/generated/implementedProperties");
-var camelize = require("../lib/utils/camelize");
-
-var dashedProperties = [...allProperties, ...allExtraProperties];
-var allowedProperties = dashedProperties.map(camelize.dashedToCamelCase);
-implementedProperties = Array.from(implementedProperties).map(camelize.dashedToCamelCase);
-var invalidProperties = implementedProperties.filter((prop) => !allowedProperties.includes(prop));
+const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
+const allExtraProperties = require("../lib/allExtraProperties");
+const allProperties = require("../lib/generated/allProperties");
+const implementedProperties = require("../lib/generated/implementedProperties");
+const camelize = require("../lib/utils/camelize");
 
 describe("CSSStyleDeclaration", () => {
+  const dashedProperties = [...allProperties, ...allExtraProperties];
+  const allowedProperties = dashedProperties.map(camelize.dashedToCamelCase);
+  const invalidProperties = [...implementedProperties]
+    .map(camelize.dashedToCamelCase)
+    .filter((prop) => !allowedProperties.includes(prop));
+
   it("has only valid properties implemented", () => {
     assert.strictEqual(invalidProperties.length, 0);
   });
 
   it("has all properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     allProperties.forEach((property) => {
       assert.ok(style.__lookupGetter__(property));
       assert.ok(style.__lookupSetter__(property));
@@ -28,7 +28,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("has dashed properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     dashedProperties.forEach((property) => {
       assert.ok(style.__lookupGetter__(property));
       assert.ok(style.__lookupSetter__(property));
@@ -36,7 +36,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("has all functions", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
 
     assert.strictEqual(typeof style.item, "function");
     assert.strictEqual(typeof style.getPropertyValue, "function");
@@ -49,7 +49,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("has special properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
 
     assert.ok(style.__lookupGetter__("cssText"));
     assert.ok(style.__lookupSetter__("cssText"));
@@ -59,7 +59,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("from style string", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.cssText = "color: blue; background-color: red; width: 78%; height: 50vh;";
     assert.strictEqual(style.length, 4);
     assert.strictEqual(
@@ -76,7 +76,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("from properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.color = "blue";
     assert.strictEqual(style.length, 1);
     assert.strictEqual(style[0], "color");
@@ -94,7 +94,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("shorthand properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.background = "blue url(http://www.example.com/some_img.jpg)";
     assert.strictEqual(style.backgroundColor, "blue");
     assert.strictEqual(style.backgroundImage, 'url("http://www.example.com/some_img.jpg")');
@@ -112,7 +112,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("width and height properties and null and empty strings", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.height = 6;
     assert.strictEqual(style.height, "");
     style.width = 0;
@@ -132,7 +132,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("implicit properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderWidth = 0;
     assert.strictEqual(style.length, 1);
     assert.strictEqual(style.borderWidth, "0px");
@@ -144,7 +144,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("top, left, right, bottom properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.top = 0;
     style.left = "0%";
     style.right = "5em";
@@ -158,7 +158,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it('top, left, right, bottom properties should accept "auto"', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.cssText = `top: auto; right: auto; bottom: auto; left: auto;`;
     assert.strictEqual(style.top, "auto");
     assert.strictEqual(style.right, "auto");
@@ -167,7 +167,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("clear and clip properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.clear = "none";
     assert.strictEqual(style.clear, "none");
     style.clear = "lfet";
@@ -188,7 +188,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("colors", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.color = "rgba(0,0,0,0)";
     assert.strictEqual(style.color, "rgba(0, 0, 0, 0)");
     style.color = "rgba(5%, 10%, 20%, 0.4)";
@@ -216,13 +216,13 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("invalid hex color value", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.color = "#1234567";
     assert.strictEqual(style.color, "");
   });
 
   it("short hand properties with embedded spaces", () => {
-    var style = new CSSStyleDeclaration();
+    let style = new CSSStyleDeclaration();
     style.background = "rgb(0, 0, 0) url(/something/somewhere.jpg)";
     assert.strictEqual(style.backgroundColor, "rgb(0, 0, 0)");
     assert.strictEqual(style.backgroundImage, 'url("/something/somewhere.jpg")');
@@ -233,7 +233,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting shorthand properties to an empty string should clear all dependent properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderWidth = "1px";
     assert.strictEqual(style.cssText, "border-width: 1px;");
     style.border = "";
@@ -241,7 +241,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting implicit properties to an empty string should clear all dependent properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.borderWidth = "";
@@ -249,7 +249,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting a shorthand property, whose shorthands are implicit properties, to an empty string should clear all dependent properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.border = "";
@@ -261,7 +261,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it('setting border values to "none" should clear dependent values', () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.border = "none";
@@ -282,25 +282,25 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting border to 0 should be okay", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.border = 0;
     assert.strictEqual(style.cssText, "border: 0px;");
   });
 
   it("setting borderColor to var() should be okay", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderColor = "var(--foo)";
     assert.strictEqual(style.cssText, "border-color: var(--foo);");
   });
 
   it("setting borderColor to inherit should be okay", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderColor = "inherit";
     assert.strictEqual(style.cssText, "border-color: inherit;");
   });
 
   it("setting values implicit and shorthand properties via csstext and setproperty should propagate to dependent properties", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.cssText = "border: 1px solid black;";
     assert.strictEqual(style.cssText, "border: 1px solid black;");
     assert.strictEqual(style.borderTop, "1px solid black");
@@ -311,7 +311,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting opacity should work", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty("opacity", 0.75);
     assert.strictEqual(style.cssText, "opacity: 0.75;");
     style.opacity = "0.50";
@@ -321,7 +321,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("width and height of auto should work", () => {
-    var style = new CSSStyleDeclaration();
+    let style = new CSSStyleDeclaration();
     style.width = "auto";
     assert.strictEqual(style.cssText, "width: auto;");
     assert.strictEqual(style.width, "auto");
@@ -332,12 +332,12 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("padding and margin should set/clear shorthand properties", () => {
-    var style = new CSSStyleDeclaration();
-    var parts = ["Top", "Right", "Bottom", "Left"];
-    var testParts = function (name, v, V) {
+    const style = new CSSStyleDeclaration();
+    const parts = ["Top", "Right", "Bottom", "Left"];
+    const testParts = function (name, v, V) {
       style[name] = v;
-      for (var i = 0; i < 4; i++) {
-        var part = name + parts[i];
+      for (let i = 0; i < 4; i++) {
+        const part = name + parts[i];
         assert.strictEqual(style[part], V[i]);
       }
 
@@ -359,11 +359,11 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("padding and margin shorthands should set main properties", () => {
-    var style = new CSSStyleDeclaration();
-    var parts = ["Top", "Right", "Bottom", "Left"];
-    var testParts = function (name, v, V) {
-      var expected;
-      for (var i = 0; i < 4; i++) {
+    const style = new CSSStyleDeclaration();
+    const parts = ["Top", "Right", "Bottom", "Left"];
+    const testParts = function (name, v, V) {
+      let expected;
+      for (let i = 0; i < 4; i++) {
         style[name] = v;
         style[name + parts[i]] = V;
         expected = v.split(/ /);
@@ -379,13 +379,13 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting individual padding and margin properties to an empty string should clear them", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
 
-    var properties = ["padding", "margin"];
-    var parts = ["Top", "Right", "Bottom", "Left"];
-    for (var i = 0; i < properties.length; i++) {
-      for (var j = 0; j < parts.length; j++) {
-        var property = properties[i] + parts[j];
+    const properties = ["padding", "margin"];
+    const parts = ["Top", "Right", "Bottom", "Left"];
+    for (let i = 0; i < properties.length; i++) {
+      for (let j = 0; j < parts.length; j++) {
+        const property = properties[i] + parts[j];
         style[property] = "12px";
         assert.strictEqual(style[property], "12px");
 
@@ -396,7 +396,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("removing and setting individual margin properties updates the combined property accordingly", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.margin = "1px 2px 3px 4px";
 
     style.marginTop = "";
@@ -422,12 +422,12 @@ describe("CSSStyleDeclaration", () => {
 
   for (const property of ["padding", "margin"]) {
     it(`removing an individual ${property} property should remove the combined property and replace it with the remaining individual ones`, () => {
-      var style = new CSSStyleDeclaration();
-      var parts = ["Top", "Right", "Bottom", "Left"];
-      var partValues = ["1px", "2px", "3px", "4px"];
+      const style = new CSSStyleDeclaration();
+      const parts = ["Top", "Right", "Bottom", "Left"];
+      const partValues = ["1px", "2px", "3px", "4px"];
 
-      for (var j = 0; j < parts.length; j++) {
-        var partToRemove = parts[j];
+      for (let j = 0; j < parts.length; j++) {
+        const partToRemove = parts[j];
         style[property] = partValues.join(" ");
         style[property + partToRemove] = "";
 
@@ -435,8 +435,8 @@ describe("CSSStyleDeclaration", () => {
         assert.strictEqual(style[property], "");
 
         // Expect other parts to still be there
-        for (var k = 0; k < parts.length; k++) {
-          var propertyCss = property + "-" + parts[k].toLowerCase() + ": " + partValues[k] + ";";
+        for (let k = 0; k < parts.length; k++) {
+          const propertyCss = property + "-" + parts[k].toLowerCase() + ": " + partValues[k] + ";";
           if (k === j) {
             assert.strictEqual(style[property + parts[k]], "");
             assert.strictEqual(style.cssText.includes(propertyCss), false);
@@ -449,8 +449,8 @@ describe("CSSStyleDeclaration", () => {
     });
 
     it(`setting additional ${property} properties keeps important status of others`, () => {
-      var style = new CSSStyleDeclaration();
-      var importantProperty = property + "-top: 3px !important;";
+      const style = new CSSStyleDeclaration();
+      const importantProperty = property + "-top: 3px !important;";
       style.cssText = importantProperty;
       assert.strictEqual(style.cssText.includes(importantProperty), true);
 
@@ -466,7 +466,7 @@ describe("CSSStyleDeclaration", () => {
     });
 
     it(`setting individual ${property} keeps important status of others`, () => {
-      var style = new CSSStyleDeclaration();
+      const style = new CSSStyleDeclaration();
       style.cssText = `${property}: 3px !important;`;
 
       style[property + "Top"] = "4px";
@@ -480,14 +480,14 @@ describe("CSSStyleDeclaration", () => {
   }
 
   it("setting a value to 0 should return the string value", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty("fill-opacity", 0);
     assert.strictEqual(style.fillOpacity, "0");
   });
 
   it("onchange callback should be called when the csstext changes", () => {
-    var called = 0;
-    var style = new CSSStyleDeclaration(function (cssText) {
+    let called = 0;
+    const style = new CSSStyleDeclaration(function (cssText) {
       called++;
       assert.strictEqual(cssText, "opacity: 0;");
     });
@@ -498,8 +498,8 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("onchange callback should be called only once when multiple properties were added", () => {
-    var called = 0;
-    var style = new CSSStyleDeclaration(function (cssText) {
+    let called = 0;
+    const style = new CSSStyleDeclaration(function (cssText) {
       called++;
       assert.strictEqual(cssText, "width: 100px; height: 100px;");
     });
@@ -508,8 +508,8 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("onchange callback should not be called when property is set to the same value", () => {
-    var called = 0;
-    var style = new CSSStyleDeclaration(function () {
+    let called = 0;
+    const style = new CSSStyleDeclaration(function () {
       called++;
     });
 
@@ -520,8 +520,8 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("onchange callback should not be called when removeProperty was called on non-existing property", () => {
-    var called = 0;
-    var style = new CSSStyleDeclaration(function () {
+    let called = 0;
+    const style = new CSSStyleDeclaration(function () {
       called++;
     });
     style.removeProperty("opacity");
@@ -529,13 +529,13 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting float should work the same as cssfloat", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.float = "left";
     assert.strictEqual(style.cssFloat, "left");
   });
 
   it("setting improper css to csstext should not throw", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.cssText = "color: ";
     assert.strictEqual(style.cssText, "");
     style.color = "black";
@@ -544,7 +544,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("url parsing works with quotes", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.backgroundImage = "url(http://some/url/here1.png)";
     assert.strictEqual(style.backgroundImage, 'url("http://some/url/here1.png")');
     style.backgroundImage = "url('http://some/url/here2.png')";
@@ -554,7 +554,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting 0 to a padding or margin works", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.padding = 0;
     assert.strictEqual(style.cssText, "padding: 0px;");
     style.margin = "1em";
@@ -563,7 +563,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting ex units to a padding or margin works", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.padding = "1ex";
     assert.strictEqual(style.cssText, "padding: 1ex;");
     style.margin = "1em";
@@ -572,11 +572,11 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting empty string and null to a padding or margin works", () => {
-    var style = new CSSStyleDeclaration();
-    var parts = ["Top", "Right", "Bottom", "Left"];
+    const style = new CSSStyleDeclaration();
+    const parts = ["Top", "Right", "Bottom", "Left"];
     function testParts(base, nullValue) {
-      var props = [base].concat(parts.map((part) => base + part));
-      for (let prop of props) {
+      const props = [base].concat(parts.map((part) => base + part));
+      for (const prop of props) {
         assert.strictEqual(style[prop], "");
         style[prop] = "10px";
         assert.strictEqual(style[prop], "10px");
@@ -592,11 +592,11 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting undefined to a padding or margin does nothing", () => {
-    var style = new CSSStyleDeclaration();
-    var parts = ["Top", "Right", "Bottom", "Left"];
+    const style = new CSSStyleDeclaration();
+    const parts = ["Top", "Right", "Bottom", "Left"];
     function testParts(base) {
-      var props = [base].concat(parts.map((part) => base + part));
-      for (let prop of props) {
+      const props = [base].concat(parts.map((part) => base + part));
+      for (const prop of props) {
         style[prop] = "10px";
         assert.strictEqual(style[prop], "10px");
         style[prop] = undefined;
@@ -609,7 +609,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting null to background works", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.background = "red";
     assert.strictEqual(style.cssText, "background: red;");
     style.background = null;
@@ -617,7 +617,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("flex properties should keep their values", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.flexDirection = "column";
     assert.strictEqual(style.cssText, "flex-direction: column;");
     style.flexDirection = "row";
@@ -625,33 +625,33 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("camelcase properties are not assigned with `.setproperty()`", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty("fontSize", "12px");
     assert.strictEqual(style.cssText, "");
   });
 
   it("casing is ignored in `.setproperty()`", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty("FoNt-SiZe", "12px");
     assert.strictEqual(style.fontSize, "12px");
     assert.strictEqual(style.getPropertyValue("font-size"), "12px");
   });
 
   it("support non string entries in border-spacing", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.borderSpacing = 0;
     assert.strictEqual(style.cssText, "border-spacing: 0px;");
   });
 
   it("float should be valid property for `.setproperty()`", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty("float", "left");
     assert.strictEqual(style.float, "left");
     assert.strictEqual(style.getPropertyValue("float"), "left");
   });
 
   it("flex-shrink works", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty("flex-shrink", 0);
     assert.strictEqual(style.getPropertyValue("flex-shrink"), "0");
     style.setProperty("flex-shrink", 1);
@@ -660,14 +660,14 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("flex-grow works", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty("flex-grow", 2);
     assert.strictEqual(style.getPropertyValue("flex-grow"), "2");
     assert.strictEqual(style.cssText, "flex-grow: 2;");
   });
 
   it("flex-basis works", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty("flex-basis", 0);
     assert.strictEqual(style.getPropertyValue("flex-basis"), "0px");
     style.setProperty("flex-basis", "250px");
@@ -680,7 +680,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("shorthand flex works", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     style.setProperty("flex", "none");
     assert.strictEqual(style.getPropertyValue("flex-grow"), "0");
     assert.strictEqual(style.getPropertyValue("flex-shrink"), "0");
@@ -716,7 +716,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("font-size get a valid value", () => {
-    var style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration();
     const invalidValue = "1r5px";
     style.cssText = "font-size: 15px";
     assert.strictEqual(1, style.length);

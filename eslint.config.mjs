@@ -18,13 +18,18 @@ export default [
       globals: globals.node
     },
     rules: {
-      "no-console": "off"
+      "no-console": "off",
+      "prefer-template": "error"
     }
   },
   {
     files: ["test/**/*"],
     languageOptions: {
       globals: globals.node
+    },
+    rules: {
+      "no-var": "error",
+      "prefer-const": "error"
     }
   }
 ];

@@ -16,7 +16,7 @@ console.log("Downloading CSS properties...");
 
 const res = await fetch(url);
 if (res.status !== 200) {
-  throw new Error("Bad status code: " + res.status);
+  throw new Error(`Bad status code: ${res.status}`);
 }
 
 const rawCSSProperties = await res.json();

@@ -63,7 +63,7 @@ function isRequire(node, filename) {
 // step 1: parse all files and figure out their dependencies
 const parsedFilesByPath = {};
 propertyFiles.forEach(function (propertyFile) {
-  const filename = nodePath.resolve(__dirname, "../lib/properties/" + propertyFile);
+  const filename = nodePath.resolve(__dirname, `../lib/properties/${propertyFile}`);
   const src = fs.readFileSync(filename, "utf8");
   const property = basename(propertyFile, ".js");
   const ast = parser.parse(src);
@@ -92,8 +92,10 @@ const addedFiles = {};
 function addFile(filename, dependencyPath) {
   if (dependencyPath.indexOf(filename) !== -1) {
     throw new Error(
-      "Circular dependency: " +
-        dependencyPath.slice(dependencyPath.indexOf(filename)).concat([filename]).join(" -> ")
+      `Circular dependency: ${dependencyPath
+        .slice(dependencyPath.indexOf(filename))
+        .concat([filename])
+        .join(" -> ")}`
     );
   }
   const file = parsedFilesByPath[filename];
@@ -121,12 +123,12 @@ const moduleExportsByPath = {};
 const statements = [];
 externalDependencies.forEach(function (filename, i) {
   const id = t.identifier(
-    "external_dependency_" + basename(filename, ".js").replace(/[^A-Za-z]/g, "") + "_" + i
+    `external_dependency_${basename(filename, ".js").replace(/[^A-Za-z]/g, "")}_${i}`
   );
   moduleExportsByPath[filename] = { defaultExports: id };
-  let relativePath = nodePath.relative(nodePath.resolve(__dirname + "/../lib"), filename);
+  let relativePath = nodePath.relative(nodePath.resolve(`${__dirname}/../lib`), filename);
   if (relativePath[0] !== ".") {
-    relativePath = "../" + relativePath;
+    relativePath = `../${relativePath}`;
   }
   statements.push(
     t.variableDeclaration("var", [
@@ -151,7 +153,7 @@ function getRequireValue(node, file) {
         return t.memberExpression(e.defaultExports, node.property);
       }
       if (!e.namedExports[node.property.name]) {
-        throw new Error(r.relative + " does not export " + node.property.name);
+        throw new Error(`${r.relative} does not export ${node.property.name}`);
       }
       return e.namedExports[node.property.name];
     }
@@ -191,7 +193,7 @@ parsedFiles.forEach(function (file) {
       ) {
         r = getRequireValue(path.node.declarations[0].init, file);
         if (r) {
-          const newName = "compiled_local_variable_reference_" + getUniqueIndex();
+          const newName = `compiled_local_variable_reference_${getUniqueIndex()}`;
           path.scope.rename(path.node.declarations[0].id.name, newName);
           localVariableMap[newName] = r;
           path.remove();
@@ -201,7 +203,7 @@ parsedFiles.forEach(function (file) {
 
       // rename all top level functions to keep them local to the module
       if (t.isFunctionDeclaration(path.node) && t.isProgram(path.parent)) {
-        path.scope.rename(path.node.id.name, file.property + "_local_fn_" + path.node.id.name);
+        path.scope.rename(path.node.id.name, `${file.property}_local_fn_${path.node.id.name}`);
         return;
       }
 
@@ -210,7 +212,7 @@ parsedFiles.forEach(function (file) {
         path.node.declarations.forEach(function (declaration) {
           path.scope.rename(
             declaration.id.name,
-            file.property + "_local_var_" + declaration.id.name
+            `${file.property}_local_var_${declaration.id.name}`
           );
         });
         return;
@@ -222,7 +224,7 @@ parsedFiles.forEach(function (file) {
         isModuleDotExports(path.node.object)
       ) {
         const { name } = path.node.property;
-        const identifier = t.identifier(file.property + "_export_" + name);
+        const identifier = t.identifier(`${file.property}_export_${name}`);
         path.replaceWith(identifier);
         namedExports[name] = identifier;
       }
@@ -263,12 +265,12 @@ parsedFiles.forEach(function (file) {
   propertyDefinitions.push(
     t.objectProperty(
       t.identifier(file.property),
-      t.identifier(file.property + "_export_definition")
+      t.identifier(`${file.property}_export_definition`)
     )
   );
   if (file.property !== dashed) {
     propertyDefinitions.push(
-      t.objectProperty(t.stringLiteral(dashed), t.identifier(file.property + "_export_definition"))
+      t.objectProperty(t.stringLiteral(dashed), t.identifier(`${file.property}_export_definition`))
     );
   }
 });
@@ -289,7 +291,7 @@ statements.push(
     )
   )
 );
-outFile.write(generate(t.program(statements)).code + "\n");
+outFile.write(`${generate(t.program(statements)).code}\n`);
 outFile.end(function (err) {
   if (err) {
     throw err;
