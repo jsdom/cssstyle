@@ -436,7 +436,7 @@ describe("CSSStyleDeclaration", () => {
 
         // Expect other parts to still be there
         for (let k = 0; k < parts.length; k++) {
-          const propertyCss = property + "-" + parts[k].toLowerCase() + ": " + partValues[k] + ";";
+          const propertyCss = `${property}-${parts[k].toLowerCase()}: ${partValues[k]};`;
           if (k === j) {
             assert.strictEqual(style[property + parts[k]], "");
             assert.strictEqual(style.cssText.includes(propertyCss), false);
@@ -450,18 +450,18 @@ describe("CSSStyleDeclaration", () => {
 
     it(`setting additional ${property} properties keeps important status of others`, () => {
       const style = new CSSStyleDeclaration();
-      const importantProperty = property + "-top: 3px !important;";
+      const importantProperty = `${property}-top: 3px !important;`;
       style.cssText = importantProperty;
       assert.strictEqual(style.cssText.includes(importantProperty), true);
 
-      style[property + "Right"] = "4px";
-      style[property + "Bottom"] = "5px";
-      style[property + "Left"] = "6px";
+      style[`${property}Right`] = "4px";
+      style[`${property}Bottom`] = "5px";
+      style[`${property}Left`] = "6px";
 
       assert.strictEqual(style.cssText.includes(importantProperty), true);
-      assert.strictEqual(style.cssText.includes(property + "-right: 4px;"), true);
-      assert.strictEqual(style.cssText.includes(property + "-bottom: 5px;"), true);
-      assert.strictEqual(style.cssText.includes(property + "-left: 6px;"), true);
+      assert.strictEqual(style.cssText.includes(`${property}-right: 4px;`), true);
+      assert.strictEqual(style.cssText.includes(`${property}-bottom: 5px;`), true);
+      assert.strictEqual(style.cssText.includes(`${property}-left: 6px;`), true);
       assert.strictEqual(style.cssText.includes("margin:"), false);
     });
 
@@ -469,7 +469,7 @@ describe("CSSStyleDeclaration", () => {
       const style = new CSSStyleDeclaration();
       style.cssText = `${property}: 3px !important;`;
 
-      style[property + "Top"] = "4px";
+      style[`${property}Top`] = "4px";
 
       assert.strictEqual(style.cssText.includes(`${property}-top: 4px;`), true);
       assert.strictEqual(style.cssText.includes(`${property}-right: 3px !important;`), true);
