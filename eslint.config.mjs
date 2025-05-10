@@ -3,7 +3,7 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['lib/implementedProperties.js', 'lib/properties.js'],
+    ignores: ['lib/generated/**'],
   },
   {
     files: ['**/*.js'],
@@ -19,7 +19,7 @@ export default [
     },
   },
   {
-    files: ['scripts/**/*', 'tests/**/*'],
+    files: ['scripts/**/*', 'test/**/*'],
     languageOptions: {
       globals: globals.node,
     },

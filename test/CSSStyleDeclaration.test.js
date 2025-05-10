@@ -4,9 +4,9 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 var { CSSStyleDeclaration } = require('../lib/CSSStyleDeclaration');
 
-var allProperties = require('../lib/allProperties');
 var allExtraProperties = require('../lib/allExtraProperties');
-var implementedProperties = require('../lib/implementedProperties');
+var allProperties = require('../lib/generated/allProperties');
+var implementedProperties = require('../lib/generated/implementedProperties');
 var camelize = require('../lib/utils/camelize');
 
 var dashedProperties = [...allProperties, ...allExtraProperties];
