@@ -1,27 +1,30 @@
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import globals from 'globals';
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import globals from "globals";
 
 export default [
   {
-    ignores: ['lib/generated/**'],
+    ignores: ["lib/generated/**"]
   },
   {
-    files: ['**/*.js'],
+    files: ["**/*.js"],
     languageOptions: {
-      sourceType: 'commonjs',
-    },
+      sourceType: "commonjs"
+    }
   },
   eslintPluginPrettierRecommended,
   {
-    files: ['scripts/**/*'],
-    rules: {
-      'no-console': 'off',
+    files: ["scripts/**/*"],
+    languageOptions: {
+      globals: globals.node
     },
+    rules: {
+      "no-console": "off"
+    }
   },
   {
-    files: ['scripts/**/*', 'test/**/*'],
+    files: ["test/**/*"],
     languageOptions: {
-      globals: globals.node,
-    },
-  },
+      globals: globals.node
+    }
+  }
 ];
