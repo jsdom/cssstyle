@@ -55,9 +55,8 @@ function isRequire(node, filename) {
       relative,
       fullPath
     };
-  } else {
-    return false;
   }
+  return false;
 }
 
 // step 1: parse all files and figure out their dependencies
@@ -77,10 +76,10 @@ propertyFiles.forEach(function (propertyFile) {
     }
   });
   parsedFilesByPath[filename] = {
-    filename: filename,
-    property: property,
-    ast: ast,
-    dependencies: dependencies
+    filename,
+    property,
+    ast,
+    dependencies
   };
 });
 
@@ -232,10 +231,7 @@ parsedFiles.forEach(function (file) {
   });
   traverse(file.ast, {
     enter(path) {
-      if (
-        t.isIdentifier(path.node) &&
-        Object.prototype.hasOwnProperty.call(localVariableMap, path.node.name)
-      ) {
+      if (t.isIdentifier(path.node) && Object.hasOwn(localVariableMap, path.node.name)) {
         path.replaceWith(localVariableMap[path.node.name]);
       }
     }
@@ -246,8 +242,8 @@ parsedFiles.forEach(function (file) {
     })
   );
   moduleExportsByPath[file.filename] = {
-    namedExports: namedExports,
-    defaultExports: defaultExports
+    namedExports,
+    defaultExports
   };
   statements.push(
     t.variableDeclaration(

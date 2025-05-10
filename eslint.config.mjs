@@ -1,9 +1,10 @@
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import domenicConfig from "@domenic/eslint-config";
+import prettierRecommended from "eslint-plugin-prettier/recommended";
 import globals from "globals";
 
 export default [
   {
-    ignores: ["lib/generated/**"]
+    ignores: ["lib/generated/*"]
   },
   {
     files: ["**/*.js"],
@@ -11,23 +12,24 @@ export default [
       sourceType: "commonjs"
     }
   },
-  eslintPluginPrettierRecommended,
+  ...domenicConfig,
+  prettierRecommended,
   {
     rules: {
-      camelcase: "error",
-      "no-var": "error",
-      "prefer-const": "error",
-      "prefer-template": "error"
+      "consistent-return": "off",
+      "func-style": "off",
+      "prefer-destructuring": "off",
+      "require-unicode-regexp": "off"
     }
   },
   {
     // FIXME:
     // see https://github.com/jsdom/cssstyle/issues/201
     // see https://github.com/jsdom/cssstyle/issues/202
-    files: ["lib/CSSStyleDeclaration.js", "lib/properties/*"],
+    files: ["lib/CSSStyleDeclaration.js", "lib/parsers.js", "lib/properties/*.js"],
     rules: {
-      "no-var": "off",
-      "prefer-template": "off"
+      "no-invalid-this": "off",
+      "no-var": "off"
     }
   },
   {
