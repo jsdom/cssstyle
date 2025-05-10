@@ -26,7 +26,7 @@ export default [
     // FIXME:
     // see https://github.com/jsdom/cssstyle/issues/201
     // see https://github.com/jsdom/cssstyle/issues/202
-    files: ["lib/CSSStyleDeclaration.js", "lib/parsers.js", "lib/properties/*.js"],
+    files: ["lib/parsers.js", "lib/properties/*.js"],
     rules: {
       "no-invalid-this": "off",
       "no-var": "off"
