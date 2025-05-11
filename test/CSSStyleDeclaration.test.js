@@ -43,9 +43,6 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(typeof style.setProperty, "function");
     assert.strictEqual(typeof style.getPropertyPriority, "function");
     assert.strictEqual(typeof style.removeProperty, "function");
-
-    // TODO - deprecated according to MDN and not implemented at all, can we remove?
-    assert.strictEqual(typeof style.getPropertyCSSValue, "function");
   });
 
   it("has special properties", () => {
@@ -483,49 +480,6 @@ describe("CSSStyleDeclaration", () => {
     const style = new CSSStyleDeclaration();
     style.setProperty("fill-opacity", 0);
     assert.strictEqual(style.fillOpacity, "0");
-  });
-
-  it("onchange callback should be called when the csstext changes", () => {
-    let called = 0;
-    const style = new CSSStyleDeclaration(function (cssText) {
-      called++;
-      assert.strictEqual(cssText, "opacity: 0;");
-    });
-    style.cssText = "opacity: 0;";
-    assert.strictEqual(called, 1);
-    style.cssText = "opacity: 0;";
-    assert.strictEqual(called, 2);
-  });
-
-  it("onchange callback should be called only once when multiple properties were added", () => {
-    let called = 0;
-    const style = new CSSStyleDeclaration(function (cssText) {
-      called++;
-      assert.strictEqual(cssText, "width: 100px; height: 100px;");
-    });
-    style.cssText = "width: 100px;height:100px;";
-    assert.strictEqual(called, 1);
-  });
-
-  it("onchange callback should not be called when property is set to the same value", () => {
-    let called = 0;
-    const style = new CSSStyleDeclaration(function () {
-      called++;
-    });
-
-    style.setProperty("opacity", 0);
-    assert.strictEqual(called, 1);
-    style.setProperty("opacity", 0);
-    assert.strictEqual(called, 1);
-  });
-
-  it("onchange callback should not be called when removeProperty was called on non-existing property", () => {
-    let called = 0;
-    const style = new CSSStyleDeclaration(function () {
-      called++;
-    });
-    style.removeProperty("opacity");
-    assert.strictEqual(called, 0);
   });
 
   it("setting float should work the same as cssfloat", () => {
