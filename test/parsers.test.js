@@ -951,11 +951,11 @@ describe("shorthandParser", () => {
   const flexGrow = require("../lib/properties/flexGrow");
   const flexShrink = require("../lib/properties/flexShrink");
   const flexBasis = require("../lib/properties/flexBasis");
-  const shorthandFor = {
-    "flex-grow": flexGrow,
-    "flex-shrink": flexShrink,
-    "flex-basis": flexBasis
-  };
+  const shorthandFor = new Map([
+    ["flex-grow", flexGrow],
+    ["flex-shrink", flexShrink],
+    ["flex-basis", flexBasis]
+  ]);
 
   it("should return undefined for keyword", () => {
     const input = "none";
@@ -1024,8 +1024,7 @@ describe("shorthandParser", () => {
     });
   });
 
-  // FIXME:
-  it.skip("should return undefined", () => {
+  it("should return undefined", () => {
     const input = "2 10px 20px";
     const output = parsers.shorthandParser(input, shorthandFor);
 

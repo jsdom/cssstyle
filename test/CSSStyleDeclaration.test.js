@@ -95,7 +95,7 @@ describe("CSSStyleDeclaration", () => {
     style.background = "blue url(http://www.example.com/some_img.jpg)";
     assert.strictEqual(style.backgroundColor, "blue");
     assert.strictEqual(style.backgroundImage, 'url("http://www.example.com/some_img.jpg")');
-    assert.strictEqual(style.background, 'blue url("http://www.example.com/some_img.jpg")');
+    assert.strictEqual(style.background, 'url("http://www.example.com/some_img.jpg") blue');
     style.border = "0 solid black";
     assert.strictEqual(style.borderWidth, "0px");
     assert.strictEqual(style.borderStyle, "solid");
@@ -223,7 +223,7 @@ describe("CSSStyleDeclaration", () => {
     style.background = "rgb(0, 0, 0) url(/something/somewhere.jpg)";
     assert.strictEqual(style.backgroundColor, "rgb(0, 0, 0)");
     assert.strictEqual(style.backgroundImage, 'url("/something/somewhere.jpg")');
-    assert.strictEqual(style.cssText, 'background: rgb(0, 0, 0) url("/something/somewhere.jpg");');
+    assert.strictEqual(style.cssText, 'background: url("/something/somewhere.jpg") rgb(0, 0, 0);');
     style = new CSSStyleDeclaration();
     style.border = "  1px  solid   black  ";
     assert.strictEqual(style.border, "1px solid black");
