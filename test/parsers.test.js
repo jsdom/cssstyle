@@ -1034,16 +1034,3 @@ describe("shorthandParser", () => {
 
   it.todo("test");
 });
-
-describe("shorthandSetter", () => {
-  it.todo("test");
-});
-describe("shorthandGetter", () => {
-  it.todo("test");
-});
-describe("implicitSetter", () => {
-  it.todo("test");
-});
-describe("subImplicitSetter", () => {
-  it.todo("test");
-});
