@@ -270,20 +270,12 @@ parsedFiles.forEach(function (file) {
     );
   }
 });
-const definePropertiesCall = t.callExpression(
-  t.memberExpression(t.identifier("Object"), t.identifier("defineProperties")),
-  [t.identifier("prototype"), t.objectExpression(propertyDefinitions)]
-);
 statements.push(
   t.expressionStatement(
     t.assignmentExpression(
       "=",
       t.memberExpression(t.identifier("module"), t.identifier("exports")),
-      t.functionExpression(
-        null,
-        [t.identifier("prototype")],
-        t.blockStatement([t.expressionStatement(definePropertiesCall)])
-      )
+      t.objectExpression(propertyDefinitions)
     )
   )
 );
