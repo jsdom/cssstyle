@@ -2,6 +2,7 @@
 
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
+const { JSDOM } = require("jsdom");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
 const allExtraProperties = require("../lib/allExtraProperties");
 const allProperties = require("../lib/generated/allProperties");
@@ -17,6 +18,14 @@ describe("CSSStyleDeclaration", () => {
 
   it("has only valid properties implemented", () => {
     assert.strictEqual(invalidProperties.length, 0);
+  });
+
+  it("does not enumerate constructor or internals", () => {
+    const style = new CSSStyleDeclaration();
+    assert.strictEqual(Object.getOwnPropertyDescriptor(style, "constructor").enumerable, false);
+    for (const i in style) {
+      assert.strictEqual(i.startsWith("_"), false);
+    }
   });
 
   it("has all properties", () => {
@@ -45,6 +54,21 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(typeof style.removeProperty, "function");
   });
 
+  it("throws if argument is not given", () => {
+    const style = new CSSStyleDeclaration();
+
+    assert.throws(
+      () => {
+        style.item();
+      },
+      (e) => {
+        assert.strictEqual(e instanceof globalThis.TypeError, true);
+        assert.strictEqual(e.message, "1 argument required, but only 0 present.");
+        return true;
+      }
+    );
+  });
+
   it("has special properties", () => {
     const style = new CSSStyleDeclaration();
 
@@ -53,6 +77,62 @@ describe("CSSStyleDeclaration", () => {
     assert.ok(style.__lookupGetter__("length"));
     assert.ok(style.__lookupSetter__("length"));
     assert.ok(style.__lookupGetter__("parentRule"));
+  });
+
+  it("sets internals for Window", () => {
+    const { window } = new JSDOM();
+    const style = new CSSStyleDeclaration(window);
+
+    assert.strictEqual(style.cssText, "");
+    assert.throws(
+      () => {
+        style.cssText = "color: green;";
+      },
+      (e) => {
+        assert.strictEqual(e instanceof window.DOMException, true);
+        assert.strictEqual(e.name, "NoModificationAllowedError");
+        assert.strictEqual(e.message, "cssText can not be modified.");
+        return true;
+      }
+    );
+    assert.throws(
+      () => {
+        style.removeProperty("color");
+      },
+      (e) => {
+        assert.strictEqual(e instanceof window.DOMException, true);
+        assert.strictEqual(e.name, "NoModificationAllowedError");
+        assert.strictEqual(e.message, "Property color can not be modified.");
+        return true;
+      }
+    );
+  });
+
+  it("sets internals for Element", () => {
+    const { window } = new JSDOM("", {
+      runScripts: "dangerously"
+    });
+    const { document } = window;
+    const node = document.createElement("div");
+    document.body.appendChild(node);
+    const style = new CSSStyleDeclaration(node);
+    style.cssText = "color: green";
+    assert.strictEqual(style.cssText, "color: green;");
+  });
+
+  it("sets internals for CSSRule", () => {
+    const { window } = new JSDOM("", {
+      runScripts: "dangerously"
+    });
+    const { document } = window;
+    const node = document.createElement("style");
+    node.textContent = `body { color: green; }`;
+    document.body.appendChild(node);
+    const sheet = document.styleSheets[0];
+    const rule = sheet.cssRules[0];
+    const style = new CSSStyleDeclaration(rule);
+    style.cssText = "color: green";
+    assert.strictEqual(style.cssText, "");
   });
 
   it("from style string", () => {
