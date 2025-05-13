@@ -35,28 +35,35 @@ describe("dashedToCamelCase", () => {
 });
 
 describe("camelCaseToDashed", () => {
-  it("should return dashed value", () => {
+  it("should not convert custom property to dashed", () => {
+    const input = "--foo-Bar-baZ";
+    const output = camelize.camelCaseToDashed(input);
+
+    assert.strictEqual(output, "--foo-Bar-baZ");
+  });
+
+  it("should convert to dashed value", () => {
     const input = "fooBarBaz";
     const output = camelize.camelCaseToDashed(input);
 
     assert.strictEqual(output, "foo-bar-baz");
   });
 
-  it("should return dashed value", () => {
+  it("should convert to dashed value", () => {
     const input = "FooBarBaz";
     const output = camelize.camelCaseToDashed(input);
 
     assert.strictEqual(output, "foo-bar-baz");
   });
 
-  it("should return dashed value", () => {
+  it("should convert to dashed value", () => {
     const input = "webkitFooBar";
     const output = camelize.camelCaseToDashed(input);
 
     assert.strictEqual(output, "-webkit-foo-bar");
   });
 
-  it("should return dashed value", () => {
+  it("should convert to dashed value", () => {
     const input = "WebkitFooBar";
     const output = camelize.camelCaseToDashed(input);
 

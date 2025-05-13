@@ -257,16 +257,21 @@ parsedFiles.forEach(function (file) {
 });
 const propertyDefinitions = [];
 parsedFiles.forEach(function (file) {
-  const dashed = camelCaseToDashed(file.property);
+  const { property } = file;
+  const propertyDefinition = `${property}_export_definition`;
   propertyDefinitions.push(
-    t.objectProperty(
-      t.identifier(file.property),
-      t.identifier(`${file.property}_export_definition`)
-    )
+    t.objectProperty(t.identifier(property), t.identifier(propertyDefinition))
   );
-  if (file.property !== dashed) {
+  const dashed = camelCaseToDashed(property);
+  if (property !== dashed) {
     propertyDefinitions.push(
-      t.objectProperty(t.stringLiteral(dashed), t.identifier(`${file.property}_export_definition`))
+      t.objectProperty(t.stringLiteral(dashed), t.identifier(propertyDefinition))
+    );
+  }
+  if (/^webkit[A-Z]/.test(property)) {
+    const pascal = property.replace(/^webkit/, "Webkit");
+    propertyDefinitions.push(
+      t.objectProperty(t.stringLiteral(pascal), t.identifier(propertyDefinition))
     );
   }
 });

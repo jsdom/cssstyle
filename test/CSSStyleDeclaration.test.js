@@ -54,6 +54,16 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(typeof style.removeProperty, "function");
   });
 
+  it("has PascalCase for webkit prefixed properties", () => {
+    const style = new CSSStyleDeclaration();
+    for (const i in style) {
+      if (/^webkit[A-Z]/.test(i)) {
+        const pascal = i.replace(/^webkit/, "Webkit");
+        assert.ok(style[pascal] !== undefined);
+      }
+    }
+  });
+
   it("throws if argument is not given", () => {
     const style = new CSSStyleDeclaration();
 
