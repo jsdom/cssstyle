@@ -2,7 +2,7 @@
 
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
-const { JSDOM } = require("jsdom");
+const CSSOM = require("rrweb-cssom");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
 const allExtraProperties = require("../lib/allExtraProperties");
 const allProperties = require("../lib/generated/allProperties");
@@ -80,8 +80,13 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("sets internals for Window", () => {
-    const { window } = new JSDOM();
-    const style = new CSSStyleDeclaration(window);
+    const window = {
+      getComputedStyle: () => {},
+      DOMException: globalThis.DOMException
+    };
+    const style = new CSSStyleDeclaration(null, {
+      context: window
+    });
 
     assert.strictEqual(style.cssText, "");
     assert.throws(
@@ -109,28 +114,27 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("sets internals for Element", () => {
-    const { window } = new JSDOM("", {
-      runScripts: "dangerously"
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
+    const style = new CSSStyleDeclaration(null, {
+      context: node
     });
-    const { document } = window;
-    const node = document.createElement("div");
-    document.body.appendChild(node);
-    const style = new CSSStyleDeclaration(node);
     style.cssText = "color: green";
     assert.strictEqual(style.cssText, "color: green;");
   });
 
   it("sets internals for CSSRule", () => {
-    const { window } = new JSDOM("", {
-      runScripts: "dangerously"
+    const rule = CSSOM.parse(`body { color: green; }`).cssRules[0];
+    const style = new CSSStyleDeclaration(null, {
+      context: rule
     });
-    const { document } = window;
-    const node = document.createElement("style");
-    node.textContent = `body { color: green; }`;
-    document.body.appendChild(node);
-    const sheet = document.styleSheets[0];
-    const rule = sheet.cssRules[0];
-    const style = new CSSStyleDeclaration(rule);
     style.cssText = "color: green";
     assert.strictEqual(style.cssText, "");
   });
@@ -560,6 +564,49 @@ describe("CSSStyleDeclaration", () => {
     const style = new CSSStyleDeclaration();
     style.setProperty("fill-opacity", 0);
     assert.strictEqual(style.fillOpacity, "0");
+  });
+
+  it("onchange callback should be called when the csstext changes", () => {
+    let called = 0;
+    const style = new CSSStyleDeclaration(function (cssText) {
+      called++;
+      assert.strictEqual(cssText, "opacity: 0;");
+    });
+    style.cssText = "opacity: 0;";
+    assert.strictEqual(called, 1);
+    style.cssText = "opacity: 0;";
+    assert.strictEqual(called, 2);
+  });
+
+  it("onchange callback should be called only once when multiple properties were added", () => {
+    let called = 0;
+    const style = new CSSStyleDeclaration(function (cssText) {
+      called++;
+      assert.strictEqual(cssText, "width: 100px; height: 100px;");
+    });
+    style.cssText = "width: 100px;height:100px;";
+    assert.strictEqual(called, 1);
+  });
+
+  it("onchange callback should not be called when property is set to the same value", () => {
+    let called = 0;
+    const style = new CSSStyleDeclaration(function () {
+      called++;
+    });
+
+    style.setProperty("opacity", 0);
+    assert.strictEqual(called, 1);
+    style.setProperty("opacity", 0);
+    assert.strictEqual(called, 1);
+  });
+
+  it("onchange callback should not be called when removeProperty was called on non-existing property", () => {
+    let called = 0;
+    const style = new CSSStyleDeclaration(function () {
+      called++;
+    });
+    style.removeProperty("opacity");
+    assert.strictEqual(called, 0);
   });
 
   it("setting float should work the same as cssfloat", () => {
