@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 
 const url = "https://www.w3.org/Style/CSS/all-properties.en.json";
 const outputFile = resolve("../lib/generated/allProperties.js");
-const unwantedStatuses = new Set(["NOTE", "ED", "FPWD"]);
+const unwantedStatuses = new Set(["NOTE", "ED"]);
 
 console.log("Downloading CSS properties...");
 
