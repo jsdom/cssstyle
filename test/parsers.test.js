@@ -1,31 +1,11 @@
 "use strict";
+/* eslint-disable no-useless-escape */
 
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const parsers = require("../lib/parsers");
 
 describe("valueType", () => {
-  it("returns null or empty string for null", () => {
-    const input = null;
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.NULL_OR_EMPTY_STR);
-  });
-
-  it("returns null or empty string for empty string", () => {
-    const input = "";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.NULL_OR_EMPTY_STR);
-  });
-
-  it("returns undefined for undefined", () => {
-    const input = undefined;
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
-  });
-
   it("returns number for 1", () => {
     const input = 1;
     const output = parsers.valueType(input);
@@ -61,39 +41,39 @@ describe("valueType", () => {
     assert.strictEqual(output, parsers.TYPES.PERCENT);
   });
 
-  it("returns unidentified for url(https://example.com)", () => {
+  it("returns undefined for url(https://example.com)", () => {
     const input = "url(https://example.com)";
     const output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.UNIDENT);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
   });
 
-  it('returns unidentified for url("https://example.com")', () => {
+  it('returns undefined for url("https://example.com")', () => {
     const input = 'url("https://example.com")';
     const output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.UNIDENT);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
   });
 
-  it("returns unidentified for url(foo.png)", () => {
+  it("returns undefined for url(foo.png)", () => {
     const input = "url(foo.png)";
     const output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.UNIDENT);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
   });
 
-  it('returns unidentified for url("foo.png")', () => {
+  it('returns undefined for url("foo.png")', () => {
     const input = 'url("foo.png")';
     const output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.UNIDENT);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
   });
 
-  it("returns unidentified for url(var(--foo))", () => {
+  it("returns undefined for url(var(--foo))", () => {
     const input = "url(var(--foo))";
     const output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.UNIDENT);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
   });
 
   it("returns calc from calc(100px *  var(--foo))", () => {
@@ -138,18 +118,18 @@ describe("valueType", () => {
     assert.strictEqual(output, parsers.TYPES.CALC);
   });
 
-  it('returns string from "foo"', () => {
+  it('returns undefined from "foo"', () => {
     const input = '"foo"';
     const output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.STRING);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
   });
 
-  it("returns string from 'foo'", () => {
+  it("returns undefined from 'foo'", () => {
     const input = "'foo'";
     const output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.STRING);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
   });
 
   it("returns angle for 90deg", () => {
@@ -159,118 +139,73 @@ describe("valueType", () => {
     assert.strictEqual(output, parsers.TYPES.ANGLE);
   });
 
-  it("returns color for red", () => {
-    const input = "red";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.COLOR);
-  });
-
-  it("returns color for #nnnnnn", () => {
+  it("returns undefined for #nnnnnn", () => {
     const input = "#fefefe";
     const output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.COLOR);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
   });
 
-  it("returns color for rgb(n, n, n)", () => {
+  it("returns undefined for rgb(n, n, n)", () => {
     const input = "rgb(10, 10, 10)";
     const output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.COLOR);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
   });
 
-  it("returns color for rgb(p, p, p)", () => {
-    const input = "rgb(10%, 10%, 10%)";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.COLOR);
-  });
-
-  it("returns color for rgba(n, n, n, n)", () => {
-    const input = "rgba(10, 10, 10, 1)";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.COLOR);
-  });
-
-  it("returns color for rgba(n, n, n, n) with decimal alpha", () => {
-    const input = "rgba(10, 10, 10, 0.5)";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.COLOR);
-  });
-
-  it("returns color for rgba(p, p, p, n)", () => {
-    const input = "rgba(10%, 10%, 10%, 1)";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.COLOR);
-  });
-
-  it("returns color for rgba(p, p, p, n) with decimal alpha", () => {
-    const input = "rgba(10%, 10%, 10%, 0.5)";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.COLOR);
-  });
-
-  it("returns color for transparent keyword", () => {
-    const input = "transparent";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.COLOR);
-  });
-
-  it("returns unidentified for linear-gradient(red, blue)", () => {
-    const input = "linear-gradient(red, blue)";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.UNIDENT);
-  });
-
-  it("returns color for accentcolor", () => {
-    const input = "AccentColor";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.COLOR);
-  });
-
-  it("returns color for legacy activeborder", () => {
-    const input = "ActiveBorder";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.COLOR);
-  });
-
-  it("returns keyword for foo", () => {
-    const input = "foo";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.KEYWORD);
-  });
-
-  it("returns keyword for foo-bar", () => {
-    const input = "foo-bar";
-    const output = parsers.valueType(input);
-
-    assert.strictEqual(output, parsers.TYPES.KEYWORD);
-  });
-
-  it("returns unidentified for foo(bar)", () => {
+  it("returns undefined for foo(bar)", () => {
     const input = "foo(bar)";
     const output = parsers.valueType(input);
 
-    assert.strictEqual(output, parsers.TYPES.UNIDENT);
+    assert.strictEqual(output, parsers.TYPES.UNDEFINED);
+  });
+});
+
+describe("prepareValue", () => {
+  it("should return undefined", () => {
+    const input = undefined;
+    const output = parsers.prepareValue(input);
+
+    assert.strictEqual(output, "undefined");
+  });
+
+  it("should return empty string", () => {
+    const input = null;
+    const output = parsers.prepareValue(input);
+
+    assert.strictEqual(output, "");
+  });
+
+  it("should return stringified number", () => {
+    const input = 1.5;
+    const output = parsers.prepareValue(input);
+
+    assert.strictEqual(output, "1.5");
+  });
+
+  it("should return string", () => {
+    const input = "foo";
+    const output = parsers.prepareValue(input);
+
+    assert.strictEqual(output, "foo");
+  });
+
+  it("should return as is", () => {
+    const input = {
+      toString: () => null
+    };
+    const output = parsers.prepareValue(input);
+
+    assert.deepEqual(output, input);
   });
 });
 
 describe("parseNumber", () => {
-  it("should return null", () => {
+  it("should return empty string", () => {
     const input = null;
     const output = parsers.parseNumber(input);
 
-    assert.strictEqual(output, null);
+    assert.strictEqual(output, "");
   });
 
   it("should return empty string", () => {
@@ -290,6 +225,13 @@ describe("parseNumber", () => {
   it("should return undefined", () => {
     const input = undefined;
     const output = parsers.parseNumber(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = "-1";
+    const output = parsers.parseNumber(input, true);
 
     assert.strictEqual(output, undefined);
   });
@@ -338,11 +280,11 @@ describe("parseNumber", () => {
 });
 
 describe("parseLength", () => {
-  it("should return null", () => {
+  it("should return empty string", () => {
     const input = null;
     const output = parsers.parseLength(input);
 
-    assert.strictEqual(output, null);
+    assert.strictEqual(output, "");
   });
 
   it("should return empty string", () => {
@@ -350,6 +292,13 @@ describe("parseLength", () => {
     const output = parsers.parseLength(input);
 
     assert.strictEqual(output, "");
+  });
+
+  it("should return undefined for negative length", () => {
+    const input = "-1em";
+    const output = parsers.parseLength(input, true);
+
+    assert.strictEqual(output, undefined);
   });
 
   it("should return value as is", () => {
@@ -382,11 +331,11 @@ describe("parseLength", () => {
 });
 
 describe("parsePercent", () => {
-  it("should return null", () => {
+  it("should return empty string", () => {
     const input = null;
     const output = parsers.parsePercent(input);
 
-    assert.strictEqual(output, null);
+    assert.strictEqual(output, "");
   });
 
   it("should return empty string", () => {
@@ -394,6 +343,20 @@ describe("parsePercent", () => {
     const output = parsers.parsePercent(input);
 
     assert.strictEqual(output, "");
+  });
+
+  it("should return value", () => {
+    const input = "10%";
+    const output = parsers.parsePercent(input);
+
+    assert.strictEqual(output, "10%");
+  });
+
+  it("should return undefined for negative percent", () => {
+    const input = "-10%";
+    const output = parsers.parsePercent(input, true);
+
+    assert.strictEqual(output, undefined);
   });
 
   it("should return value as is", () => {
@@ -419,11 +382,11 @@ describe("parsePercent", () => {
 });
 
 describe("parseMeasurement", () => {
-  it("should return null", () => {
+  it("should return empty string", () => {
     const input = null;
     const output = parsers.parseMeasurement(input);
 
-    assert.strictEqual(output, null);
+    assert.strictEqual(output, "");
   });
 
   it("should return empty string", () => {
@@ -431,6 +394,13 @@ describe("parseMeasurement", () => {
     const output = parsers.parseMeasurement(input);
 
     assert.strictEqual(output, "");
+  });
+
+  it("should return undefined", () => {
+    const input = "-1em";
+    const output = parsers.parseMeasurement(input, true);
+
+    assert.strictEqual(output, undefined);
   });
 
   it("should return value with em unit", () => {
@@ -494,50 +464,6 @@ describe("parseMeasurement", () => {
     const output = parsers.parseMeasurement(input);
 
     assert.strictEqual(output, "0px");
-  });
-});
-
-describe("parseInheritingMeasurement", () => {
-  it("should return auto", () => {
-    const input = "auto";
-    const output = parsers.parseInheritingMeasurement(input);
-
-    assert.strictEqual(output, "auto");
-  });
-
-  it("should return auto", () => {
-    const input = "AUTO";
-    const output = parsers.parseInheritingMeasurement(input);
-
-    assert.strictEqual(output, "auto");
-  });
-
-  it("should return inherit", () => {
-    const input = "inherit";
-    const output = parsers.parseInheritingMeasurement(input);
-
-    assert.strictEqual(output, "inherit");
-  });
-
-  it("should return inherit", () => {
-    const input = "INHERIT";
-    const output = parsers.parseInheritingMeasurement(input);
-
-    assert.strictEqual(output, "inherit");
-  });
-
-  it("should return value with em unit", () => {
-    const input = "1em";
-    const output = parsers.parseInheritingMeasurement(input);
-
-    assert.strictEqual(output, "1em");
-  });
-
-  it("should return value with percent", () => {
-    const input = "100%";
-    const output = parsers.parseInheritingMeasurement(input);
-
-    assert.strictEqual(output, "100%");
   });
 });
 
@@ -692,7 +618,75 @@ describe("parseUrl", () => {
 });
 
 describe("parseString", () => {
-  it.todo("test");
+  it("should return empty string", () => {
+    const input = null;
+    const output = parsers.parseString(input);
+
+    assert.strictEqual(output, "");
+  });
+
+  it("should return empty string", () => {
+    const input = "";
+    const output = parsers.parseString(input);
+
+    assert.strictEqual(output, "");
+  });
+
+  it("should return undefined", () => {
+    const input = undefined;
+    const output = parsers.parseString(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = "foo";
+    const output = parsers.parseString(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = "'foo bar\"";
+    const output = parsers.parseString(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return quoted string", () => {
+    const input = "'foo bar'";
+    const output = parsers.parseString(input);
+
+    assert.strictEqual(output, '"foo bar"');
+  });
+
+  it("should return quoted string", () => {
+    const input = '"foo bar"';
+    const output = parsers.parseString(input);
+
+    assert.strictEqual(output, '"foo bar"');
+  });
+
+  it("should return quoted string", () => {
+    const input = '"foo \ bar"';
+    const output = parsers.parseString(input);
+
+    assert.strictEqual(output, '"foo  bar"');
+  });
+
+  it("should return quoted string", () => {
+    const input = '"foo \\\\ bar"';
+    const output = parsers.parseString(input);
+
+    assert.strictEqual(output, '"foo \\\\ bar"');
+  });
+
+  it("should return quoted string", () => {
+    const input = "'foo \"bar\"'";
+    const output = parsers.parseString(input);
+
+    assert.strictEqual(output, '"foo \\"bar\\""');
+  });
 });
 
 describe("parseColor", () => {
@@ -947,7 +941,7 @@ describe("parseImage", () => {
   });
 });
 
-describe("shorthandParser", () => {
+describe("parseShorthand", () => {
   const flexGrow = require("../lib/properties/flexGrow");
   const flexShrink = require("../lib/properties/flexShrink");
   const flexBasis = require("../lib/properties/flexBasis");
@@ -959,14 +953,14 @@ describe("shorthandParser", () => {
 
   it("should return undefined for keyword", () => {
     const input = "none";
-    const output = parsers.shorthandParser(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandFor);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return object", () => {
     const input = "0 0 auto";
-    const output = parsers.shorthandParser(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandFor);
 
     assert.deepEqual(output, {
       "flex-grow": "0",
@@ -977,7 +971,7 @@ describe("shorthandParser", () => {
 
   it("should return object", () => {
     const input = "0 1 auto";
-    const output = parsers.shorthandParser(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandFor);
 
     assert.deepEqual(output, {
       "flex-grow": "0",
@@ -988,7 +982,7 @@ describe("shorthandParser", () => {
 
   it("should return object", () => {
     const input = "2";
-    const output = parsers.shorthandParser(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandFor);
 
     assert.deepEqual(output, {
       "flex-grow": "2"
@@ -997,7 +991,7 @@ describe("shorthandParser", () => {
 
   it("should return object", () => {
     const input = "2 1";
-    const output = parsers.shorthandParser(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandFor);
 
     assert.deepEqual(output, {
       "flex-grow": "2",
@@ -1007,7 +1001,7 @@ describe("shorthandParser", () => {
 
   it("should return object", () => {
     const input = "10px";
-    const output = parsers.shorthandParser(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandFor);
 
     assert.deepEqual(output, {
       "flex-basis": "10px"
@@ -1016,7 +1010,7 @@ describe("shorthandParser", () => {
 
   it("should return object", () => {
     const input = "2 10px";
-    const output = parsers.shorthandParser(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandFor);
 
     assert.deepEqual(output, {
       "flex-grow": "2",
@@ -1026,10 +1020,47 @@ describe("shorthandParser", () => {
 
   it("should return undefined", () => {
     const input = "2 10px 20px";
-    const output = parsers.shorthandParser(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandFor);
 
     assert.deepEqual(output, undefined);
   });
 
   it.todo("test");
+});
+
+describe("isValidColor", () => {
+  it("should return false", () => {
+    const input = "foo";
+    const output = parsers.isValidColor(input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return false", () => {
+    const input = "inherit";
+    const output = parsers.isValidColor(input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return true", () => {
+    const input = "green";
+    const output = parsers.isValidColor(input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "#008000";
+    const output = parsers.isValidColor(input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "rgb(0 128 0)";
+    const output = parsers.isValidColor(input);
+
+    assert.strictEqual(output, true);
+  });
 });
