@@ -953,4 +953,28 @@ describe("CSSStyleDeclaration", () => {
     style.width = undefined;
     assert.strictEqual(style.getPropertyValue("width"), "10px");
   });
+
+  // @see https://github.com/jsdom/jsdom/issues/3833
+  it("should set global value unset", () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty("width", "10px");
+    assert.strictEqual(style.getPropertyValue("width"), "10px");
+
+    style.setProperty("width", "unset");
+    assert.strictEqual(style.getPropertyValue("width"), "unset");
+  });
+
+  // @see https://github.com/jsdom/jsdom/issues/3878
+  it("should not set custom properties twice", () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty("--foo", 0);
+    style.setProperty("--foo", 1);
+
+    assert.strictEqual(style.item(0), "--foo");
+    assert.strictEqual(style.item(1), "");
+    assert.deepEqual(JSON.parse(JSON.stringify(style)), {
+      0: "--foo"
+    });
+    assert.strictEqual(style.getPropertyValue("--foo"), "1");
+  });
 });
