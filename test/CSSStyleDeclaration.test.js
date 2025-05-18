@@ -779,8 +779,8 @@ describe("CSSStyleDeclaration", () => {
     style.removeProperty("flex");
     style.removeProperty("flex-basis");
     style.setProperty("flex", "auto");
-    assert.strictEqual(style.getPropertyValue("flex-grow"), "");
-    assert.strictEqual(style.getPropertyValue("flex-shrink"), "");
+    assert.strictEqual(style.getPropertyValue("flex-grow"), "1");
+    assert.strictEqual(style.getPropertyValue("flex-shrink"), "1");
     assert.strictEqual(style.getPropertyValue("flex-basis"), "auto");
     style.removeProperty("flex");
     style.setProperty("flex", "0 1 250px");
@@ -791,18 +791,18 @@ describe("CSSStyleDeclaration", () => {
     style.removeProperty("flex");
     style.setProperty("flex", "2");
     assert.strictEqual(style.getPropertyValue("flex-grow"), "2");
-    assert.strictEqual(style.getPropertyValue("flex-shrink"), "");
-    assert.strictEqual(style.getPropertyValue("flex-basis"), "");
+    assert.strictEqual(style.getPropertyValue("flex-shrink"), "1");
+    assert.strictEqual(style.getPropertyValue("flex-basis"), "0%");
     style.removeProperty("flex");
     style.setProperty("flex", "20%");
-    assert.strictEqual(style.getPropertyValue("flex-grow"), "");
-    assert.strictEqual(style.getPropertyValue("flex-shrink"), "");
+    assert.strictEqual(style.getPropertyValue("flex-grow"), "1");
+    assert.strictEqual(style.getPropertyValue("flex-shrink"), "1");
     assert.strictEqual(style.getPropertyValue("flex-basis"), "20%");
     style.removeProperty("flex");
     style.setProperty("flex", "2 2");
     assert.strictEqual(style.getPropertyValue("flex-grow"), "2");
     assert.strictEqual(style.getPropertyValue("flex-shrink"), "2");
-    assert.strictEqual(style.getPropertyValue("flex-basis"), "");
+    assert.strictEqual(style.getPropertyValue("flex-basis"), "0%");
     style.removeProperty("flex");
   });
 
@@ -940,5 +940,17 @@ describe("CSSStyleDeclaration", () => {
     const style = new CSSStyleDeclaration();
     style.setProperty("width", "calc(sign(.1) + sign(.2))");
     assert.strictEqual(style.getPropertyValue("width"), "calc(2)");
+  });
+
+  it("no-op for setting undefined to width", () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty("width", "10px");
+    assert.strictEqual(style.getPropertyValue("width"), "10px");
+
+    style.setProperty("width", undefined);
+    assert.strictEqual(style.getPropertyValue("width"), "10px");
+
+    style.width = undefined;
+    assert.strictEqual(style.getPropertyValue("width"), "10px");
   });
 });
