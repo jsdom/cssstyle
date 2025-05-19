@@ -977,4 +977,34 @@ describe("CSSStyleDeclaration", () => {
     });
     assert.strictEqual(style.getPropertyValue("--foo"), "1");
   });
+
+  // @see https://github.com/jsdom/cssstyle/issues/129
+  it("should set stringified value", () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty("--foo", true);
+    assert.strictEqual(style.getPropertyValue("--foo"), "true");
+  });
+
+  // @see https://github.com/jsdom/cssstyle/issues/129
+  it("throws for setting Symbol", () => {
+    const style = new CSSStyleDeclaration();
+    assert.throws(
+      () => style.setProperty("width", Symbol("foo")),
+      (e) => {
+        assert.strictEqual(e instanceof TypeError, true);
+        assert.strictEqual(e.message, "Can not convert symbol to string.");
+        return true;
+      }
+    );
+    assert.throws(
+      () => {
+        style.width = Symbol("foo");
+      },
+      (e) => {
+        assert.strictEqual(e instanceof TypeError, true);
+        assert.strictEqual(e.message, "Can not convert symbol to string.");
+        return true;
+      }
+    );
+  });
 });
