@@ -6,41 +6,115 @@ const assert = require("node:assert/strict");
 const parsers = require("../lib/parsers");
 
 describe("prepareValue", () => {
-  it("should return undefined", () => {
-    const input = undefined;
-    const output = parsers.prepareValue(input);
-
-    assert.strictEqual(output, "undefined");
-  });
-
-  it("should return empty string", () => {
+  it("should return empty string for null", () => {
     const input = null;
     const output = parsers.prepareValue(input);
 
     assert.strictEqual(output, "");
   });
 
-  it("should return stringified number", () => {
-    const input = 1.5;
-    const output = parsers.prepareValue(input);
-
-    assert.strictEqual(output, "1.5");
-  });
-
-  it("should return string", () => {
+  it("should return string for string", () => {
     const input = "foo";
     const output = parsers.prepareValue(input);
 
     assert.strictEqual(output, "foo");
   });
 
-  it("should return as is", () => {
-    const input = {
-      toString: () => null
-    };
+  it("should return stringified number for number", () => {
+    const input = 1.5;
     const output = parsers.prepareValue(input);
 
-    assert.deepEqual(output, input);
+    assert.strictEqual(output, "1.5");
+  });
+
+  it("should return string for undefined", () => {
+    const input = undefined;
+    const output = parsers.prepareValue(input);
+
+    assert.strictEqual(output, "undefined");
+  });
+
+  it("should return string for BigInt", () => {
+    const input = BigInt(1);
+    const output = parsers.prepareValue(input);
+
+    assert.strictEqual(output, "1");
+  });
+
+  it("should return string for boolean", () => {
+    const input = true;
+    const output = parsers.prepareValue(input);
+
+    assert.strictEqual(output, "true");
+  });
+
+  it("should return string for boolean", () => {
+    const input = false;
+    const output = parsers.prepareValue(input);
+
+    assert.strictEqual(output, "false");
+  });
+
+  it("should throw for Symbol", () => {
+    const input = Symbol("foo");
+
+    assert.throws(
+      () => parsers.prepareValue(input),
+      (e) => {
+        assert.strictEqual(e instanceof globalThis.TypeError, true);
+        assert.strictEqual(e.message, "Can not convert symbol to string.");
+        return true;
+      }
+    );
+  });
+
+  it("should throw with window global for Symbol", () => {
+    const input = Symbol("foo");
+    const window = {
+      TypeError: globalThis.TypeError
+    };
+
+    assert.throws(
+      () => parsers.prepareValue(input, window),
+      (e) => {
+        assert.strictEqual(e instanceof window.TypeError, true);
+        assert.strictEqual(e.message, "Can not convert symbol to string.");
+        return true;
+      }
+    );
+  });
+
+  it("should throw for object.toString() not converting to string", () => {
+    const input = {
+      toString: () => [1]
+    };
+
+    assert.throws(
+      () => parsers.prepareValue(input),
+      (e) => {
+        assert.strictEqual(e instanceof globalThis.TypeError, true);
+        assert.strictEqual(e.message, "Can not convert object to string.");
+        return true;
+      }
+    );
+  });
+
+  it("should throw for object.toString() not converting to string", () => {
+    const input = {
+      toString: () => [1]
+    };
+    const window = {
+      TypeError: globalThis.TypeError
+    };
+
+    assert.throws(
+      () => parsers.prepareValue(input, window),
+      (e) => {
+        assert.strictEqual(e instanceof window.TypeError, true);
+        assert.strictEqual(e.message, "Can not convert object to string.");
+        return true;
+      }
+    );
   });
 });
 
