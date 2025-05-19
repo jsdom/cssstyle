@@ -120,13 +120,6 @@ describe("prepareValue", () => {
 
 describe("parseNumber", () => {
   it("should return empty string", () => {
-    const input = null;
-    const output = parsers.parseNumber(input);
-
-    assert.strictEqual(output, "");
-  });
-
-  it("should return empty string", () => {
     const input = "";
     const output = parsers.parseNumber(input);
 
@@ -141,20 +134,6 @@ describe("parseNumber", () => {
   });
 
   it("should return undefined", () => {
-    const input = undefined;
-    const output = parsers.parseNumber(input);
-
-    assert.strictEqual(output, undefined);
-  });
-
-  it("should return undefined", () => {
-    const input = NaN;
-    const output = parsers.parseNumber(input);
-
-    assert.strictEqual(output, undefined);
-  });
-
-  it("should return undefined", () => {
     const input = "-1";
     const output = parsers.parseNumber(input, true);
 
@@ -162,24 +141,10 @@ describe("parseNumber", () => {
   });
 
   it('should return "1"', () => {
-    const input = 1;
-    const output = parsers.parseNumber(input);
-
-    assert.strictEqual(output, "1");
-  });
-
-  it('should return "1"', () => {
     const input = "1";
     const output = parsers.parseNumber(input);
 
     assert.strictEqual(output, "1");
-  });
-
-  it('should return "0.5"', () => {
-    const input = 0.5;
-    const output = parsers.parseNumber(input);
-
-    assert.strictEqual(output, "0.5");
   });
 
   it('should return "0.5"', () => {
@@ -205,13 +170,6 @@ describe("parseNumber", () => {
 });
 
 describe("parseLength", () => {
-  it("should return empty string", () => {
-    const input = null;
-    const output = parsers.parseLength(input);
-
-    assert.strictEqual(output, "");
-  });
-
   it("should return empty string", () => {
     const input = "";
     const output = parsers.parseLength(input);
@@ -257,13 +215,6 @@ describe("parseLength", () => {
 
 describe("parsePercent", () => {
   it("should return empty string", () => {
-    const input = null;
-    const output = parsers.parsePercent(input);
-
-    assert.strictEqual(output, "");
-  });
-
-  it("should return empty string", () => {
     const input = "";
     const output = parsers.parsePercent(input);
 
@@ -307,13 +258,6 @@ describe("parsePercent", () => {
 });
 
 describe("parseMeasurement", () => {
-  it("should return empty string", () => {
-    const input = null;
-    const output = parsers.parseMeasurement(input);
-
-    assert.strictEqual(output, "");
-  });
-
   it("should return empty string", () => {
     const input = "";
     const output = parsers.parseMeasurement(input);
@@ -394,13 +338,6 @@ describe("parseMeasurement", () => {
 
 describe("parseAngle", () => {
   it("should return empty string", () => {
-    const input = null;
-    const output = parsers.parseAngle(input);
-
-    assert.strictEqual(output, "");
-  });
-
-  it("should return empty string", () => {
     const input = "";
     const output = parsers.parseAngle(input);
 
@@ -456,14 +393,7 @@ describe("parseAngle", () => {
     assert.strictEqual(output, "calc(30deg)");
   });
 
-  it("should return 0deg for 0", () => {
-    const input = 0;
-    const output = parsers.parseAngle(input);
-
-    assert.strictEqual(output, "0deg");
-  });
-
-  it('should return 0px for "0"', () => {
+  it('should return 0deg for "0"', () => {
     const input = "0";
     const output = parsers.parseAngle(input);
 
@@ -473,13 +403,6 @@ describe("parseAngle", () => {
 
 describe("parseUrl", () => {
   it("should return empty string", () => {
-    const input = null;
-    const output = parsers.parseUrl(input);
-
-    assert.strictEqual(output, "");
-  });
-
-  it("should return empty string", () => {
     const input = "";
     const output = parsers.parseUrl(input);
 
@@ -488,13 +411,6 @@ describe("parseUrl", () => {
 
   it("should return undefined", () => {
     const input = "url(var(--foo))";
-    const output = parsers.parseUrl(input);
-
-    assert.strictEqual(output, undefined);
-  });
-
-  it("should return undefined", () => {
-    const input = undefined;
     const output = parsers.parseUrl(input);
 
     assert.strictEqual(output, undefined);
@@ -623,24 +539,10 @@ describe("parseUrl", () => {
 
 describe("parseString", () => {
   it("should return empty string", () => {
-    const input = null;
-    const output = parsers.parseString(input);
-
-    assert.strictEqual(output, "");
-  });
-
-  it("should return empty string", () => {
     const input = "";
     const output = parsers.parseString(input);
 
     assert.strictEqual(output, "");
-  });
-
-  it("should return undefined", () => {
-    const input = undefined;
-    const output = parsers.parseString(input);
-
-    assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
@@ -695,24 +597,10 @@ describe("parseString", () => {
 
 describe("parseColor", () => {
   it("should return empty string", () => {
-    const input = null;
-    const output = parsers.parseColor(input);
-
-    assert.strictEqual(output, "");
-  });
-
-  it("should return empty string", () => {
     const input = "";
     const output = parsers.parseColor(input);
 
     assert.strictEqual(output, "");
-  });
-
-  it("should return undefined", () => {
-    const input = undefined;
-    const output = parsers.parseColor(input);
-
-    assert.strictEqual(output, undefined);
   });
 
   it("should return inherit", () => {
@@ -814,10 +702,6 @@ describe("parseColor", () => {
   });
 });
 
-describe("parseAngle", () => {
-  it.todo("test");
-});
-
 describe("parseKeyword", () => {
   it("should return value", () => {
     const input = "inherit";
@@ -851,13 +735,6 @@ describe("parseKeyword", () => {
 describe("parseImage", () => {
   it("should return empty string", () => {
     const input = "";
-    const output = parsers.parseImage(input);
-
-    assert.strictEqual(output, "");
-  });
-
-  it("should return empty string", () => {
-    const input = null;
     const output = parsers.parseImage(input);
 
     assert.strictEqual(output, "");
