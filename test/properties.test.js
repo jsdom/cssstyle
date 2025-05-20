@@ -1108,6 +1108,22 @@ describe("font", () => {
       ])
     );
   });
+
+  it("font shorthand should set / get values", () => {
+    testImplicitPropertyValue(
+      "font",
+      'italic bold calc(3em/2)/1.2 Times, "Times New Roman", Georgia, serif',
+      'italic bold calc(1.5em) / 1.2 Times, "Times New Roman", Georgia, serif',
+      new Map([
+        ["font-style", "italic"],
+        ["font-variant", ""],
+        ["font-weight", "bold"],
+        ["font-size", "calc(1.5em)"],
+        ["line-height", "1.2"],
+        ["font-family", 'Times, "Times New Roman", Georgia, serif']
+      ])
+    );
+  });
 });
 
 describe("logical", () => {

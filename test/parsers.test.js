@@ -826,7 +826,7 @@ describe("parseShorthand", () => {
   const flexGrow = require("../lib/properties/flexGrow");
   const flexShrink = require("../lib/properties/flexShrink");
   const flexBasis = require("../lib/properties/flexBasis");
-  const shorthandFor = new Map([
+  const shorthandForFlex = new Map([
     ["flex-grow", flexGrow],
     ["flex-shrink", flexShrink],
     ["flex-basis", flexBasis]
@@ -834,14 +834,14 @@ describe("parseShorthand", () => {
 
   it("should return undefined for keyword", () => {
     const input = "none";
-    const output = parsers.parseShorthand(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandForFlex);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return object", () => {
     const input = "0 0 auto";
-    const output = parsers.parseShorthand(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandForFlex);
 
     assert.deepEqual(output, {
       "flex-grow": "0",
@@ -852,7 +852,7 @@ describe("parseShorthand", () => {
 
   it("should return object", () => {
     const input = "0 1 auto";
-    const output = parsers.parseShorthand(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandForFlex);
 
     assert.deepEqual(output, {
       "flex-grow": "0",
@@ -863,7 +863,7 @@ describe("parseShorthand", () => {
 
   it("should return object", () => {
     const input = "2";
-    const output = parsers.parseShorthand(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandForFlex);
 
     assert.deepEqual(output, {
       "flex-grow": "2"
@@ -872,7 +872,7 @@ describe("parseShorthand", () => {
 
   it("should return object", () => {
     const input = "2 1";
-    const output = parsers.parseShorthand(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandForFlex);
 
     assert.deepEqual(output, {
       "flex-grow": "2",
@@ -882,7 +882,7 @@ describe("parseShorthand", () => {
 
   it("should return object", () => {
     const input = "10px";
-    const output = parsers.parseShorthand(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandForFlex);
 
     assert.deepEqual(output, {
       "flex-basis": "10px"
@@ -891,7 +891,7 @@ describe("parseShorthand", () => {
 
   it("should return object", () => {
     const input = "2 10px";
-    const output = parsers.parseShorthand(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandForFlex);
 
     assert.deepEqual(output, {
       "flex-grow": "2",
@@ -901,9 +901,78 @@ describe("parseShorthand", () => {
 
   it("should return undefined", () => {
     const input = "2 10px 20px";
-    const output = parsers.parseShorthand(input, shorthandFor);
+    const output = parsers.parseShorthand(input, shorthandForFlex);
 
     assert.deepEqual(output, undefined);
+  });
+
+  it("should return object", () => {
+    const input = "calc(2/3)";
+    const output = parsers.parseShorthand(input, shorthandForFlex);
+
+    assert.deepEqual(output, {
+      "flex-grow": "calc(0.666667)"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "calc(2/3) calc(3*.5)";
+    const output = parsers.parseShorthand(input, shorthandForFlex);
+
+    assert.deepEqual(output, {
+      "flex-grow": "calc(0.666667)",
+      "flex-shrink": "calc(1.5)"
+    });
+  });
+
+  const fontStyle = require("../lib/properties/fontStyle");
+  const fontVariant = require("../lib/properties/fontVariant");
+  const fontWeight = require("../lib/properties/fontWeight");
+  const fontSize = require("../lib/properties/fontSize");
+  const lineHeight = require("../lib/properties/lineHeight");
+  const fontFamily = require("../lib/properties/fontFamily");
+
+  const shorthandForFont = new Map([
+    ["font-style", fontStyle],
+    ["font-variant", fontVariant],
+    ["font-weight", fontWeight],
+    ["font-size", fontSize],
+    ["line-height", lineHeight],
+    ["font-family", fontFamily]
+  ]);
+
+  it("should return undefined for invalid font-family", () => {
+    const input = "medium foo";
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, undefined);
+  });
+
+  it("should return object", () => {
+    const input = "normal medium sans-serif";
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, {
+      "font-style": "normal",
+      "font-variant": "normal",
+      "font-weight": "normal",
+      "font-size": "medium",
+      "line-height": "normal",
+      "font-family": "sans-serif"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "italic bold calc(3em/2) serif";
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, {
+      "font-style": "italic",
+      "font-weight": "bold",
+      "font-size": "calc(1.5em)",
+      "line-height": "calc(1.5em)",
+      "font-family": "serif"
+    });
   });
 
   it.todo("test");
