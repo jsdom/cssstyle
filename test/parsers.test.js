@@ -118,6 +118,36 @@ describe("prepareValue", () => {
   });
 });
 
+describe("hasVarFunc", () => {
+  it("should return false", () => {
+    const input = "";
+    const output = parsers.hasVarFunc(input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return false", () => {
+    const input = "--foo";
+    const output = parsers.hasVarFunc(input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return true", () => {
+    const input = "var(--foo)";
+    const output = parsers.hasVarFunc(input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "bar var(--foo)";
+    const output = parsers.hasVarFunc(input);
+
+    assert.strictEqual(output, true);
+  });
+});
+
 describe("parseNumber", () => {
   it("should return empty string", () => {
     const input = "";
@@ -925,6 +955,17 @@ describe("parseShorthand", () => {
     });
   });
 
+  it("should return object", () => {
+    const input = "1 0 var(--foo)";
+    const output = parsers.parseShorthand(input, shorthandForFlex);
+
+    assert.deepEqual(output, {
+      "flex-grow": "",
+      "flex-shrink": "",
+      "flex-basis": ""
+    });
+  });
+
   const fontStyle = require("../lib/properties/fontStyle");
   const fontVariant = require("../lib/properties/fontVariant");
   const fontWeight = require("../lib/properties/fontWeight");
@@ -975,7 +1016,19 @@ describe("parseShorthand", () => {
     });
   });
 
-  it.todo("test");
+  it("should return object", () => {
+    const input = "var(--foo) medium serif";
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, {
+      "font-style": "",
+      "font-variant": "",
+      "font-weight": "",
+      "font-size": "",
+      "line-height": "",
+      "font-family": ""
+    });
+  });
 });
 
 describe("isValidColor", () => {

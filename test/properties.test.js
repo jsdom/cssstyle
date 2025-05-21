@@ -260,6 +260,21 @@ describe("background", () => {
       }
     );
   });
+
+  it("background shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "background",
+      "fixed left repeat url(example.png) var(--foo)",
+      "fixed left repeat url(example.png) var(--foo)",
+      new Map([
+        ["background-image", ""],
+        ["background-position", ""],
+        ["background-repeat", ""],
+        ["background-attachment", ""],
+        ["background-color", ""]
+      ])
+    );
+  });
 });
 
 describe("border", () => {
@@ -555,6 +570,110 @@ describe("border", () => {
     testPropertyValue("border-spacing", "10px 20px", "10px 20px");
   });
 
+  it("border-top shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "border-top",
+      "1px solid green",
+      "1px solid green",
+      new Map([
+        ["border-top-width", "1px"],
+        ["border-top-style", "solid"],
+        ["border-top-color", "green"]
+      ])
+    );
+  });
+
+  it("border-top shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "border-top",
+      "1px var(--foo) green",
+      "1px var(--foo) green",
+      new Map([
+        ["border-top-width", ""],
+        ["border-top-style", ""],
+        ["border-top-color", ""]
+      ])
+    );
+  });
+
+  it("border-right shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "border-right",
+      "1px solid green",
+      "1px solid green",
+      new Map([
+        ["border-right-width", "1px"],
+        ["border-right-style", "solid"],
+        ["border-right-color", "green"]
+      ])
+    );
+  });
+
+  it("border-right shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "border-right",
+      "1px var(--foo) green",
+      "1px var(--foo) green",
+      new Map([
+        ["border-right-width", ""],
+        ["border-right-style", ""],
+        ["border-right-color", ""]
+      ])
+    );
+  });
+
+  it("border-bottom shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "border-bottom",
+      "1px solid green",
+      "1px solid green",
+      new Map([
+        ["border-bottom-width", "1px"],
+        ["border-bottom-style", "solid"],
+        ["border-bottom-color", "green"]
+      ])
+    );
+  });
+
+  it("border-bottom shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "border-bottom",
+      "1px var(--foo) green",
+      "1px var(--foo) green",
+      new Map([
+        ["border-bottom-width", ""],
+        ["border-bottom-style", ""],
+        ["border-bottom-color", ""]
+      ])
+    );
+  });
+
+  it("border-left shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "border-left",
+      "1px solid green",
+      "1px solid green",
+      new Map([
+        ["border-left-width", "1px"],
+        ["border-left-style", "solid"],
+        ["border-left-color", "green"]
+      ])
+    );
+  });
+
+  it("border-left shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "border-left",
+      "1px var(--foo) green",
+      "1px var(--foo) green",
+      new Map([
+        ["border-left-width", ""],
+        ["border-left-style", ""],
+        ["border-left-color", ""]
+      ])
+    );
+  });
+
   it("border shorthand should set / get value", () => {
     testImplicitPropertyValue(
       "border",
@@ -573,6 +692,28 @@ describe("border", () => {
         ["border-left-width", "1px"],
         ["border-left-style", "solid"],
         ["border-left-color", "green"]
+      ])
+    );
+  });
+
+  it("border shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "border",
+      "1px var(--foo) green",
+      "1px var(--foo) green",
+      new Map([
+        ["border-top-width", ""],
+        ["border-top-style", ""],
+        ["border-top-color", ""],
+        ["border-right-width", ""],
+        ["border-right-style", ""],
+        ["border-right-color", ""],
+        ["border-bottom-width", ""],
+        ["border-bottom-style", ""],
+        ["border-bottom-color", ""],
+        ["border-left-width", ""],
+        ["border-left-style", ""],
+        ["border-left-color", ""]
       ])
     );
   });
@@ -717,6 +858,48 @@ describe("box model", () => {
     );
   });
 
+  it("margin shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "margin",
+      "10px 20px 30px",
+      "10px 20px 30px",
+      new Map([
+        ["margin-top", "10px"],
+        ["margin-right", "20px"],
+        ["margin-bottom", "30px"],
+        ["margin-left", "20px"]
+      ])
+    );
+  });
+
+  it("margin shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "margin",
+      "10px 20px 30px 40px",
+      "10px 20px 30px 40px",
+      new Map([
+        ["margin-top", "10px"],
+        ["margin-right", "20px"],
+        ["margin-bottom", "30px"],
+        ["margin-left", "40px"]
+      ])
+    );
+  });
+
+  it("margin shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "margin",
+      "10px var(--foo)",
+      "10px var(--foo)",
+      new Map([
+        ["margin-top", ""],
+        ["margin-right", ""],
+        ["margin-bottom", ""],
+        ["margin-left", ""]
+      ])
+    );
+  });
+
   it("padding-top should set / get length", () => {
     testPropertyValue("padding-top", "0", "0px");
   });
@@ -821,6 +1004,48 @@ describe("box model", () => {
         ["padding-right", "20px"],
         ["padding-bottom", "10px"],
         ["padding-left", "20px"]
+      ])
+    );
+  });
+
+  it("padding shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "padding",
+      "10px 20px 30px",
+      "10px 20px 30px",
+      new Map([
+        ["padding-top", "10px"],
+        ["padding-right", "20px"],
+        ["padding-bottom", "30px"],
+        ["padding-left", "20px"]
+      ])
+    );
+  });
+
+  it("padding shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "padding",
+      "10px 20px 30px 40px",
+      "10px 20px 30px 40px",
+      new Map([
+        ["padding-top", "10px"],
+        ["padding-right", "20px"],
+        ["padding-bottom", "30px"],
+        ["padding-left", "40px"]
+      ])
+    );
+  });
+
+  it("padding shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "padding",
+      "10px var(--foo)",
+      "10px var(--foo)",
+      new Map([
+        ["padding-top", ""],
+        ["padding-right", ""],
+        ["padding-bottom", ""],
+        ["padding-left", ""]
       ])
     );
   });
@@ -978,6 +1203,19 @@ describe("flex box", () => {
   it("flex shorthand should set / get longhand value", () => {
     testPropertyValue("flex", "2 3 10px", "2 3 10px");
   });
+
+  it("flex shorthand should set / get longhand value", () => {
+    testImplicitPropertyValue(
+      "flex",
+      "2 var(--foo) 10px",
+      "2 var(--foo) 10px",
+      new Map([
+        ["flex-grow", ""],
+        ["flex-shrink", ""],
+        ["flex-basis", ""]
+      ])
+    );
+  });
 });
 
 describe("font", () => {
@@ -1121,6 +1359,22 @@ describe("font", () => {
         ["font-size", "calc(1.5em)"],
         ["line-height", "1.2"],
         ["font-family", 'Times, "Times New Roman", Georgia, serif']
+      ])
+    );
+  });
+
+  it("font shorthand should set / get values", () => {
+    testImplicitPropertyValue(
+      "font",
+      'italic bold var(--foo)/1.2 Times, "Times New Roman", Georgia, serif',
+      'italic bold var(--foo)/1.2 Times, "Times New Roman", Georgia, serif',
+      new Map([
+        ["font-style", ""],
+        ["font-variant", ""],
+        ["font-weight", ""],
+        ["font-size", ""],
+        ["line-height", ""],
+        ["font-family", ""]
       ])
     );
   });
