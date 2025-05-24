@@ -43,7 +43,11 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   assert.strictEqual(res, expected, `setProperty("${property}", '${value}')`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, subExpected, `setProperty("${property}", '${value}') ${key}`);
+    assert.strictEqual(
+      res,
+      subExpected,
+      `setProperty("${property}", '${value}') implicitly changes the value of ${key}`
+    );
   }
 
   style.setProperty(property, undefined);
@@ -51,7 +55,11 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   assert.strictEqual(res, expected, `setProperty("${property}", undefined)`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, subExpected, `setProperty("${property}", undefined) ${key}`);
+    assert.strictEqual(
+      res,
+      subExpected,
+      `setProperty("${property}", undefined) does not change the value of ${key}`
+    );
   }
 
   style.setProperty(property, null);
@@ -59,14 +67,22 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   assert.strictEqual(res, "", `setProperty("${property}", null)`);
   for (const [key] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, "", `setProperty("${property}", null) ${key}`);
+    assert.strictEqual(
+      res,
+      "",
+      `setProperty("${property}", null) implicitly changes the value of ${key}`
+    );
   }
 
   for (const key of sub.keys()) {
     style.setProperty(property, value);
     style.setProperty(key, "var(--foo)");
     res = style.getPropertyValue(property);
-    assert.strictEqual(res, "", `setProperty("${key}", "var(--foo)") ${property}`);
+    assert.strictEqual(
+      res,
+      "",
+      `setProperty("${key}", "var(--foo)") implicitly changes the value of ${property}`
+    );
     style.setProperty(property, null);
   }
 
@@ -75,7 +91,11 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   assert.strictEqual(res, expected, `set["${property}"] = '${value}'`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, subExpected, `set["${property}"] = '${value}' ${key}`);
+    assert.strictEqual(
+      res,
+      subExpected,
+      `set["${property}"] = '${value}' implicitly changes the value of ${key}`
+    );
   }
 
   style[property] = undefined;
@@ -83,7 +103,11 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   assert.strictEqual(res, expected, `set["${property}"] = undefined`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, subExpected, `set["${property}"] = undefined ${key}`);
+    assert.strictEqual(
+      res,
+      subExpected,
+      `set["${property}"] = undefined does not change the value of ${key}`
+    );
   }
 
   style[property] = null;
@@ -91,7 +115,7 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   assert.strictEqual(res, "", `set["${property}"] = null`);
   for (const [key] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, "", `set["${property}"] = null ${key}`);
+    assert.strictEqual(res, "", `set["${property}"] = null implicitly changes the value of ${key}`);
   }
 }
 
