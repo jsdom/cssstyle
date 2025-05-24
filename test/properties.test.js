@@ -11,27 +11,27 @@ function testPropertyValue(property, value, expected) {
 
   style.setProperty(property, value);
   res = style.getPropertyValue(property);
-  assert.strictEqual(res, expected, `setProperty(${property}, ${value})`);
+  assert.strictEqual(res, expected, `setProperty("${property}", '${value}')`);
 
   style.setProperty(property, undefined);
   res = style.getPropertyValue(property);
-  assert.strictEqual(res, expected, `setProperty(${property}, undefined)`);
+  assert.strictEqual(res, expected, `setProperty("${property}", undefined)`);
 
   style.setProperty(property, null);
   res = style.getPropertyValue(property);
-  assert.strictEqual(res, "", `setProperty(${property}, null)`);
+  assert.strictEqual(res, "", `setProperty("${property}", null)`);
 
   style[property] = value;
   res = style[property];
-  assert.strictEqual(res, expected, `set[${property}] = ${value}`);
+  assert.strictEqual(res, expected, `set["${property}"] = '${value}'`);
 
   style[property] = undefined;
   res = style[property];
-  assert.strictEqual(res, expected, `set[${property}] = undefined`);
+  assert.strictEqual(res, expected, `set["${property}"] = undefined`);
 
   style[property] = null;
   res = style[property];
-  assert.strictEqual(res, "", `set[${property}] = null`);
+  assert.strictEqual(res, "", `set["${property}"] = null`);
 }
 
 function testImplicitPropertyValue(property, value, expected, sub) {
@@ -40,50 +40,58 @@ function testImplicitPropertyValue(property, value, expected, sub) {
 
   style.setProperty(property, value);
   res = style.getPropertyValue(property);
-  assert.strictEqual(res, expected, `setProperty(${property}, ${value})`);
+  assert.strictEqual(res, expected, `setProperty("${property}", '${value}')`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, subExpected, `setProperty(${property}, ${value}) ${key}`);
+    assert.strictEqual(res, subExpected, `setProperty("${property}", '${value}') ${key}`);
   }
 
   style.setProperty(property, undefined);
   res = style.getPropertyValue(property);
-  assert.strictEqual(res, expected, `setProperty(${property}, undefined)`);
+  assert.strictEqual(res, expected, `setProperty("${property}", undefined)`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, subExpected, `setProperty(${property}, undefined) ${key}`);
+    assert.strictEqual(res, subExpected, `setProperty("${property}", undefined) ${key}`);
   }
 
   style.setProperty(property, null);
   res = style.getPropertyValue(property);
-  assert.strictEqual(res, "", `setProperty(${property}, null)`);
+  assert.strictEqual(res, "", `setProperty("${property}", null)`);
   for (const [key] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, "", `setProperty${property}, null) ${key}`);
+    assert.strictEqual(res, "", `setProperty("${property}", null) ${key}`);
+  }
+
+  for (const key of sub.keys()) {
+    style.setProperty(property, value);
+    style.setProperty(key, "var(--foo)");
+    res = style.getPropertyValue(property);
+    assert.strictEqual(res, "", `setProperty("${key}", "var(--foo)") ${property}`);
+    style.setProperty(property, null);
   }
 
   style[property] = value;
   res = style[property];
-  assert.strictEqual(res, expected, `set[${property}] = ${value}`);
+  assert.strictEqual(res, expected, `set["${property}"] = '${value}'`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, subExpected, `set[${property}] = ${value}) ${key}`);
+    assert.strictEqual(res, subExpected, `set["${property}"] = '${value}' ${key}`);
   }
 
   style[property] = undefined;
   res = style[property];
-  assert.strictEqual(res, expected, `set[${property}] = undefined`);
+  assert.strictEqual(res, expected, `set["${property}"] = undefined`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, subExpected, `set[${property}] = undefined) ${key}`);
+    assert.strictEqual(res, subExpected, `set["${property}"] = undefined ${key}`);
   }
 
   style[property] = null;
   res = style[property];
-  assert.strictEqual(res, "", `set[${property}] = null`);
+  assert.strictEqual(res, "", `set["${property}"] = null`);
   for (const [key] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(res, "", `set[${property}] = null) ${key}`);
+    assert.strictEqual(res, "", `set["${property}"] = null ${key}`);
   }
 }
 
@@ -94,27 +102,27 @@ function testShorthandPropertyValue(property, value, expected) {
 
   style.setProperty(property, value);
   res = style.getPropertyValue(property);
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty(${property}, ${value}`);
+  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}", '${value}'`);
 
   style.setProperty(property, undefined);
   res = style.getPropertyValue(property);
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty(${property}, undefined`);
+  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}", undefined`);
 
   style.setProperty(property, null);
   res = style.getPropertyValue(property);
-  assert.strictEqual(res, "", `setProperty(${property}, null`);
+  assert.strictEqual(res, "", `setProperty("${property}", null`);
 
   style[property] = value;
   res = style[property];
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty(${property} = ${value}`);
+  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}" = '${value}'`);
 
   style[property] = undefined;
   res = style[property];
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty(${property} = undefined`);
+  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}" = undefined`);
 
   style[property] = null;
   res = style[property];
-  assert.strictEqual(res, "", `set[${property}] = null`);
+  assert.strictEqual(res, "", `set["${property}"] = null`);
 }
 
 describe("background", () => {
