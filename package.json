@@ -37,7 +37,7 @@
   ],
   "main": "./lib/CSSStyleDeclaration.js",
   "dependencies": {
-    "@asamuzakjp/css-color": "^3.1.7",
+    "@asamuzakjp/css-color": "^3.2.0",
     "rrweb-cssom": "^0.8.0"
   },
   "devDependencies": {
@@ -45,6 +45,7 @@
     "@babel/parser": "^7.26.9",
     "@babel/traverse": "^7.26.9",
     "@babel/types": "^7.26.9",
+    "@domenic/eslint-config": "^4.0.1",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.3",
@@ -54,10 +55,10 @@
     "resolve": "^1.22.10"
   },
   "scripts": {
-    "download": "node ./scripts/downloadLatestProperties.mjs && eslint lib/allProperties.js --fix",
+    "download": "node ./scripts/downloadLatestProperties.mjs",
     "generate": "run-p generate:*",
     "generate:implemented_properties": "node ./scripts/generateImplementedProperties.mjs",
-    "generate:properties": "node ./scripts/generate_properties.js",
+    "generate:properties": "node ./scripts/generateProperties.js",
     "lint": "npm run generate && eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
     "prepublishOnly": "npm run lint && npm run test",
