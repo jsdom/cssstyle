@@ -953,8 +953,10 @@ describe("CSSStyleDeclaration", () => {
     style.width = undefined;
     assert.strictEqual(style.getPropertyValue("width"), "10px");
   });
+});
 
-  // @see https://github.com/jsdom/jsdom/issues/3833
+/* regression tests */
+describe("regression test for https://github.com/jsdom/jsdom/issues/3833", () => {
   it("should set global value unset", () => {
     const style = new CSSStyleDeclaration();
     style.setProperty("width", "10px");
@@ -963,13 +965,15 @@ describe("CSSStyleDeclaration", () => {
     style.setProperty("width", "unset");
     assert.strictEqual(style.getPropertyValue("width"), "unset");
   });
+});
 
-  // @see https://github.com/jsdom/jsdom/issues/3878
+describe("regression test for https://github.com/jsdom/jsdom/issues/3878", () => {
   it("should not set custom properties twice", () => {
     const style = new CSSStyleDeclaration();
     style.setProperty("--foo", 0);
     style.setProperty("--foo", 1);
 
+    assert.strictEqual(style.length, 1);
     assert.strictEqual(style.item(0), "--foo");
     assert.strictEqual(style.item(1), "");
     assert.deepEqual(JSON.parse(JSON.stringify(style)), {
@@ -977,15 +981,15 @@ describe("CSSStyleDeclaration", () => {
     });
     assert.strictEqual(style.getPropertyValue("--foo"), "1");
   });
+});
 
-  // @see https://github.com/jsdom/cssstyle/issues/129
+describe("regression test for https://github.com/jsdom/cssstyle/issues/129", () => {
   it("should set stringified value", () => {
     const style = new CSSStyleDeclaration();
     style.setProperty("--foo", true);
     assert.strictEqual(style.getPropertyValue("--foo"), "true");
   });
 
-  // @see https://github.com/jsdom/cssstyle/issues/129
   it("throws for setting Symbol", () => {
     const style = new CSSStyleDeclaration();
     assert.throws(
@@ -1006,5 +1010,46 @@ describe("CSSStyleDeclaration", () => {
         return true;
       }
     );
+  });
+});
+
+describe("regression test for https://github.com/jsdom/cssstyle/issues/70", () => {
+  it('returns empty string for "webkit-*", without leading "-"', () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "background-color: green; webkit-transform: scale(3);";
+    assert.strictEqual(style.backgroundColor, "green");
+    assert.strictEqual(style.webkitTransform, "");
+  });
+
+  it('should set/get value for "-webkit-*"', () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "background-color: green; -webkit-transform: scale(3);";
+    assert.strictEqual(style.backgroundColor, "green");
+    assert.strictEqual(style.webkitTransform, "scale(3)");
+  });
+
+  it('returns undefined for unknown "-webkit-*"', () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "background-color: green; -webkit-foo: scale(3);";
+    assert.strictEqual(style.backgroundColor, "green");
+    assert.strictEqual(style.webkitFoo, undefined);
+  });
+});
+
+describe("regression test for https://github.com/jsdom/cssstyle/issues/124", () => {
+  it("no-op when setting undefined to border", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "1px solid green";
+    assert.strictEqual(style.border, "1px solid green");
+    style.border = undefined;
+    assert.strictEqual(style.border, "1px solid green");
+  });
+
+  it("no-op when setting undefined to borderWidth", () => {
+    const style = new CSSStyleDeclaration();
+    style.borderWidth = "1px";
+    assert.strictEqual(style.borderWidth, "1px");
+    style.border = undefined;
+    assert.strictEqual(style.borderWidth, "1px");
   });
 });
