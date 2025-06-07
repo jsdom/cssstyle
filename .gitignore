@@ -1,4 +1,4 @@
 node_modules
 npm-debug.log
-lib/implementedProperties.js
-lib/properties.js
+lib/generated/implementedProperties.js
+lib/generated/properties.js

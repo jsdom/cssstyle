@@ -1,27 +1,40 @@
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import globals from 'globals';
+import domenicConfig from "@domenic/eslint-config";
+import prettierRecommended from "eslint-plugin-prettier/recommended";
+import globals from "globals";
 
 export default [
   {
-    ignores: ['lib/implementedProperties.js', 'lib/properties.js'],
+    ignores: ["lib/generated/*"]
   },
   {
-    files: ['**/*.js'],
+    files: ["**/*.js"],
     languageOptions: {
-      sourceType: 'commonjs',
-    },
+      sourceType: "commonjs"
+    }
   },
-  eslintPluginPrettierRecommended,
+  ...domenicConfig,
+  prettierRecommended,
   {
-    files: ['scripts/**/*'],
     rules: {
-      'no-console': 'off',
-    },
+      "consistent-return": "off",
+      "func-style": "off",
+      "prefer-destructuring": "off",
+      "require-unicode-regexp": "off"
+    }
   },
   {
-    files: ['scripts/**/*', 'tests/**/*'],
+    files: ["scripts/**/*"],
     languageOptions: {
-      globals: globals.node,
+      globals: globals.node
     },
+    rules: {
+      "no-console": "off"
+    }
   },
+  {
+    files: ["test/**/*"],
+    languageOptions: {
+      globals: globals.node
+    }
+  }
 ];
