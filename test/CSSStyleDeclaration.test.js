@@ -1077,7 +1077,7 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/212", () 
   });
 
   // see https://drafts.csswg.org/css-fonts-4/#changes-2021-12-21
-  it("support generic keywords that have been removed from the spec", () => {
+  it("should support removed generic keywords as non generic family name", () => {
     const keywords = ["emoji", "fangsong"];
     const style = new CSSStyleDeclaration();
     for (const keyword of keywords) {

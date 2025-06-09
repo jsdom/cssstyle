@@ -983,7 +983,7 @@ describe("parseShorthand", () => {
   ]);
 
   it("should return undefined for invalid font-family", () => {
-    const input = "medium foo";
+    const input = "medium Ahem!, sans-serif";
     const output = parsers.parseShorthand(input, shorthandForFont, true);
 
     assert.deepEqual(output, undefined);
