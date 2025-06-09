@@ -1053,3 +1053,17 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/124", () 
     assert.strictEqual(style.borderWidth, "1px");
   });
 });
+
+describe("regression test for https://github.com/jsdom/cssstyle/issues/214", () => {
+  it("should return value for each property", () => {
+    const style = new CSSStyleDeclaration();
+    const key = "background-color";
+    const camel = "backgroundColor";
+    const value = "var(--foo)";
+    style[key] = value;
+    assert.strictEqual(style[key], value);
+    style[key] = null;
+    style[camel] = value;
+    assert.strictEqual(style[camel], value);
+  });
+});
