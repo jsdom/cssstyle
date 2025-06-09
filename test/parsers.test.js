@@ -983,7 +983,63 @@ describe("parseShorthand", () => {
   ]);
 
   it("should return undefined for invalid font-family", () => {
-    const input = "medium Ahem!, sans-serif";
+    const input = "normal medium Goudy Bookletter 1911, sans-serif";
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, undefined);
+  });
+
+  it("should return undefined for invalid font-family", () => {
+    const input = "normal medium Red/Black, sans-serif";
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, undefined);
+  });
+
+  it("should return undefined for invalid font-family", () => {
+    const input = "normal medium Red/Black, sans-serif";
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, undefined);
+  });
+
+  it("should return undefined for invalid font-family", () => {
+    const input = 'normal medium "Lucida" Grande, sans-serif';
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, undefined);
+  });
+
+  it("should return undefined for invalid font-family", () => {
+    const input = 'normal medium Lucida "Grande", sans-serif';
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, undefined);
+  });
+
+  it("should return undefined for invalid font-family", () => {
+    const input = "normal medium Ahem!, sans-serif";
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, undefined);
+  });
+
+  it("should return undefined for invalid font-family", () => {
+    const input = "normal medium test@foo, sans-serif";
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, undefined);
+  });
+
+  it("should return undefined for invalid font-family", () => {
+    const input = "normal medium #POUND, sans-serif";
+    const output = parsers.parseShorthand(input, shorthandForFont, true);
+
+    assert.deepEqual(output, undefined);
+  });
+
+  it("should return undefined for invalid font-family", () => {
+    const input = "normal medium Hawaii 5-0, sans-serif";
     const output = parsers.parseShorthand(input, shorthandForFont, true);
 
     assert.deepEqual(output, undefined);
