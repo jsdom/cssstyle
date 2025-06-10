@@ -1347,6 +1347,54 @@ describe("font", () => {
     );
   });
 
+  it("font-family should set / get family values", () => {
+    testPropertyValue(
+      "font-family",
+      '"Gill Sans Extrabold", sans-serif',
+      '"Gill Sans Extrabold", sans-serif'
+    );
+  });
+
+  it("font-family should set / get family values", () => {
+    testPropertyValue(
+      "font-family",
+      '"Goudy Bookletter 1911", sans-serif',
+      '"Goudy Bookletter 1911", sans-serif'
+    );
+  });
+
+  it("font-family should not set / get invalid family values", () => {
+    testPropertyValue("font-family", "Goudy Bookletter 1911, sans-serif", "");
+  });
+
+  it("font-family should not set / get invalid family values", () => {
+    testPropertyValue("font-family", "Red/Black, sans-serif", "");
+  });
+
+  it("font-family should not set / get invalid family values", () => {
+    testPropertyValue("font-family", '"Lucida" Grande, sans-serif', "");
+  });
+
+  it("font-family should not set / get invalid family values", () => {
+    testPropertyValue("font-family", 'Lucida "Grande", sans-serif', "");
+  });
+
+  it("font-family should not set / get invalid family values", () => {
+    testPropertyValue("font-family", "Ahem!, sans-serif", "");
+  });
+
+  it("font-family should not set / get invalid family values", () => {
+    testPropertyValue("font-family", "test@foo, sans-serif", "");
+  });
+
+  it("font-family should not set / get invalid family values", () => {
+    testPropertyValue("font-family", "#POUND, sans-serif", "");
+  });
+
+  it("font-family should not set / get invalid family values", () => {
+    testPropertyValue("font-family", "Hawaii 5-0, sans-serif", "");
+  });
+
   it("font shorthand should set / get values", () => {
     testImplicitPropertyValue(
       "font",
