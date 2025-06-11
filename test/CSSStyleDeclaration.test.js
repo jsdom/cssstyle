@@ -1092,3 +1092,11 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/212", () 
     assert.strictEqual(style.fontFamily, "-webkit-body");
   });
 });
+
+describe("regression test for https://github.com/jsdom/jsdom/issues/3021", () => {
+  it("should get normalized value for font shorthand", () => {
+    const style = new CSSStyleDeclaration();
+    style.font = "normal bold 4px sans-serif";
+    assert.strictEqual(style.font, "bold 4px sans-serif");
+  });
+});
