@@ -1399,7 +1399,7 @@ describe("font", () => {
     testImplicitPropertyValue(
       "font",
       'normal medium Times, "Times New Roman", Georgia, serif',
-      'normal medium Times, "Times New Roman", Georgia, serif',
+      'medium Times, "Times New Roman", Georgia, serif',
       new Map([
         ["font-style", "normal"],
         ["font-variant", "normal"],
@@ -1414,11 +1414,171 @@ describe("font", () => {
   it("font shorthand should set / get values", () => {
     testImplicitPropertyValue(
       "font",
+      "normal medium Gill Sans Extrabold, sans-serif",
+      "medium Gill Sans Extrabold, sans-serif",
+      new Map([
+        ["font-style", "normal"],
+        ["font-variant", "normal"],
+        ["font-weight", "normal"],
+        ["font-size", "medium"],
+        ["line-height", "normal"],
+        ["font-family", "Gill Sans Extrabold, sans-serif"]
+      ])
+    );
+  });
+
+  it("font shorthand should set / get values", () => {
+    testImplicitPropertyValue(
+      "font",
+      'normal medium "Goudy Bookletter 1911", sans-serif',
+      'medium "Goudy Bookletter 1911", sans-serif',
+      new Map([
+        ["font-style", "normal"],
+        ["font-variant", "normal"],
+        ["font-weight", "normal"],
+        ["font-size", "medium"],
+        ["line-height", "normal"],
+        ["font-family", '"Goudy Bookletter 1911", sans-serif']
+      ])
+    );
+  });
+
+  it("font shorthand should not set / get invalid values", () => {
+    testImplicitPropertyValue(
+      "font",
+      "normal medium Goudy Bookletter 1911, sans-serif",
+      "",
+      new Map([
+        ["font-style", ""],
+        ["font-variant", ""],
+        ["font-weight", ""],
+        ["font-size", ""],
+        ["line-height", ""],
+        ["font-family", ""]
+      ])
+    );
+  });
+
+  it("font shorthand should not set / get invalid values", () => {
+    testImplicitPropertyValue(
+      "font",
+      "normal medium Red/Black, sans-serif",
+      "",
+      new Map([
+        ["font-style", ""],
+        ["font-variant", ""],
+        ["font-weight", ""],
+        ["font-size", ""],
+        ["line-height", ""],
+        ["font-family", ""]
+      ])
+    );
+  });
+
+  it("font shorthand should not set / get invalid values", () => {
+    testImplicitPropertyValue(
+      "font",
+      'normal medium "Lucida" Grande, sans-serif',
+      "",
+      new Map([
+        ["font-style", ""],
+        ["font-variant", ""],
+        ["font-weight", ""],
+        ["font-size", ""],
+        ["line-height", ""],
+        ["font-family", ""]
+      ])
+    );
+  });
+
+  it("font shorthand should not set / get invalid values", () => {
+    testImplicitPropertyValue(
+      "font",
+      'normal medium Lucida "Grande", sans-serif',
+      "",
+      new Map([
+        ["font-style", ""],
+        ["font-variant", ""],
+        ["font-weight", ""],
+        ["font-size", ""],
+        ["line-height", ""],
+        ["font-family", ""]
+      ])
+    );
+  });
+
+  it("font shorthand should not set / get invalid values", () => {
+    testImplicitPropertyValue(
+      "font",
+      "normal medium Ahem!, sans-serif",
+      "",
+      new Map([
+        ["font-style", ""],
+        ["font-variant", ""],
+        ["font-weight", ""],
+        ["font-size", ""],
+        ["line-height", ""],
+        ["font-family", ""]
+      ])
+    );
+  });
+
+  it("font shorthand should not set / get invalid values", () => {
+    testImplicitPropertyValue(
+      "font",
+      "normal medium test@foo, sans-serif",
+      "",
+      new Map([
+        ["font-style", ""],
+        ["font-variant", ""],
+        ["font-weight", ""],
+        ["font-size", ""],
+        ["line-height", ""],
+        ["font-family", ""]
+      ])
+    );
+  });
+
+  it("font shorthand should not set / get invalid values", () => {
+    testImplicitPropertyValue(
+      "font",
+      "normal medium #POUND, sans-serif",
+      "",
+      new Map([
+        ["font-style", ""],
+        ["font-variant", ""],
+        ["font-weight", ""],
+        ["font-size", ""],
+        ["line-height", ""],
+        ["font-family", ""]
+      ])
+    );
+  });
+
+  it("font shorthand should not set / get invalid values", () => {
+    testImplicitPropertyValue(
+      "font",
+      "normal medium Hawaii 5-0, sans-serif",
+      "",
+      new Map([
+        ["font-style", ""],
+        ["font-variant", ""],
+        ["font-weight", ""],
+        ["font-size", ""],
+        ["line-height", ""],
+        ["font-family", ""]
+      ])
+    );
+  });
+
+  it("font shorthand should set / get values", () => {
+    testImplicitPropertyValue(
+      "font",
       'italic bold medium/1.2 Times, "Times New Roman", Georgia, serif',
       'italic bold medium / 1.2 Times, "Times New Roman", Georgia, serif',
       new Map([
         ["font-style", "italic"],
-        ["font-variant", ""],
+        ["font-variant", "normal"],
         ["font-weight", "bold"],
         ["font-size", "medium"],
         ["line-height", "1.2"],
@@ -1434,7 +1594,7 @@ describe("font", () => {
       'italic bold calc(1.5em) / 1.2 Times, "Times New Roman", Georgia, serif',
       new Map([
         ["font-style", "italic"],
-        ["font-variant", ""],
+        ["font-variant", "normal"],
         ["font-weight", "bold"],
         ["font-size", "calc(1.5em)"],
         ["line-height", "1.2"],
