@@ -1053,3 +1053,50 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/124", () 
     assert.strictEqual(style.borderWidth, "1px");
   });
 });
+
+describe("regression test for https://github.com/jsdom/cssstyle/issues/212", () => {
+  it("should support <generic-family> keywords", () => {
+    const keywords = [
+      "serif",
+      "sans-serif",
+      "cursive",
+      "fantasy",
+      "monospace",
+      "system-ui",
+      "math",
+      "ui-serif",
+      "ui-sans-serif",
+      "ui-monospace",
+      "ui-rounded"
+    ];
+    const style = new CSSStyleDeclaration();
+    for (const keyword of keywords) {
+      style.fontFamily = keyword;
+      assert.strictEqual(style.fontFamily, keyword);
+    }
+  });
+
+  // see https://drafts.csswg.org/css-fonts-4/#changes-2021-12-21
+  it("should support removed generic keywords as non generic family name", () => {
+    const keywords = ["emoji", "fangsong"];
+    const style = new CSSStyleDeclaration();
+    for (const keyword of keywords) {
+      style.fontFamily = keyword;
+      assert.strictEqual(style.fontFamily, keyword);
+    }
+  });
+
+  it("should support `-webkit-` prefixed family name", () => {
+    const style = new CSSStyleDeclaration();
+    style.fontFamily = "-webkit-body";
+    assert.strictEqual(style.fontFamily, "-webkit-body");
+  });
+});
+
+describe("regression test for https://github.com/jsdom/jsdom/issues/3021", () => {
+  it("should get normalized value for font shorthand", () => {
+    const style = new CSSStyleDeclaration();
+    style.font = "normal bold 4px sans-serif";
+    assert.strictEqual(style.font, "bold 4px sans-serif");
+  });
+});
