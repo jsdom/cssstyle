@@ -859,6 +859,149 @@ describe("parseImage", () => {
   });
 });
 
+describe("parseFunction", () => {
+  it("should return undefined for keyword", () => {
+    const input = "inherit";
+    const output = parsers.parseFunction(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return object with null name and empty value for empty string", () => {
+    const input = "";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: null,
+      value: ""
+    });
+  });
+
+  it("should return undefined for unmatched value (hyphen before X)", () => {
+    const input = "foo-X(bar)";
+    const output = parsers.parseFunction(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined for unmatched value (hypen before number)", () => {
+    const input = "foo-3d(bar)";
+    const output = parsers.parseFunction(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return object with name var and value as is for var()", () => {
+    const input = "var(--foo)";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "var",
+      value: "var(--foo)"
+    });
+  });
+
+  it("should return object with name var and value as is for function containing var()", () => {
+    const input = "translate(var(--foo))";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "var",
+      value: "translate(var(--foo))"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "translate(0)";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "translate",
+      value: "0"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "translate(42px)";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "translate",
+      value: "42px"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "translate( 100px, 200px )";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "translate",
+      value: "100px, 200px"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "translateX(100px)";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "translateX",
+      value: "100px"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "translateY(100px)";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "translateY",
+      value: "100px"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "translateZ(100px)";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "translateZ",
+      value: "100px"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "translate3d(42px, -62px, -135px)";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "translate3d",
+      value: "42px, -62px, -135px"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "drop-shadow(30px 10px 4px #4444dd)";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "drop-shadow",
+      value: "30px 10px 4px #4444dd"
+    });
+  });
+
+  it("should return object", () => {
+    const input = "foo-bar-baz(qux)";
+    const output = parsers.parseFunction(input);
+
+    assert.deepEqual(output, {
+      name: "foo-bar-baz",
+      value: "qux"
+    });
+  });
+});
+
 describe("parseShorthand", () => {
   const flexGrow = require("../lib/properties/flexGrow");
   const flexShrink = require("../lib/properties/flexShrink");
