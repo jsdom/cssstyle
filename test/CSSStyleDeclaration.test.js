@@ -1113,4 +1113,12 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/214", () 
     style[camel] = value;
     assert.strictEqual(style[camel], value);
   });
+
+  it("should set var() values for background-attachment correctly", () => {
+    const style = new CSSStyleDeclaration();
+    style.backgroundAttachment = "var(--foo)";
+    assert.strictEqual(style.backgroundAttachment, "var(--foo)");
+    style.setProperty("background-attachment", "var(--bar)");
+    assert.strictEqual(style.backgroundAttachment, "var(--bar)");
+  });
 });
