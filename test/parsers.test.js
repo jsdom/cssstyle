@@ -640,6 +640,13 @@ describe("parseColor", () => {
     assert.strictEqual(output, "inherit");
   });
 
+  it("should return lower cased keyword for system color", () => {
+    const input = "CanvasText";
+    const output = parsers.parseColor(input);
+
+    assert.strictEqual(output, "canvastext");
+  });
+
   it("should convert hsl to rgb values", () => {
     const input = "hsla(0, 1%, 2%)";
     const output = parsers.parseColor(input);
