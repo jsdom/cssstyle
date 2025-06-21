@@ -1395,6 +1395,26 @@ describe("font", () => {
     testPropertyValue("font-family", "Hawaii 5-0, sans-serif", "");
   });
 
+  it("font-family should set / get family values", () => {
+    testPropertyValue("font-family", "generic(fangsong)", "generic(fangsong)");
+  });
+
+  it("font-family should set / get family values", () => {
+    testPropertyValue("font-family", "generic(kai)", "generic(kai)");
+  });
+
+  it("font-family should set / get family values", () => {
+    testPropertyValue("font-family", "generic(khmer-mul)", "generic(khmer-mul)");
+  });
+
+  it("font-family should set / get family values", () => {
+    testPropertyValue("font-family", "generic(nastaliq)", "generic(nastaliq)");
+  });
+
+  it("font-family should not set / get invalid family values", () => {
+    testPropertyValue("font-family", "generic(foo)", "");
+  });
+
   it("font shorthand should set / get values", () => {
     testImplicitPropertyValue(
       "font",
@@ -1439,6 +1459,22 @@ describe("font", () => {
         ["font-size", "medium"],
         ["line-height", "normal"],
         ["font-family", '"Goudy Bookletter 1911", sans-serif']
+      ])
+    );
+  });
+
+  it("font shorthand should set / get values", () => {
+    testImplicitPropertyValue(
+      "font",
+      "normal medium generic(fangsong)",
+      "medium generic(fangsong)",
+      new Map([
+        ["font-style", "normal"],
+        ["font-variant", "normal"],
+        ["font-weight", "normal"],
+        ["font-size", "medium"],
+        ["line-height", "normal"],
+        ["font-family", "generic(fangsong)"]
       ])
     );
   });
