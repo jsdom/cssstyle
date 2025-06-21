@@ -1076,6 +1076,20 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/212", () 
     }
   });
 
+  it("should support generic() function keywords", () => {
+    const keywords = [
+      "generic(fangsong)",
+      "generic(kai)",
+      "generic(khmer-mul)",
+      "generic(nastaliq)"
+    ];
+    const style = new CSSStyleDeclaration();
+    for (const keyword of keywords) {
+      style.fontFamily = keyword;
+      assert.strictEqual(style.fontFamily, keyword);
+    }
+  });
+
   // see https://drafts.csswg.org/css-fonts-4/#changes-2021-12-21
   it("should support removed generic keywords as non generic family name", () => {
     const keywords = ["emoji", "fangsong"];
