@@ -877,15 +877,8 @@ describe("parseFunction", () => {
     });
   });
 
-  it("should return undefined for unmatched value (hyphen before X)", () => {
-    const input = "foo-X(bar)";
-    const output = parsers.parseFunction(input);
-
-    assert.strictEqual(output, undefined);
-  });
-
-  it("should return undefined for unmatched value (hypen before number)", () => {
-    const input = "foo-3d(bar)";
+  it("should return undefined for unmatched value (starting with digit)", () => {
+    const input = "123go(foo)";
     const output = parsers.parseFunction(input);
 
     assert.strictEqual(output, undefined);
