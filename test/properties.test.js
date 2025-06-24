@@ -764,16 +764,16 @@ describe("box model", () => {
     testPropertyValue("margin-top", "10px", "10px");
   });
 
-  it("margin-top should not set / get negative length", () => {
-    testPropertyValue("margin-top", "-10px", "");
+  it("margin-top should set / get negative length", () => {
+    testPropertyValue("margin-top", "-10px", "-10px");
   });
 
   it("margin-top should set / get percent", () => {
     testPropertyValue("margin-top", "10%", "10%");
   });
 
-  it("margin-top should not set / get negative percent", () => {
-    testPropertyValue("margin-top", "-10%", "");
+  it("margin-top should set / get negative percent", () => {
+    testPropertyValue("margin-top", "-10%", "-10%");
   });
 
   it("margin-right should set / get keyword", () => {
@@ -788,16 +788,16 @@ describe("box model", () => {
     testPropertyValue("margin-right", "10px", "10px");
   });
 
-  it("margin-right should not set / get negative length", () => {
-    testPropertyValue("margin-right", "-10px", "");
+  it("margin-right should set / get negative length", () => {
+    testPropertyValue("margin-right", "-10px", "-10px");
   });
 
   it("margin-right should set / get percent", () => {
     testPropertyValue("margin-right", "10%", "10%");
   });
 
-  it("margin-right should not set / get negative percent", () => {
-    testPropertyValue("margin-right", "-10%", "");
+  it("margin-right should set / get negative percent", () => {
+    testPropertyValue("margin-right", "-10%", "-10%");
   });
 
   it("margin-bottom should set / get keyword", () => {
@@ -812,16 +812,16 @@ describe("box model", () => {
     testPropertyValue("margin-bottom", "10px", "10px");
   });
 
-  it("margin-bottom should not set / get negative length", () => {
-    testPropertyValue("margin-bottom", "-10px", "");
+  it("margin-bottom should set / get negative length", () => {
+    testPropertyValue("margin-bottom", "-10px", "-10px");
   });
 
   it("margin-bottom should set / get percent", () => {
     testPropertyValue("margin-bottom", "10%", "10%");
   });
 
-  it("margin-bottom should not set / get negative percent", () => {
-    testPropertyValue("margin-bottom", "-10%", "");
+  it("margin-bottom should set / get negative percent", () => {
+    testPropertyValue("margin-bottom", "-10%", "-10%");
   });
 
   it("margin-left should set / get keyword", () => {
@@ -836,16 +836,16 @@ describe("box model", () => {
     testPropertyValue("margin-left", "10px", "10px");
   });
 
-  it("margin-left should not set / get negative length", () => {
-    testPropertyValue("margin-left", "-10px", "");
+  it("margin-left should set / get negative length", () => {
+    testPropertyValue("margin-left", "-10px", "-10px");
   });
 
   it("margin-left should set / get percent", () => {
     testPropertyValue("margin-left", "10%", "10%");
   });
 
-  it("margin-left should not set / get negative percent", () => {
-    testPropertyValue("margin-left", "-10%", "");
+  it("margin-left should set / get negative percent", () => {
+    testPropertyValue("margin-left", "-10%", "-10%");
   });
 
   it("margin shorthand should set / get keyword", () => {
