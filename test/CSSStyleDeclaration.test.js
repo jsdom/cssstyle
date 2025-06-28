@@ -269,7 +269,7 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.clear, "right");
     style.clear = "both";
     assert.strictEqual(style.clear, "both");
-    style.clip = "elipse(5px, 10px)";
+    style.clip = "ellipse(5px, 10px)";
     assert.strictEqual(style.clip, "");
     assert.strictEqual(style.length, 1);
     style.clip = "rect(0, 3Em, 2pt, 50%)";
