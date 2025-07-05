@@ -158,6 +158,14 @@ describe("background", () => {
     testPropertyValue("background-attachment", "fixed, scroll", "fixed, scroll");
   });
 
+  it("background-clip should set / get keyword", () => {
+    testPropertyValue("background-clip", "border-box", "border-box");
+  });
+
+  it("background-clip should set / get multiple values", () => {
+    testPropertyValue("background-clip", "padding-box, content-box", "padding-box, content-box");
+  });
+
   it("background-color should set / get color", () => {
     testPropertyValue("background-color", "green", "green");
   });
@@ -196,6 +204,14 @@ describe("background", () => {
       "url(example.png), linear-gradient(to right, green, blue)",
       'url("example.png"), linear-gradient(to right, green, blue)'
     );
+  });
+
+  it("background-origin should set / get keyword", () => {
+    testPropertyValue("background-origin", "border-box", "border-box");
+  });
+
+  it("background-origin should set / get multiple values", () => {
+    testPropertyValue("background-origin", "padding-box, content-box", "padding-box, content-box");
   });
 
   it("background-position should set / get keyword", () => {
@@ -336,6 +352,54 @@ describe("background", () => {
 
   it("background-repeat should set / get multiple values", () => {
     testPropertyValue("background-repeat", "repeat, no-repeat", "repeat, no-repeat");
+  });
+
+  it("background-size should set / get keyword", () => {
+    testPropertyValue("background-size", "contain", "contain");
+  });
+
+  it("background-size should not set / get multiple ratio keywords", () => {
+    testPropertyValue("background-size", "contain cover", "");
+  });
+
+  it("background-size should set / get keyword", () => {
+    testPropertyValue("background-size", "auto auto", "auto");
+  });
+
+  it("background-size should set / get length and length", () => {
+    testPropertyValue("background-size", "10px 20px", "10px 20px");
+  });
+
+  it("background-size should not set / get negative length", () => {
+    testPropertyValue("background-size", "-10px 20px", "");
+  });
+
+  it("background-size should not set / get negative length", () => {
+    testPropertyValue("background-size", "10px -20px", "");
+  });
+
+  it("background-size should set / get percent", () => {
+    testPropertyValue("background-size", "10% 20%", "10% 20%");
+  });
+
+  it("background-size should not set / get negative percent", () => {
+    testPropertyValue("background-size", "-10% 20%", "");
+  });
+
+  it("background-size should not set / get negative percent", () => {
+    testPropertyValue("background-size", "10% -20%%", "");
+  });
+
+  it("background-size should set / get keyword and length", () => {
+    testPropertyValue("background-size", "auto 10px", "auto 10px");
+  });
+
+  it("background-size should set / get length", () => {
+    testPropertyValue("background-size", "10px auto", "10px");
+  });
+
+  it("background-size should set / get multiple values", () => {
+    testPropertyValue("background-size", "contain, cover", "contain, cover");
   });
 
   it("background shorthand should set / get value", () => {
