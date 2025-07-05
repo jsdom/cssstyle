@@ -154,6 +154,10 @@ describe("background", () => {
     testPropertyValue("background-attachment", "fixed", "fixed");
   });
 
+  it("background-attachment should set / get multiple values", () => {
+    testPropertyValue("background-attachment", "fixed, scroll", "fixed, scroll");
+  });
+
   it("background-color should set / get color", () => {
     testPropertyValue("background-color", "green", "green");
   });
@@ -164,6 +168,10 @@ describe("background", () => {
 
   it("background-color should set / get color", () => {
     testPropertyValue("background-color", "rgb(0 128 0)", "rgb(0, 128, 0)");
+  });
+
+  it("background-color should set / get multiple values", () => {
+    testPropertyValue("background-color", "green, blue", "green, blue");
   });
 
   it("background-image should set / get keyword", () => {
@@ -182,7 +190,7 @@ describe("background", () => {
     );
   });
 
-  it("background-image should set / get multiple images", () => {
+  it("background-image should set / get multiple values", () => {
     testPropertyValue(
       "background-image",
       "url(example.png), linear-gradient(to right, green, blue)",
