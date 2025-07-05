@@ -178,8 +178,8 @@ describe("background", () => {
     testPropertyValue("background-color", "rgb(0 128 0)", "rgb(0, 128, 0)");
   });
 
-  it("background-color should set / get multiple values", () => {
-    testPropertyValue("background-color", "green, blue", "green, blue");
+  it("background-color should not set / get multiple values", () => {
+    testPropertyValue("background-color", "green, blue", "");
   });
 
   it("background-image should set / get keyword", () => {
