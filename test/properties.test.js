@@ -298,6 +298,10 @@ describe("background", () => {
     testPropertyValue("background-position", "top 10px left 20px", "left 20px top 10px");
   });
 
+  it("background-position should set / get multiple values", () => {
+    testPropertyValue("background-position", "left top, bottom right", "left top, right bottom");
+  });
+
   it("background-repeat should set / get keyword", () => {
     testPropertyValue("background-repeat", "repeat", "repeat");
   });
