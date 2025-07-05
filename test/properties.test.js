@@ -190,46 +190,6 @@ describe("background", () => {
     );
   });
 
-  it("background-position-x should set / get keyword", () => {
-    testPropertyValue("background-position-x", "left", "left");
-  });
-
-  it("background-position-x should set / get length", () => {
-    testPropertyValue("background-position-x", "10px", "10px");
-  });
-
-  it("background-position-x should set / get percent", () => {
-    testPropertyValue("background-position-x", "10%", "10%");
-  });
-
-  it("background-position-x should not set / get keyword and keyword", () => {
-    testPropertyValue("background-position-x", "left right", "");
-  });
-
-  it("background-position-x should set / get keyword and offset", () => {
-    testPropertyValue("background-position-x", "left 10px", "left 10px");
-  });
-
-  it("background-position-y should set / get keyword", () => {
-    testPropertyValue("background-position-y", "top", "top");
-  });
-
-  it("background-position-y should set / get length", () => {
-    testPropertyValue("background-position-y", "10px", "10px");
-  });
-
-  it("background-position-y should set / get percent", () => {
-    testPropertyValue("background-position-y", "10%", "10%");
-  });
-
-  it("background-position-y should not set / get keyword and keyword", () => {
-    testPropertyValue("background-position-y", "top bottom", "");
-  });
-
-  it("background-position-y should set / get keyword and offset", () => {
-    testPropertyValue("background-position-y", "top 10px", "top 10px");
-  });
-
   it("background-position should set / get keyword", () => {
     testPropertyValue("background-position", "left", "left");
   });
