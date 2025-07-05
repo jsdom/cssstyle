@@ -198,6 +198,15 @@ describe("background", () => {
     );
   });
 
+  // FIXME:
+  it.skip("background-image should set / get gradient image", () => {
+    testPropertyValue(
+      "background-image",
+      "radial-gradient(ellipse closest-side, #1e90ff 50%, red)",
+      "radial-gradient(closest-side, rgb(30, 144, 255) 50%, red)"
+    );
+  });
+
   it("background-image should set / get multiple values", () => {
     testPropertyValue(
       "background-image",

@@ -813,45 +813,34 @@ describe("parseImage", () => {
   });
 
   it("should return value", () => {
-    const input = 'url(example.png), url("example2.png")';
+    const input = "url(example.png)";
     const output = parsers.parseImage(input);
 
-    assert.strictEqual(output, 'url("example.png"), url("example2.png")');
+    assert.strictEqual(output, 'url("example.png")');
   });
 
   it("should return value", () => {
-    const input = "none, url(example.png)";
+    const input = "linear-gradient(green, blue)";
     const output = parsers.parseImage(input);
 
-    assert.strictEqual(output, 'none, url("example.png")');
-  });
-
-  it("should return value", () => {
-    const input = "linear-gradient(green, blue), url(example.png)";
-    const output = parsers.parseImage(input);
-
-    assert.strictEqual(output, 'linear-gradient(green, blue), url("example.png")');
+    assert.strictEqual(output, "linear-gradient(green, blue)");
   });
 
   it("should return value as is if var() is included", () => {
-    const input =
-      "radial-gradient(transparent, /* comment */ var(--custom-color)), url(example.png)";
+    const input = "radial-gradient(transparent, /* comment */ var(--custom-color))";
     const output = parsers.parseImage(input);
 
-    assert.strictEqual(
-      output,
-      'radial-gradient(transparent, /* comment */ var(--custom-color)), url("example.png")'
-    );
+    assert.strictEqual(output, "radial-gradient(transparent, /* comment */ var(--custom-color))");
   });
 
-  it("should return undefined if invalid image type is included", () => {
-    const input = "radial-gradient(transparent, var(--custom-color)), red";
+  it("should return undefined if value is not image type", () => {
+    const input = "red";
     const output = parsers.parseImage(input);
 
     assert.strictEqual(output, undefined);
   });
 
-  it("should return undefined if value is not image type", () => {
+  it("should return undefined if value contains var() but not gradient", () => {
     const input = "rgb(var(--my-var, 0, 0, 0))";
     const output = parsers.parseImage(input);
 
