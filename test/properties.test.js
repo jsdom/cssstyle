@@ -198,12 +198,16 @@ describe("background", () => {
     testPropertyValue("background-position", "left center", "left center");
   });
 
-  it("background-position should not set / get keyword", () => {
-    testPropertyValue("background-position", "left right", "");
+  it("background-position should set / get keyword", () => {
+    testPropertyValue("background-position", "top left", "left top");
+  });
+
+  it("background-position should set / get keyword", () => {
+    testPropertyValue("background-position", "top center", "center top");
   });
 
   it("background-position should not set / get keyword", () => {
-    testPropertyValue("background-position", "center left", "");
+    testPropertyValue("background-position", "left right", "");
   });
 
   it("background-position should set / get length", () => {
@@ -230,19 +234,68 @@ describe("background", () => {
     testPropertyValue("background-position", "left 10px", "left 10px");
   });
 
-  // FIXME: offset not supported
-  it.skip("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "left 10px center", "left 10px center");
+  it("background-position should not set / get keyword length", () => {
+    testPropertyValue("background-position", "10px left", "");
   });
 
-  // FIXME: offset not supported
-  it.skip("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "left center 20px", "left center 20px");
+  it("background-position should set / get keyword length", () => {
+    testPropertyValue("background-position", "10px top", "10px top");
   });
 
-  // FIXME: offset not supported
-  it.skip("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "left 10px center 20px", "left 10px center 20px");
+  it("background-position should not set / get keyword length", () => {
+    testPropertyValue("background-position", "top 10px", "");
+  });
+
+  it("background-position should not set / get keyword", () => {
+    testPropertyValue("background-position", "left right bottom", "");
+  });
+
+  it("background-position should not set / get length percent", () => {
+    testPropertyValue("background-position", "10px 20% 30px", "");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "center 10px center", "center 10px center");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "center center 10px", "center center 10px");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "left 10px top", "left 10px top");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "left top 20px", "left top 20px");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "top 20px left", "left top 20px");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "top left 10px", "left 10px top");
+  });
+
+  it("background-position should not set / get keyword", () => {
+    testPropertyValue("background-position", "left right top bottom", "");
+  });
+
+  it("background-position should not set / get length percent", () => {
+    testPropertyValue("background-position", "10px 20% 30px 40%", "");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "center 10px center 20px", "center 10px center 20px");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "left 10px top 20px", "left 10px top 20px");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "top 10px left 20px", "left 20px top 10px");
   });
 
   it("background-repeat should set / get keyword", () => {
