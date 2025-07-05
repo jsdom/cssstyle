@@ -314,14 +314,28 @@ describe("background", () => {
     testPropertyValue("background-repeat", "repeat", "repeat");
   });
 
-  // FIXME: two values not supported
-  it.skip("background-repeat should set / get keyword keyword", () => {
-    testPropertyValue("background-repeat", "repeat no-repeat", "repeat no-repeat");
+  it("background-repeat should set / get keyword keyword", () => {
+    testPropertyValue("background-repeat", "repeat no-repeat", "repeat-x");
   });
 
-  // FIXME: two values not supported
-  it.skip("background-repeat should set / get keyword keyword", () => {
-    testPropertyValue("background-repeat", "no-repeat repeat", "no-repeat repeat");
+  it("background-repeat should set / get keyword keyword", () => {
+    testPropertyValue("background-repeat", "no-repeat repeat", "repeat-y");
+  });
+
+  it("background-repeat should set / get keyword keyword", () => {
+    testPropertyValue("background-repeat", "repeat repeat", "repeat");
+  });
+
+  it("background-repeat should set / get keyword keyword", () => {
+    testPropertyValue("background-repeat", "repeat space", "repeat space");
+  });
+
+  it("background-repeat should not set / get multiple axis keywords", () => {
+    testPropertyValue("background-repeat", "repeat-x repeat-y", "");
+  });
+
+  it("background-repeat should set / get multiple values", () => {
+    testPropertyValue("background-repeat", "repeat, no-repeat", "repeat, no-repeat");
   });
 
   it("background shorthand should set / get value", () => {
