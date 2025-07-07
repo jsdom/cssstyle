@@ -3,7 +3,6 @@
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
-const { splitValue } = require("../lib/parsers");
 
 function testPropertyValue(property, value, expected) {
   const style = new CSSStyleDeclaration();
@@ -119,36 +118,6 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   }
 }
 
-function testShorthandPropertyValue(property, value, expected) {
-  const style = new CSSStyleDeclaration();
-  const expectedArr = splitValue(expected).sort();
-  let res;
-
-  style.setProperty(property, value);
-  res = style.getPropertyValue(property);
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}", '${value}'`);
-
-  style.setProperty(property, undefined);
-  res = style.getPropertyValue(property);
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}", undefined`);
-
-  style.setProperty(property, null);
-  res = style.getPropertyValue(property);
-  assert.strictEqual(res, "", `setProperty("${property}", null`);
-
-  style[property] = value;
-  res = style[property];
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}" = '${value}'`);
-
-  style[property] = undefined;
-  res = style[property];
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}" = undefined`);
-
-  style[property] = null;
-  res = style[property];
-  assert.strictEqual(res, "", `set["${property}"] = null`);
-}
-
 describe("background", () => {
   it("background-attachment should set / get keyword", () => {
     testPropertyValue("background-attachment", "fixed", "fixed");
@@ -223,19 +192,23 @@ describe("background", () => {
     testPropertyValue("background-origin", "padding-box, content-box", "padding-box, content-box");
   });
 
-  it("background-position should set / get keyword", () => {
-    testPropertyValue("background-position", "left", "left");
+  it("background-position should set / get keywords", () => {
+    testPropertyValue("background-position", "left", "left center");
   });
 
-  it("background-position should set / get keyword", () => {
+  it("background-position should set / get keywords", () => {
+    testPropertyValue("background-position", "top", "center top");
+  });
+
+  it("background-position should set / get keywords", () => {
     testPropertyValue("background-position", "left center", "left center");
   });
 
-  it("background-position should set / get keyword", () => {
+  it("background-position should set / get keywords", () => {
     testPropertyValue("background-position", "top left", "left top");
   });
 
-  it("background-position should set / get keyword", () => {
+  it("background-position should set / get keywords", () => {
     testPropertyValue("background-position", "top center", "center top");
   });
 
@@ -243,19 +216,19 @@ describe("background", () => {
     testPropertyValue("background-position", "left right", "");
   });
 
-  it("background-position should set / get length", () => {
-    testPropertyValue("background-position", "10px", "10px");
+  it("background-position should set / get length keyword", () => {
+    testPropertyValue("background-position", "10px", "10px center");
   });
 
   it("background-position should set / get length", () => {
     testPropertyValue("background-position", "10px 20px", "10px 20px");
   });
 
-  it("background-position should set / get percent", () => {
-    testPropertyValue("background-position", "10%", "10%");
+  it("background-position should set / get percent keyword", () => {
+    testPropertyValue("background-position", "10%", "10% center");
   });
 
-  it("background-position should set / get percent", () => {
+  it("background-position should set / get percents", () => {
     testPropertyValue("background-position", "10% 20%", "10% 20%");
   });
 
@@ -412,36 +385,65 @@ describe("background", () => {
   });
 
   it("background shorthand should set / get value", () => {
-    testShorthandPropertyValue(
+    testImplicitPropertyValue(
       "background",
       "fixed left repeat url(example.png) green",
-      'fixed left repeat url("example.png") green'
+      'url("example.png") left center repeat fixed green',
+      new Map([
+        ["background-image", 'url("example.png")'],
+        ["background-position", "left center"],
+        ["background-size", ""],
+        ["background-repeat", "repeat"],
+        ["background-origin", ""],
+        ["background-clip", ""],
+        ["background-attachment", "fixed"],
+        ["background-color", "green"]
+      ])
     );
   });
 
   it("background shorthand should set / get value", () => {
-    testShorthandPropertyValue("background", "none", "none");
-  });
-
-  // FIXME: fix background shorthand handler
-  it.skip("background shorthand should set / get sub longhand value", () => {
-    testShorthandPropertyValue(
+    testImplicitPropertyValue(
       "background",
-      "fixed left center repeat url(example.png) green",
-      'fixed left center repeat url("example.png") green'
+      "none",
+      "none",
+      new Map([["background-image", "none"]])
     );
   });
 
-  // FIXME: multiple backgrounds not supported, needs test function update too
-  it.skip("background shorthand should set / get multiple values", () => {
-    testShorthandPropertyValue(
+  it("background shorthand should set / get sub longhand value", () => {
+    testImplicitPropertyValue(
       "background",
-      "fixed left repeat url(example.png), scroll center no-repeat linearGradient(to right, green, blue) green",
-      'fixed left repeat url("example.png"), scroll center no-repeat linearGradient(to right, green, blue) green',
-      {
-        multi: true,
-        delimiter: ","
-      }
+      "fixed left repeat url(example.png) green",
+      'url("example.png") left center repeat fixed green',
+      new Map([
+        ["background-image", 'url("example.png")'],
+        ["background-position", "left center"],
+        ["background-size", ""],
+        ["background-repeat", "repeat"],
+        ["background-origin", ""],
+        ["background-clip", ""],
+        ["background-attachment", "fixed"],
+        ["background-color", "green"]
+      ])
+    );
+  });
+
+  it("background shorthand should set / get multiple values", () => {
+    testImplicitPropertyValue(
+      "background",
+      "fixed left repeat url(example.png), linear-gradient(to right, green, blue) green",
+      'url("example.png") left center fixed, linear-gradient(to right, green, blue) green',
+      new Map([
+        ["background-image", 'url("example.png"), linear-gradient(to right, green, blue)'],
+        ["background-position", "left center, 0% 0%"],
+        ["background-size", "auto auto, auto auto"],
+        ["background-repeat", "repeat, repeat"],
+        ["background-origin", "padding-box, padding-box"],
+        ["background-clip", "border-box, border-box"],
+        ["background-attachment", "fixed, scroll"],
+        ["background-color", "green"]
+      ])
     );
   });
 
@@ -453,7 +455,10 @@ describe("background", () => {
       new Map([
         ["background-image", ""],
         ["background-position", ""],
+        ["background-size", ""],
         ["background-repeat", ""],
+        ["background-origin", ""],
+        ["background-clip", ""],
         ["background-attachment", ""],
         ["background-color", ""]
       ])
