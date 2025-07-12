@@ -3,7 +3,6 @@
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
-const { splitValue } = require("../lib/parsers");
 
 function testPropertyValue(property, value, expected) {
   const style = new CSSStyleDeclaration();
@@ -119,39 +118,21 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   }
 }
 
-function testShorthandPropertyValue(property, value, expected) {
-  const style = new CSSStyleDeclaration();
-  const expectedArr = splitValue(expected).sort();
-  let res;
-
-  style.setProperty(property, value);
-  res = style.getPropertyValue(property);
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}", '${value}'`);
-
-  style.setProperty(property, undefined);
-  res = style.getPropertyValue(property);
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}", undefined`);
-
-  style.setProperty(property, null);
-  res = style.getPropertyValue(property);
-  assert.strictEqual(res, "", `setProperty("${property}", null`);
-
-  style[property] = value;
-  res = style[property];
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}" = '${value}'`);
-
-  style[property] = undefined;
-  res = style[property];
-  assert.deepEqual(splitValue(res).sort(), expectedArr, `setProperty("${property}" = undefined`);
-
-  style[property] = null;
-  res = style[property];
-  assert.strictEqual(res, "", `set["${property}"] = null`);
-}
-
 describe("background", () => {
   it("background-attachment should set / get keyword", () => {
     testPropertyValue("background-attachment", "fixed", "fixed");
+  });
+
+  it("background-attachment should set / get multiple values", () => {
+    testPropertyValue("background-attachment", "fixed, scroll", "fixed, scroll");
+  });
+
+  it("background-clip should set / get keyword", () => {
+    testPropertyValue("background-clip", "border-box", "border-box");
+  });
+
+  it("background-clip should set / get multiple values", () => {
+    testPropertyValue("background-clip", "padding-box, content-box", "padding-box, content-box");
   });
 
   it("background-color should set / get color", () => {
@@ -164,6 +145,10 @@ describe("background", () => {
 
   it("background-color should set / get color", () => {
     testPropertyValue("background-color", "rgb(0 128 0)", "rgb(0, 128, 0)");
+  });
+
+  it("background-color should not set / get multiple values", () => {
+    testPropertyValue("background-color", "green, blue", "");
   });
 
   it("background-image should set / get keyword", () => {
@@ -182,7 +167,16 @@ describe("background", () => {
     );
   });
 
-  it("background-image should set / get multiple images", () => {
+  // FIXME:
+  it.skip("background-image should set / get gradient image", () => {
+    testPropertyValue(
+      "background-image",
+      "radial-gradient(ellipse closest-side, #1e90ff 50%, red)",
+      "radial-gradient(closest-side, rgb(30, 144, 255) 50%, red)"
+    );
+  });
+
+  it("background-image should set / get multiple values", () => {
     testPropertyValue(
       "background-image",
       "url(example.png), linear-gradient(to right, green, blue)",
@@ -190,35 +184,51 @@ describe("background", () => {
     );
   });
 
-  it("background-position should set / get keyword", () => {
-    testPropertyValue("background-position", "left", "left");
+  it("background-origin should set / get keyword", () => {
+    testPropertyValue("background-origin", "border-box", "border-box");
   });
 
-  it("background-position should set / get keyword", () => {
+  it("background-origin should set / get multiple values", () => {
+    testPropertyValue("background-origin", "padding-box, content-box", "padding-box, content-box");
+  });
+
+  it("background-position should set / get keywords", () => {
+    testPropertyValue("background-position", "left", "left center");
+  });
+
+  it("background-position should set / get keywords", () => {
+    testPropertyValue("background-position", "top", "center top");
+  });
+
+  it("background-position should set / get keywords", () => {
     testPropertyValue("background-position", "left center", "left center");
+  });
+
+  it("background-position should set / get keywords", () => {
+    testPropertyValue("background-position", "top left", "left top");
+  });
+
+  it("background-position should set / get keywords", () => {
+    testPropertyValue("background-position", "top center", "center top");
   });
 
   it("background-position should not set / get keyword", () => {
     testPropertyValue("background-position", "left right", "");
   });
 
-  it("background-position should not set / get keyword", () => {
-    testPropertyValue("background-position", "center left", "");
-  });
-
-  it("background-position should set / get length", () => {
-    testPropertyValue("background-position", "10px", "10px");
+  it("background-position should set / get length keyword", () => {
+    testPropertyValue("background-position", "10px", "10px center");
   });
 
   it("background-position should set / get length", () => {
     testPropertyValue("background-position", "10px 20px", "10px 20px");
   });
 
-  it("background-position should set / get percent", () => {
-    testPropertyValue("background-position", "10%", "10%");
+  it("background-position should set / get percent keyword", () => {
+    testPropertyValue("background-position", "10%", "10% center");
   });
 
-  it("background-position should set / get percent", () => {
+  it("background-position should set / get percents", () => {
     testPropertyValue("background-position", "10% 20%", "10% 20%");
   });
 
@@ -230,66 +240,210 @@ describe("background", () => {
     testPropertyValue("background-position", "left 10px", "left 10px");
   });
 
-  // FIXME: offset not supported
-  it.skip("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "left 10px center", "left 10px center");
+  it("background-position should not set / get keyword length", () => {
+    testPropertyValue("background-position", "10px left", "");
   });
 
-  // FIXME: offset not supported
-  it.skip("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "left center 20px", "left center 20px");
+  it("background-position should set / get keyword length", () => {
+    testPropertyValue("background-position", "10px top", "10px top");
   });
 
-  // FIXME: offset not supported
-  it.skip("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "left 10px center 20px", "left 10px center 20px");
+  it("background-position should not set / get keyword length", () => {
+    testPropertyValue("background-position", "top 10px", "");
+  });
+
+  it("background-position should not set / get keyword", () => {
+    testPropertyValue("background-position", "left right bottom", "");
+  });
+
+  it("background-position should not set / get length percent", () => {
+    testPropertyValue("background-position", "10px 20% 30px", "");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "center 10px center", "center 10px center");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "center center 10px", "center center 10px");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "left 10px top", "left 10px top");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "left top 20px", "left top 20px");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "top 20px left", "left top 20px");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "top left 10px", "left 10px top");
+  });
+
+  it("background-position should not set / get keyword", () => {
+    testPropertyValue("background-position", "left right top bottom", "");
+  });
+
+  it("background-position should not set / get length percent", () => {
+    testPropertyValue("background-position", "10px 20% 30px 40%", "");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "center 10px center 20px", "center 10px center 20px");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "left 10px top 20px", "left 10px top 20px");
+  });
+
+  it("background-position should set / get keyword length with offset", () => {
+    testPropertyValue("background-position", "top 10px left 20px", "left 20px top 10px");
+  });
+
+  it("background-position should set / get multiple values", () => {
+    testPropertyValue("background-position", "left top, bottom right", "left top, right bottom");
   });
 
   it("background-repeat should set / get keyword", () => {
     testPropertyValue("background-repeat", "repeat", "repeat");
   });
 
-  // FIXME: two values not supported
-  it.skip("background-repeat should set / get keyword keyword", () => {
-    testPropertyValue("background-repeat", "repeat no-repeat", "repeat no-repeat");
+  it("background-repeat should set / get keyword keyword", () => {
+    testPropertyValue("background-repeat", "repeat no-repeat", "repeat-x");
   });
 
-  // FIXME: two values not supported
-  it.skip("background-repeat should set / get keyword keyword", () => {
-    testPropertyValue("background-repeat", "no-repeat repeat", "no-repeat repeat");
+  it("background-repeat should set / get keyword keyword", () => {
+    testPropertyValue("background-repeat", "no-repeat repeat", "repeat-y");
+  });
+
+  it("background-repeat should set / get keyword keyword", () => {
+    testPropertyValue("background-repeat", "repeat repeat", "repeat");
+  });
+
+  it("background-repeat should set / get keyword keyword", () => {
+    testPropertyValue("background-repeat", "repeat space", "repeat space");
+  });
+
+  it("background-repeat should not set / get multiple axis keywords", () => {
+    testPropertyValue("background-repeat", "repeat-x repeat-y", "");
+  });
+
+  it("background-repeat should set / get multiple values", () => {
+    testPropertyValue("background-repeat", "repeat, no-repeat", "repeat, no-repeat");
+  });
+
+  it("background-size should set / get keyword", () => {
+    testPropertyValue("background-size", "contain", "contain");
+  });
+
+  it("background-size should not set / get multiple ratio keywords", () => {
+    testPropertyValue("background-size", "contain cover", "");
+  });
+
+  it("background-size should set / get keyword", () => {
+    testPropertyValue("background-size", "auto auto", "auto");
+  });
+
+  it("background-size should set / get length and length", () => {
+    testPropertyValue("background-size", "10px 20px", "10px 20px");
+  });
+
+  it("background-size should not set / get negative length", () => {
+    testPropertyValue("background-size", "-10px 20px", "");
+  });
+
+  it("background-size should not set / get negative length", () => {
+    testPropertyValue("background-size", "10px -20px", "");
+  });
+
+  it("background-size should set / get percent", () => {
+    testPropertyValue("background-size", "10% 20%", "10% 20%");
+  });
+
+  it("background-size should not set / get negative percent", () => {
+    testPropertyValue("background-size", "-10% 20%", "");
+  });
+
+  it("background-size should not set / get negative percent", () => {
+    testPropertyValue("background-size", "10% -20%%", "");
+  });
+
+  it("background-size should set / get keyword and length", () => {
+    testPropertyValue("background-size", "auto 10px", "auto 10px");
+  });
+
+  it("background-size should set / get length", () => {
+    testPropertyValue("background-size", "10px auto", "10px");
+  });
+
+  it("background-size should set / get multiple values", () => {
+    testPropertyValue("background-size", "contain, cover", "contain, cover");
   });
 
   it("background shorthand should set / get value", () => {
-    testShorthandPropertyValue(
+    testImplicitPropertyValue(
       "background",
       "fixed left repeat url(example.png) green",
-      'fixed left repeat url("example.png") green'
+      'url("example.png") left center repeat fixed green',
+      new Map([
+        ["background-image", 'url("example.png")'],
+        ["background-position", "left center"],
+        ["background-size", ""],
+        ["background-repeat", "repeat"],
+        ["background-origin", ""],
+        ["background-clip", ""],
+        ["background-attachment", "fixed"],
+        ["background-color", "green"]
+      ])
     );
   });
 
   it("background shorthand should set / get value", () => {
-    testShorthandPropertyValue("background", "none", "none");
-  });
-
-  // FIXME: fix background shorthand handler
-  it.skip("background shorthand should set / get sub longhand value", () => {
-    testShorthandPropertyValue(
+    testImplicitPropertyValue(
       "background",
-      "fixed left center repeat url(example.png) green",
-      'fixed left center repeat url("example.png") green'
+      "none",
+      "none",
+      new Map([["background-image", "none"]])
     );
   });
 
-  // FIXME: multiple backgrounds not supported, needs test function update too
-  it.skip("background shorthand should set / get multiple values", () => {
-    testShorthandPropertyValue(
+  it("background shorthand should set / get sub longhand value", () => {
+    testImplicitPropertyValue(
       "background",
-      "fixed left repeat url(example.png), scroll center no-repeat linearGradient(to right, green, blue) green",
-      'fixed left repeat url("example.png"), scroll center no-repeat linearGradient(to right, green, blue) green',
-      {
-        multi: true,
-        delimiter: ","
-      }
+      "fixed left repeat url(example.png) green",
+      'url("example.png") left center repeat fixed green',
+      new Map([
+        ["background-image", 'url("example.png")'],
+        ["background-position", "left center"],
+        ["background-size", ""],
+        ["background-repeat", "repeat"],
+        ["background-origin", ""],
+        ["background-clip", ""],
+        ["background-attachment", "fixed"],
+        ["background-color", "green"]
+      ])
+    );
+  });
+
+  it("background shorthand should set / get multiple values", () => {
+    testImplicitPropertyValue(
+      "background",
+      "fixed left repeat url(example.png), linear-gradient(to right, green, blue) green",
+      'url("example.png") left center fixed, linear-gradient(to right, green, blue) green',
+      new Map([
+        ["background-image", 'url("example.png"), linear-gradient(to right, green, blue)'],
+        ["background-position", "left center, 0% 0%"],
+        ["background-size", "auto auto, auto auto"],
+        ["background-repeat", "repeat, repeat"],
+        ["background-origin", "padding-box, padding-box"],
+        ["background-clip", "border-box, border-box"],
+        ["background-attachment", "fixed, scroll"],
+        ["background-color", "green"]
+      ])
     );
   });
 
@@ -301,7 +455,10 @@ describe("background", () => {
       new Map([
         ["background-image", ""],
         ["background-position", ""],
+        ["background-size", ""],
         ["background-repeat", ""],
+        ["background-origin", ""],
+        ["background-clip", ""],
         ["background-attachment", ""],
         ["background-color", ""]
       ])
