@@ -193,6 +193,10 @@ describe("background", () => {
   });
 
   it("background-position should set / get keywords", () => {
+    testPropertyValue("background-position", "center", "center center");
+  });
+
+  it("background-position should set / get keywords", () => {
     testPropertyValue("background-position", "left", "left center");
   });
 
@@ -261,11 +265,11 @@ describe("background", () => {
   });
 
   it("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "center 10px center", "center 10px center");
+    testPropertyValue("background-position", "center 10px center", "");
   });
 
   it("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "center center 10px", "center center 10px");
+    testPropertyValue("background-position", "center center 10px", "");
   });
 
   it("background-position should set / get keyword length with offset", () => {
@@ -293,7 +297,7 @@ describe("background", () => {
   });
 
   it("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "center 10px center 20px", "center 10px center 20px");
+    testPropertyValue("background-position", "center 10px center 20px", "");
   });
 
   it("background-position should set / get keyword length with offset", () => {
