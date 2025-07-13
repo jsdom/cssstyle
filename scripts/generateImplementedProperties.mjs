@@ -1,16 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { camelCaseToDashed } from "../lib/utils/camelize.js";
 
+const { dirname } = import.meta;
 const dashedProperties = fs
-  .readdirSync(resolve("../lib/properties"))
+  .readdirSync(path.resolve(dirname, "../lib/properties"))
   .filter((propertyFile) => path.extname(propertyFile) === ".js")
   .map((propertyFile) => camelCaseToDashed(path.basename(propertyFile, ".js")));
 
-const outputFile = resolve("../lib/generated/implementedProperties.js");
+const outputFile = path.resolve(dirname, "../lib/generated/implementedProperties.js");
 
-const propertyNamesJSON = JSON.stringify(dashedProperties, undefined, 2);
+const propertyNamesJSON = JSON.stringify(dashedProperties.toSorted(), undefined, 2);
 const dateToday = new Date();
 const [dateTodayFormatted] = dateToday.toISOString().split("T");
 const output = `"use strict";
@@ -21,8 +21,3 @@ module.exports = new Set(${propertyNamesJSON});
 `;
 
 fs.writeFileSync(outputFile, output);
-
-// TODO: remove when we can drop Node.js 18 support and use import.meta.dirname.
-function resolve(relativePath) {
-  return path.resolve(path.dirname(fileURLToPath(import.meta.url)), relativePath);
-}
