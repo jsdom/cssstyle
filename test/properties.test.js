@@ -193,6 +193,10 @@ describe("background", () => {
   });
 
   it("background-position should set / get keywords", () => {
+    testPropertyValue("background-position", "center", "center center");
+  });
+
+  it("background-position should set / get keywords", () => {
     testPropertyValue("background-position", "left", "left center");
   });
 
@@ -261,11 +265,11 @@ describe("background", () => {
   });
 
   it("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "center 10px center", "center 10px center");
+    testPropertyValue("background-position", "center 10px center", "");
   });
 
   it("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "center center 10px", "center center 10px");
+    testPropertyValue("background-position", "center center 10px", "");
   });
 
   it("background-position should set / get keyword length with offset", () => {
@@ -293,7 +297,7 @@ describe("background", () => {
   });
 
   it("background-position should set / get keyword length with offset", () => {
-    testPropertyValue("background-position", "center 10px center 20px", "center 10px center 20px");
+    testPropertyValue("background-position", "center 10px center 20px", "");
   });
 
   it("background-position should set / get keyword length with offset", () => {
@@ -387,17 +391,17 @@ describe("background", () => {
   it("background shorthand should set / get value", () => {
     testImplicitPropertyValue(
       "background",
-      "fixed left repeat url(example.png) green",
-      'url("example.png") left center repeat fixed green',
+      "none",
+      "none",
       new Map([
-        ["background-image", 'url("example.png")'],
-        ["background-position", "left center"],
-        ["background-size", ""],
+        ["background-image", "none"],
+        ["background-position", "0% 0%"],
+        ["background-size", "auto"],
         ["background-repeat", "repeat"],
-        ["background-origin", ""],
-        ["background-clip", ""],
-        ["background-attachment", "fixed"],
-        ["background-color", "green"]
+        ["background-origin", "padding-box"],
+        ["background-clip", "border-box"],
+        ["background-attachment", "scroll"],
+        ["background-color", "transparent"]
       ])
     );
   });
@@ -405,24 +409,33 @@ describe("background", () => {
   it("background shorthand should set / get value", () => {
     testImplicitPropertyValue(
       "background",
-      "none",
-      "none",
-      new Map([["background-image", "none"]])
+      "transparent",
+      "transparent",
+      new Map([
+        ["background-image", "none"],
+        ["background-position", "0% 0%"],
+        ["background-size", "auto"],
+        ["background-repeat", "repeat"],
+        ["background-origin", "padding-box"],
+        ["background-clip", "border-box"],
+        ["background-attachment", "scroll"],
+        ["background-color", "transparent"]
+      ])
     );
   });
 
-  it("background shorthand should set / get sub longhand value", () => {
+  it("background shorthand should set / get sub longhand values", () => {
     testImplicitPropertyValue(
       "background",
-      "fixed left repeat url(example.png) green",
-      'url("example.png") left center repeat fixed green',
+      "fixed left / 50% repeat url(example.png) green",
+      'url("example.png") left center / 50% fixed green',
       new Map([
         ["background-image", 'url("example.png")'],
         ["background-position", "left center"],
-        ["background-size", ""],
+        ["background-size", "50%"],
         ["background-repeat", "repeat"],
-        ["background-origin", ""],
-        ["background-clip", ""],
+        ["background-origin", "padding-box"],
+        ["background-clip", "border-box"],
         ["background-attachment", "fixed"],
         ["background-color", "green"]
       ])
@@ -432,12 +445,12 @@ describe("background", () => {
   it("background shorthand should set / get multiple values", () => {
     testImplicitPropertyValue(
       "background",
-      "fixed left repeat url(example.png), linear-gradient(to right, green, blue) green",
-      'url("example.png") left center fixed, linear-gradient(to right, green, blue) green',
+      "fixed left / 50% repeat url(example.png), linear-gradient(to right, green, blue) green",
+      'url("example.png") left center / 50% fixed, linear-gradient(to right, green, blue) green',
       new Map([
         ["background-image", 'url("example.png"), linear-gradient(to right, green, blue)'],
         ["background-position", "left center, 0% 0%"],
-        ["background-size", "auto auto, auto auto"],
+        ["background-size", "50%, auto"],
         ["background-repeat", "repeat, repeat"],
         ["background-origin", "padding-box, padding-box"],
         ["background-clip", "border-box, border-box"],
