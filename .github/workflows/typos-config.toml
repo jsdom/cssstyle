@@ -1,0 +1,7 @@
+default.check-filename = true
+
+default.extend-ignore-re = [
+    "--foo-Bar-baZ",
+    "FoNt-SiZe"
+]
+ 
