@@ -1336,6 +1336,204 @@ describe("color", () => {
   });
 });
 
+describe("display", () => {
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "block", "block");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "inline", "inline");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "inline-block", "inline-block");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flex", "flex");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "inline-flex", "inline-flex");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "grid", "grid");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "inline-grid", "inline-grid");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow", "block");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow-root", "flow-root");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "none", "none");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "contents", "contents");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "table-row", "table-row");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow list-item", "list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "list-item flow", "list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "block list-item", "list-item");
+  });
+
+  it("display should not set / get keyword", () => {
+    testPropertyValue("display", "list-item block", "list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow-root list-item", "flow-root list-item");
+  });
+
+  it("display should not set / get keyword", () => {
+    testPropertyValue("display", "list-item flow-root", "flow-root list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "block flow list-item", "list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "block list-item flow", "list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "block flow-root list-item", "flow-root list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "block list-item flow-root", "flow-root list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow block list-item", "list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow list-item block", "list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow-root block list-item", "flow-root list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow-root list-item block", "flow-root list-item");
+  });
+
+  it("display should not set / get keyword", () => {
+    testPropertyValue("display", "list-item block flow", "list-item");
+  });
+
+  it("display should not set / get keyword", () => {
+    testPropertyValue("display", "list-item flow block", "list-item");
+  });
+
+  it("display should not set / get keyword", () => {
+    testPropertyValue("display", "list-item block flow-root", "flow-root list-item");
+  });
+
+  it("display should not set / get keyword", () => {
+    testPropertyValue("display", "list-item flow-root block", "flow-root list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "inline flow list-item", "inline list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "inline flow-root list-item", "inline flow-root list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "run-in flow list-item", "run-in list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "run-in flow-root list-item", "run-in flow-root list-item");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "block flow", "block");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow block", "block");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "block flow-root", "flow-root");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "block flex", "flex");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "block ruby", "block ruby");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "inline flow", "inline");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow inline", "inline");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "inline flow-root", "inline-block");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "inline flex", "inline-flex");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "inline ruby", "ruby");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "run-in flow", "run-in");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "flow run-in", "run-in");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "run-in flow-root", "run-in flow-root");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "run-in flex", "run-in flex");
+  });
+
+  it("display should set / get keyword", () => {
+    testPropertyValue("display", "run-in ruby", "run-in ruby");
+  });
+});
+
 describe("flex box", () => {
   it("flex-grow should set / get number", () => {
     testPropertyValue("flex-grow", ".5", "0.5");
