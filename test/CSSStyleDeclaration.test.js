@@ -2,7 +2,6 @@
 
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
-const CSSOM = require("rrweb-cssom");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
 const allExtraProperties = require("../lib/allExtraProperties");
 const allProperties = require("../lib/generated/allProperties");
@@ -141,7 +140,16 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("sets internals for CSSRule", () => {
-    const rule = CSSOM.parse(`body { color: green; }`).cssRules[0];
+    const rule = {
+      parentRule: {},
+      parentStyleSheet: {
+        ownerDocument: {
+          defaultView: {
+            DOMException: globalThis.DOMException
+          }
+        }
+      }
+    };
     const style = new CSSStyleDeclaration(null, {
       context: rule
     });

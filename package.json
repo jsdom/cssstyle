@@ -38,7 +38,7 @@
   "main": "./lib/CSSStyleDeclaration.js",
   "dependencies": {
     "@asamuzakjp/css-color": "^4.0.3",
-    "rrweb-cssom": "^0.8.0"
+    "css-tree": "^3.1.0"
   },
   "devDependencies": {
     "@babel/generator": "^7.26.9",
