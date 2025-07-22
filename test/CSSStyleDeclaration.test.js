@@ -139,6 +139,23 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "color: green;");
   });
 
+  it("sets internals for Element", () => {
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
+    const style = new CSSStyleDeclaration(null, {
+      context: node
+    });
+    style.cssText = "color: green!";
+    assert.strictEqual(style.cssText, "");
+  });
+
   it("sets internals for CSSRule", () => {
     const rule = {
       parentRule: {},
