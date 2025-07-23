@@ -156,6 +156,23 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "");
   });
 
+  it("sets internals for Element", () => {
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
+    const style = new CSSStyleDeclaration(null, {
+      context: node
+    });
+    style.cssText = "color: light-dark(#008000, #0000ff)";
+    assert.strictEqual(style.cssText, "color: light-dark(rgb(0, 128, 0), rgb(0, 0, 255));");
+  });
+
   it("sets internals for CSSRule", () => {
     const rule = {
       parentRule: {},

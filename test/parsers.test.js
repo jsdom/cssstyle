@@ -1099,6 +1099,49 @@ describe("parseShorthand", () => {
   });
 });
 
+describe("parseCSS", () => {
+  it("should get ast", () => {
+    const input = "color: green !important;";
+    const opt = {
+      context: "declarationList",
+      parseValue: false
+    };
+    const output = parsers.parseCSS(input, opt);
+    assert.strictEqual(output.type, "DeclarationList");
+    assert.strictEqual(Object.hasOwn(output, "children"), true);
+  });
+
+  it("should get ast", () => {
+    const input = "green";
+    const opt = {
+      context: "value",
+      parseValue: false
+    };
+    const output = parsers.parseCSS(input, opt);
+    assert.strictEqual(output.type, "Value");
+    assert.strictEqual(Object.hasOwn(output, "children"), true);
+  });
+
+  it("should get object", () => {
+    const input = "color: green !important;";
+    const opt = {
+      context: "declarationList",
+      parseValue: false
+    };
+    const output = parsers.parseCSS(input, opt, true);
+    const [
+      {
+        important,
+        property,
+        value: { value }
+      }
+    ] = output.children;
+    assert.strictEqual(important, true);
+    assert.strictEqual(property, "color");
+    assert.strictEqual(value, "green");
+  });
+});
+
 describe("isValidColor", () => {
   it("should return false", () => {
     const input = "foo";
