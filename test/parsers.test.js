@@ -1142,6 +1142,43 @@ describe("parseCSS", () => {
   });
 });
 
+describe("isValidPropertyValue", () => {
+  it("should return false", () => {
+    const input = "foo";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return true", () => {
+    const input = "initial";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "red";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "light-dark(green, blue)";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return false", () => {
+    const input = "red";
+    const output = parsers.isValidPropertyValue("--foo", input);
+
+    assert.strictEqual(output, false);
+  });
+});
+
 describe("isValidColor", () => {
   it("should return false", () => {
     const input = "foo";
