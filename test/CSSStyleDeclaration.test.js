@@ -139,7 +139,7 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "color: green;");
   });
 
-  it("sets internals for Element", () => {
+  it("sets empty string for invalid cssText", () => {
     const node = {
       nodeType: 1,
       style: {},
