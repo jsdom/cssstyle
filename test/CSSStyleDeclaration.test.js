@@ -2,7 +2,6 @@
 
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
-const CSSOM = require("rrweb-cssom");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
 const allExtraProperties = require("../lib/allExtraProperties");
 const allProperties = require("../lib/generated/allProperties");
@@ -140,8 +139,51 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "color: green;");
   });
 
+  it("sets empty string for invalid cssText", () => {
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
+    const style = new CSSStyleDeclaration(null, {
+      context: node
+    });
+    style.cssText = "color: green!";
+    assert.strictEqual(style.cssText, "");
+  });
+
+  it("sets internals for Element", () => {
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
+    const style = new CSSStyleDeclaration(null, {
+      context: node
+    });
+    style.cssText = "color: light-dark(#008000, #0000ff)";
+    assert.strictEqual(style.cssText, "color: light-dark(rgb(0, 128, 0), rgb(0, 0, 255));");
+  });
+
   it("sets internals for CSSRule", () => {
-    const rule = CSSOM.parse(`body { color: green; }`).cssRules[0];
+    const rule = {
+      parentRule: {},
+      parentStyleSheet: {
+        ownerDocument: {
+          defaultView: {
+            DOMException: globalThis.DOMException
+          }
+        }
+      }
+    };
     const style = new CSSStyleDeclaration(null, {
       context: rule
     });

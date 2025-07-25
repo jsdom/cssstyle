@@ -1307,6 +1307,14 @@ describe("color", () => {
     testPropertyValue("color", "rgb(0 128 0)", "rgb(0, 128, 0)");
   });
 
+  it("color should set / get color function", () => {
+    testPropertyValue(
+      "color",
+      "light-dark(#008000, #0000ff)",
+      "light-dark(rgb(0, 128, 0), rgb(0, 0, 255))"
+    );
+  });
+
   it("opacity should set / get keyword", () => {
     testPropertyValue("opacity", "inherit", "inherit");
   });

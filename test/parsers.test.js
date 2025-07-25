@@ -1099,6 +1099,170 @@ describe("parseShorthand", () => {
   });
 });
 
+describe("parseCSS", () => {
+  it("should get ast", () => {
+    const input = "color: green !important;";
+    const opt = {
+      context: "declarationList",
+      parseValue: false
+    };
+    const output = parsers.parseCSS(input, opt);
+    assert.strictEqual(output.type, "DeclarationList");
+    assert.strictEqual(Object.hasOwn(output, "children"), true);
+  });
+
+  it("should get ast", () => {
+    const input = "green";
+    const opt = {
+      context: "value",
+      parseValue: false
+    };
+    const output = parsers.parseCSS(input, opt);
+    assert.strictEqual(output.type, "Value");
+    assert.strictEqual(Object.hasOwn(output, "children"), true);
+  });
+
+  it("should get object", () => {
+    const input = "color: green !important;";
+    const opt = {
+      context: "declarationList",
+      parseValue: false
+    };
+    const output = parsers.parseCSS(input, opt, true);
+    const [
+      {
+        important,
+        property,
+        value: { value }
+      }
+    ] = output.children;
+    assert.strictEqual(important, true);
+    assert.strictEqual(property, "color");
+    assert.strictEqual(value, "green");
+  });
+});
+
+describe("isValidPropertyValue", () => {
+  it("should return false", () => {
+    const input = "foo";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return true", () => {
+    const input = "red";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "initial";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "canvas";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "Canvas";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "canvas";
+    const output = parsers.isValidPropertyValue("-webkit-border-after-color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return false", () => {
+    const input = "canvas";
+    const output = parsers.isValidPropertyValue("-moz-border-bottom-color", input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return true", () => {
+    const input = "canvas";
+    const output = parsers.isValidPropertyValue("background-color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "appworkspace";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "AppWorkSpace";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "light-dark(green, blue)";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "light";
+    const output = parsers.isValidPropertyValue("color-scheme", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "dark";
+    const output = parsers.isValidPropertyValue("color-scheme", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "normal";
+    const output = parsers.isValidPropertyValue("color-scheme", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "only dark";
+    const output = parsers.isValidPropertyValue("color-scheme", input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return false for custom property", () => {
+    const input = "red";
+    const output = parsers.isValidPropertyValue("--foo", input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return false for var()", () => {
+    const input = "var(--foo)";
+    const output = parsers.isValidPropertyValue("color", input);
+
+    assert.strictEqual(output, false);
+  });
+});
+
 describe("isValidColor", () => {
   it("should return false", () => {
     const input = "foo";
