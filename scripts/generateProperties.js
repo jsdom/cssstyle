@@ -125,7 +125,9 @@ externalDependencies.forEach(function (filename, i) {
     `external_dependency_${basename(filename, ".js").replace(/[^A-Za-z]/g, "")}_${i}`
   );
   moduleExportsByPath[filename] = { defaultExports: id };
-  let relativePath = nodePath.relative(nodePath.resolve(`${__dirname}/../lib`), filename);
+  let relativePath = nodePath
+    .relative(nodePath.resolve(`${__dirname}/../lib`), filename)
+    .replaceAll(nodePath.sep, "/");
   if (relativePath[0] !== ".") {
     relativePath = `../${relativePath}`;
   }
