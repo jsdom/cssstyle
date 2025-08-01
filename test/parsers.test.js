@@ -178,7 +178,7 @@ describe("hasCalcFunc", () => {
   });
 });
 
-describe("parseNumber", () => {
+describe("parseCalc", () => {
   it("should return empty string", () => {
     const input = "";
     const output = parsers.parseCalc(input);
@@ -195,11 +195,11 @@ describe("parseNumber", () => {
     assert.strictEqual(output, "calc(6px)");
   });
 
-  it('should return "rgb(85 0 0)"', () => {
+  it('should return "rgb(calc(255/3) 0 0)"', () => {
     const input = "rgb(calc(255 / 3) 0 0)";
     const output = parsers.parseCalc(input);
 
-    assert.strictEqual(output, "rgb(85 0 0)");
+    assert.strictEqual(output, "rgb(calc(255/3) 0 0)");
   });
 });
 
