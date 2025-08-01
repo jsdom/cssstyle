@@ -1584,11 +1584,11 @@ describe("flex box", () => {
   });
 
   it("flex should set / get keyword", () => {
-    testPropertyValue("flex", "initial", "0 1 auto");
+    testPropertyValue("flex", "auto", "1 1 auto");
   });
 
   it("flex should set / get keyword", () => {
-    testPropertyValue("flex", "auto", "1 1 auto");
+    testPropertyValue("flex", "initial", "initial");
   });
 
   it("flex shorthand should set / get longhand value", () => {
