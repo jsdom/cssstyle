@@ -148,6 +148,61 @@ describe("hasVarFunc", () => {
   });
 });
 
+describe("hasCalcFunc", () => {
+  it("should return false", () => {
+    const input = "";
+    const output = parsers.hasCalcFunc(input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return false", () => {
+    const input = "1px";
+    const output = parsers.hasCalcFunc(input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return true", () => {
+    const input = "calc(1px * 2)";
+    const output = parsers.hasCalcFunc(input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "rgb(calc(255 / 3) 0 0)";
+    const output = parsers.hasCalcFunc(input);
+
+    assert.strictEqual(output, true);
+  });
+});
+
+describe("parseNumber", () => {
+  it("should return empty string", () => {
+    const input = "";
+    const output = parsers.parseCalc(input);
+
+    assert.strictEqual(output, "");
+  });
+
+  it('should return "calc(6px)"', () => {
+    const input = "calc(2px * 3)";
+    const output = parsers.parseCalc(input, {
+      format: "specifiedValue"
+    });
+
+    assert.strictEqual(output, "calc(6px)");
+  });
+
+  it('should return "rgb(85 0 0)"', () => {
+    const input = "rgb(calc(255 / 3) 0 0)";
+    const output = parsers.parseCalc(input);
+
+    assert.strictEqual(output, "rgb(85 0 0)");
+  });
+});
+
 describe("parseNumber", () => {
   it("should return empty string", () => {
     const input = "";
