@@ -1258,6 +1258,10 @@ describe("box sizing", () => {
   });
 
   it("height should set / get length", () => {
+    testPropertyValue("height", "0", "0px");
+  });
+
+  it("height should set / get length", () => {
     testPropertyValue("height", "10px", "10px");
   });
 
@@ -1275,6 +1279,10 @@ describe("box sizing", () => {
 
   it("width should set / get keyword", () => {
     testPropertyValue("width", "auto", "auto");
+  });
+
+  it("height should set / get length", () => {
+    testPropertyValue("width", "0", "0px");
   });
 
   it("width should set / get length", () => {
