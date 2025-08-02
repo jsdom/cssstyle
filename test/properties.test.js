@@ -1258,6 +1258,10 @@ describe("box sizing", () => {
   });
 
   it("height should set / get length", () => {
+    testPropertyValue("height", "0", "0px");
+  });
+
+  it("height should set / get length", () => {
     testPropertyValue("height", "10px", "10px");
   });
 
@@ -1275,6 +1279,10 @@ describe("box sizing", () => {
 
   it("width should set / get keyword", () => {
     testPropertyValue("width", "auto", "auto");
+  });
+
+  it("height should set / get length", () => {
+    testPropertyValue("width", "0", "0px");
   });
 
   it("width should set / get length", () => {
@@ -1315,6 +1323,18 @@ describe("color", () => {
     );
   });
 
+  it("color should not should set / get invalid value", () => {
+    testPropertyValue(
+      "color",
+      "color-mix(in hsl, hsl(120deg 10% 20%) 0%, hsl(30deg 30% 40%) 0%)",
+      ""
+    );
+  });
+
+  it("color should not should set / get invalid value", () => {
+    testPropertyValue("color", "color(srgb 0 0 0 0)", "");
+  });
+
   it("opacity should set / get keyword", () => {
     testPropertyValue("opacity", "inherit", "inherit");
   });
@@ -1324,23 +1344,27 @@ describe("color", () => {
   });
 
   it("opacity should set / get number", () => {
-    testPropertyValue("opacity", "1.5", "1");
+    testPropertyValue("opacity", ".5", "0.5");
   });
 
-  it("opacity should set / get clamped number", () => {
-    testPropertyValue("opacity", "-1", "0");
+  it("opacity should set / get number", () => {
+    testPropertyValue("opacity", "1.5", "1.5");
+  });
+
+  it("opacity should set / get number", () => {
+    testPropertyValue("opacity", "-1", "-1");
   });
 
   it("opacity should set / get percent", () => {
     testPropertyValue("opacity", "50%", "50%");
   });
 
-  it("opacity should set / get clamped percent", () => {
-    testPropertyValue("opacity", "150%", "100%");
+  it("opacity should set / get percent", () => {
+    testPropertyValue("opacity", "150%", "150%");
   });
 
-  it("opacity should set / get clamped percent", () => {
-    testPropertyValue("opacity", "-50%", "0%");
+  it("opacity should set / get percent", () => {
+    testPropertyValue("opacity", "-50%", "-50%");
   });
 });
 
@@ -1584,11 +1608,11 @@ describe("flex box", () => {
   });
 
   it("flex should set / get keyword", () => {
-    testPropertyValue("flex", "initial", "0 1 auto");
+    testPropertyValue("flex", "auto", "1 1 auto");
   });
 
   it("flex should set / get keyword", () => {
-    testPropertyValue("flex", "auto", "1 1 auto");
+    testPropertyValue("flex", "initial", "initial");
   });
 
   it("flex shorthand should set / get longhand value", () => {

@@ -148,6 +148,61 @@ describe("hasVarFunc", () => {
   });
 });
 
+describe("hasCalcFunc", () => {
+  it("should return false", () => {
+    const input = "";
+    const output = parsers.hasCalcFunc(input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return false", () => {
+    const input = "1px";
+    const output = parsers.hasCalcFunc(input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return true", () => {
+    const input = "calc(1px * 2)";
+    const output = parsers.hasCalcFunc(input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "rgb(calc(255 / 3) 0 0)";
+    const output = parsers.hasCalcFunc(input);
+
+    assert.strictEqual(output, true);
+  });
+});
+
+describe("parseCalc", () => {
+  it("should return empty string", () => {
+    const input = "";
+    const output = parsers.parseCalc(input);
+
+    assert.strictEqual(output, "");
+  });
+
+  it('should return "calc(6px)"', () => {
+    const input = "calc(2px * 3)";
+    const output = parsers.parseCalc(input, {
+      format: "specifiedValue"
+    });
+
+    assert.strictEqual(output, "calc(6px)");
+  });
+
+  it('should return "rgb(calc(255/3) 0 0)"', () => {
+    const input = "rgb(calc(255 / 3) 0 0)";
+    const output = parsers.parseCalc(input);
+
+    assert.strictEqual(output, "rgb(calc(255/3) 0 0)");
+  });
+});
+
 describe("parseNumber", () => {
   it("should return empty string", () => {
     const input = "";
@@ -478,7 +533,7 @@ describe("parseUrl", () => {
     const input = "url(sample\\\\-escaped.png)";
     const output = parsers.parseUrl(input);
 
-    assert.strictEqual(output, 'url("sample\\\\-escaped.png")');
+    assert.strictEqual(output, 'url("sample\\-escaped.png")');
   });
 
   it("should return undefined", () => {
@@ -516,11 +571,11 @@ describe("parseUrl", () => {
     assert.strictEqual(output, undefined);
   });
 
-  it("should return quoted url string without escape", () => {
+  it("should return undefined", () => {
     const input = "url(sample\\\nescaped\\\n-lf.png)";
     const output = parsers.parseUrl(input);
 
-    assert.strictEqual(output, 'url("sample\nescaped\n-lf.png")');
+    assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
@@ -582,11 +637,11 @@ describe("parseString", () => {
     assert.strictEqual(output, undefined);
   });
 
-  it("should return undefined", () => {
+  it("should return quoted string", () => {
     const input = "'foo bar\"";
     const output = parsers.parseString(input);
 
-    assert.strictEqual(output, undefined);
+    assert.strictEqual(output, '"foo bar\\""');
   });
 
   it("should return quoted string", () => {
@@ -614,7 +669,7 @@ describe("parseString", () => {
     const input = '"foo \\\\ bar"';
     const output = parsers.parseString(input);
 
-    assert.strictEqual(output, '"foo \\\\ bar"');
+    assert.strictEqual(output, '"foo \\ bar"');
   });
 
   it("should return quoted string", () => {
@@ -637,7 +692,7 @@ describe("parseColor", () => {
     const input = "inherit";
     const output = parsers.parseColor(input);
 
-    assert.strictEqual(output, "inherit");
+    assert.strictEqual(output, undefined);
   });
 
   it("should return lower cased keyword for system color", () => {
@@ -784,18 +839,18 @@ describe("parseImage", () => {
     assert.strictEqual(output, undefined);
   });
 
-  it("should return none", () => {
+  it("should return undefined", () => {
     const input = "none";
     const output = parsers.parseImage(input);
 
-    assert.strictEqual(output, "none");
+    assert.strictEqual(output, undefined);
   });
 
-  it("should return inherit", () => {
+  it("should return undefined", () => {
     const input = "inherit";
     const output = parsers.parseImage(input);
 
-    assert.strictEqual(output, "inherit");
+    assert.strictEqual(output, undefined);
   });
 
   it("should return undefined for negative radii", () => {
@@ -840,11 +895,11 @@ describe("parseImage", () => {
     assert.strictEqual(output, undefined);
   });
 
-  it("should return undefined if value contains var() but not gradient", () => {
+  it("should return value even if value is not gradient but contains var()", () => {
     const input = "rgb(var(--my-var, 0, 0, 0))";
     const output = parsers.parseImage(input);
 
-    assert.strictEqual(output, undefined);
+    assert.strictEqual(output, "rgb(var(--my-var, 0, 0, 0))");
   });
 });
 
@@ -1260,42 +1315,5 @@ describe("isValidPropertyValue", () => {
     const output = parsers.isValidPropertyValue("color", input);
 
     assert.strictEqual(output, false);
-  });
-});
-
-describe("isValidColor", () => {
-  it("should return false", () => {
-    const input = "foo";
-    const output = parsers.isValidColor(input);
-
-    assert.strictEqual(output, false);
-  });
-
-  it("should return false", () => {
-    const input = "inherit";
-    const output = parsers.isValidColor(input);
-
-    assert.strictEqual(output, false);
-  });
-
-  it("should return true", () => {
-    const input = "green";
-    const output = parsers.isValidColor(input);
-
-    assert.strictEqual(output, true);
-  });
-
-  it("should return true", () => {
-    const input = "#008000";
-    const output = parsers.isValidColor(input);
-
-    assert.strictEqual(output, true);
-  });
-
-  it("should return true", () => {
-    const input = "rgb(0 128 0)";
-    const output = parsers.isValidColor(input);
-
-    assert.strictEqual(output, true);
   });
 });

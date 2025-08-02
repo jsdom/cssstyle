@@ -953,35 +953,35 @@ describe("CSSStyleDeclaration", () => {
 
   it("should not normalize if var() is included", () => {
     const style = new CSSStyleDeclaration();
-    style.setProperty("width", "calc( /* comment */ 100% - calc(var(--foo) *2 ))");
+    style.setProperty("line-height", "calc( /* comment */ 100% - calc(var(--foo) *2 ))");
     assert.strictEqual(
-      style.getPropertyValue("width"),
+      style.getPropertyValue("line-height"),
       "calc( /* comment */ 100% - calc(var(--foo) *2 ))"
     );
   });
 
   it("supports abs", () => {
     const style = new CSSStyleDeclaration();
-    style.setProperty("width", "abs(1 + 2 + 3)");
-    assert.strictEqual(style.getPropertyValue("width"), "calc(6)");
+    style.setProperty("line-height", "abs(1 - 2 * 3)");
+    assert.strictEqual(style.getPropertyValue("line-height"), "calc(5)");
   });
 
   it("supports abs inside calc", () => {
     const style = new CSSStyleDeclaration();
-    style.setProperty("width", "calc(abs(1) + abs(2))");
-    assert.strictEqual(style.getPropertyValue("width"), "calc(3)");
+    style.setProperty("line-height", "calc(abs(1) + abs(2))");
+    assert.strictEqual(style.getPropertyValue("line-height"), "calc(3)");
   });
 
   it("supports sign", () => {
     const style = new CSSStyleDeclaration();
-    style.setProperty("width", "sign(.1)");
-    assert.strictEqual(style.getPropertyValue("width"), "calc(1)");
+    style.setProperty("line-height", "sign(.1)");
+    assert.strictEqual(style.getPropertyValue("line-height"), "calc(1)");
   });
 
   it("supports sign inside calc", () => {
     const style = new CSSStyleDeclaration();
-    style.setProperty("width", "calc(sign(.1) + sign(.2))");
-    assert.strictEqual(style.getPropertyValue("width"), "calc(2)");
+    style.setProperty("line-height", "calc(sign(.1) + sign(.2))");
+    assert.strictEqual(style.getPropertyValue("line-height"), "calc(2)");
   });
 
   it("no-op for setting undefined to width", () => {
