@@ -11,7 +11,7 @@ const camelize = require("../lib/utils/camelize");
 describe("CSSStyleDeclaration", () => {
   const dashedProperties = [...allProperties, ...allExtraProperties];
   const allowedProperties = dashedProperties.map(camelize.dashedToCamelCase);
-  const invalidProperties = [...implementedProperties]
+  const invalidProperties = [...implementedProperties.keys()]
     .map(camelize.dashedToCamelCase)
     .filter((prop) => !allowedProperties.includes(prop));
 
