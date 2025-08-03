@@ -1747,6 +1747,14 @@ describe("font", () => {
   });
 
   it("font-family should set / get family values", () => {
+    testPropertyValue("font-family", "Times\\ New Roman, serif", '"Times New Roman", serif');
+  });
+
+  it("font-family should set / get family values", () => {
+    testPropertyValue("font-family", '"Times\\ New Roman", serif', '"Times New Roman", serif');
+  });
+
+  it("font-family should set / get family values", () => {
     testPropertyValue(
       "font-family",
       '"Gill Sans Extrabold", sans-serif',
