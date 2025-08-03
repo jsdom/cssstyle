@@ -917,7 +917,9 @@ describe("parseFunction", () => {
 
     assert.deepEqual(output, {
       name: null,
-      value: ""
+      value: "",
+      hasVar: false,
+      raw: ""
     });
   });
 
@@ -928,23 +930,27 @@ describe("parseFunction", () => {
     assert.strictEqual(output, undefined);
   });
 
-  it("should return object with name var and value as is for var()", () => {
+  it("should return object with hasVar: true", () => {
     const input = "var(--foo)";
     const output = parsers.parseFunction(input);
 
     assert.deepEqual(output, {
       name: "var",
-      value: "var(--foo)"
+      value: "--foo",
+      hasVar: true,
+      raw: "var(--foo)"
     });
   });
 
-  it("should return object with name var and value as is for function containing var()", () => {
+  it("should return object with hasVar: true", () => {
     const input = "translate(var(--foo))";
     const output = parsers.parseFunction(input);
 
     assert.deepEqual(output, {
-      name: "var",
-      value: "translate(var(--foo))"
+      name: "translate",
+      value: "var(--foo)",
+      hasVar: true,
+      raw: "translate(var(--foo))"
     });
   });
 
@@ -954,7 +960,9 @@ describe("parseFunction", () => {
 
     assert.deepEqual(output, {
       name: "translate",
-      value: "0"
+      value: "0",
+      hasVar: false,
+      raw: "translate(0)"
     });
   });
 
@@ -964,7 +972,9 @@ describe("parseFunction", () => {
 
     assert.deepEqual(output, {
       name: "translate",
-      value: "42px"
+      value: "42px",
+      hasVar: false,
+      raw: "translate(42px)"
     });
   });
 
@@ -974,7 +984,9 @@ describe("parseFunction", () => {
 
     assert.deepEqual(output, {
       name: "translate",
-      value: "100px, 200px"
+      value: "100px, 200px",
+      hasVar: false,
+      raw: "translate( 100px, 200px )"
     });
   });
 
@@ -984,7 +996,9 @@ describe("parseFunction", () => {
 
     assert.deepEqual(output, {
       name: "translateX",
-      value: "100px"
+      value: "100px",
+      hasVar: false,
+      raw: "translateX(100px)"
     });
   });
 
@@ -994,7 +1008,9 @@ describe("parseFunction", () => {
 
     assert.deepEqual(output, {
       name: "translateY",
-      value: "100px"
+      value: "100px",
+      hasVar: false,
+      raw: "translateY(100px)"
     });
   });
 
@@ -1004,7 +1020,9 @@ describe("parseFunction", () => {
 
     assert.deepEqual(output, {
       name: "translateZ",
-      value: "100px"
+      value: "100px",
+      hasVar: false,
+      raw: "translateZ(100px)"
     });
   });
 
@@ -1014,7 +1032,9 @@ describe("parseFunction", () => {
 
     assert.deepEqual(output, {
       name: "translate3d",
-      value: "42px, -62px, -135px"
+      value: "42px, -62px, -135px",
+      hasVar: false,
+      raw: "translate3d(42px, -62px, -135px)"
     });
   });
 
@@ -1024,7 +1044,9 @@ describe("parseFunction", () => {
 
     assert.deepEqual(output, {
       name: "drop-shadow",
-      value: "30px 10px 4px #4444dd"
+      value: "30px 10px 4px #4444dd",
+      hasVar: false,
+      raw: "drop-shadow(30px 10px 4px #4444dd)"
     });
   });
 
@@ -1034,7 +1056,9 @@ describe("parseFunction", () => {
 
     assert.deepEqual(output, {
       name: "foo-bar-baz",
-      value: "qux"
+      value: "qux",
+      hasVar: false,
+      raw: "foo-bar-baz(qux)"
     });
   });
 });
