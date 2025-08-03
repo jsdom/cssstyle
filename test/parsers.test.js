@@ -1221,6 +1221,57 @@ describe("parseCSS", () => {
   });
 });
 
+describe("parsePropertyValue", () => {
+  it("should get undefined", () => {
+    const property = "color";
+    const value = "foo";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should get empty string", () => {
+    const property = "color";
+    const value = "";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.strictEqual(output, "");
+  });
+
+  it("should get string", () => {
+    const property = "color";
+    const value = "var(--foo)";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.strictEqual(output, "var(--foo)");
+  });
+
+  it("should get string", () => {
+    const property = "background-size";
+    const value = "calc(3em / 2)";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.deepEqual(output, "calc(1.5em)");
+  });
+
+  it("should get string", () => {
+    const property = "color";
+    const value = "initial";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.strictEqual(output, "initial");
+  });
+
+  it("should get string", () => {
+    const property = "color";
+    const value = "CanvasText";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.strictEqual(output, "canvastext");
+  });
+
+  it("should get string", () => {
+    const property = "color";
+    const value = "green";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.strictEqual(output, "green");
+  });
+});
+
 describe("isValidPropertyValue", () => {
   it("should return false", () => {
     const input = "foo";
