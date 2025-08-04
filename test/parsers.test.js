@@ -1229,6 +1229,13 @@ describe("parsePropertyValue", () => {
     assert.strictEqual(output, undefined);
   });
 
+  it("should get undefined", () => {
+    const property = "color";
+    const value = "calc(foo)";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.strictEqual(output, undefined);
+  });
+
   it("should get empty string", () => {
     const property = "color";
     const value = "";
@@ -1245,9 +1252,23 @@ describe("parsePropertyValue", () => {
 
   it("should get string", () => {
     const property = "background-size";
+    const value = "calc(3 / 2)";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.strictEqual(output, "calc(1.5)");
+  });
+
+  it("should get string", () => {
+    const property = "background-size";
     const value = "calc(3em / 2)";
     const output = parsers.parsePropertyValue(property, value);
-    assert.deepEqual(output, "calc(1.5em)");
+    assert.strictEqual(output, "calc(1.5em)");
+  });
+
+  it("should get string", () => {
+    const property = "background-size";
+    const value = "calc(10px + 20%)";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.strictEqual(output, "calc(20% + 10px)");
   });
 
   it("should get string", () => {
@@ -1269,6 +1290,106 @@ describe("parsePropertyValue", () => {
     const value = "green";
     const output = parsers.parsePropertyValue(property, value);
     assert.strictEqual(output, "green");
+  });
+
+  it("should get string", () => {
+    const property = "color";
+    const value = "color(srgb 0 calc(1 / 2) 0)";
+    const output = parsers.parsePropertyValue(property, value);
+    assert.strictEqual(output, "color(srgb 0 calc(1/2) 0)");
+  });
+
+  it("should get array", () => {
+    const property = "color";
+    const value = "color(srgb 0 calc(1 / 2) 0)";
+    const output = parsers.parsePropertyValue(property, value, {
+      inArray: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Function",
+        name: "color",
+        value: "srgb 0 calc(1/2) 0",
+        raw: "color(srgb 0 calc(1/2) 0)"
+      }
+    ]);
+  });
+
+  it("should get array", () => {
+    const property = "color";
+    const value = "green";
+    const output = parsers.parsePropertyValue(property, value, {
+      inArray: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Identifier",
+        loc: null,
+        name: "green"
+      }
+    ]);
+  });
+
+  it("should get array", () => {
+    const property = "color";
+    const value = "rgb(0 128 0)";
+    const output = parsers.parsePropertyValue(property, value, {
+      inArray: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Function",
+        name: "rgb",
+        value: "0 128 0",
+        raw: "rgb(0 128 0)"
+      }
+    ]);
+  });
+
+  it("should get array", () => {
+    const property = "background-image";
+    const value = "none";
+    const output = parsers.parsePropertyValue(property, value, {
+      inArray: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Identifier",
+        loc: null,
+        name: "none"
+      }
+    ]);
+  });
+
+  it("should get array", () => {
+    const property = "background-image";
+    const value = "url(example.png)";
+    const output = parsers.parsePropertyValue(property, value, {
+      inArray: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Url",
+        loc: null,
+        value: "example.png"
+      }
+    ]);
+  });
+
+  it("should get array", () => {
+    const property = "background-image";
+    const value = "linear-gradient(green, blue)";
+    const output = parsers.parsePropertyValue(property, value, {
+      inArray: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Function",
+        name: "linear-gradient",
+        value: "green, blue",
+        raw: "linear-gradient(green, blue)"
+      }
+    ]);
   });
 });
 
