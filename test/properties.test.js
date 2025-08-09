@@ -717,6 +717,21 @@ describe("border", () => {
     );
   });
 
+  // FIXME:
+  it.skip("border-style should set / get keyword", () => {
+    testImplicitPropertyValue(
+      "border-style",
+      "none",
+      "none",
+      new Map([
+        ["border-top-style", "none"],
+        ["border-right-style", "none"],
+        ["border-bottom-style", "none"],
+        ["border-left-style", "none"]
+      ])
+    );
+  });
+
   it("border-style should set / get keyword", () => {
     testImplicitPropertyValue(
       "border-style",
@@ -1101,6 +1116,20 @@ describe("box model", () => {
     );
   });
 
+  it("margin shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "margin",
+      "initial",
+      "initial",
+      new Map([
+        ["margin-top", "initial"],
+        ["margin-right", "initial"],
+        ["margin-bottom", "initial"],
+        ["margin-left", "initial"]
+      ])
+    );
+  });
+
   it("padding-top should set / get length", () => {
     testPropertyValue("padding-top", "0", "0px");
   });
@@ -1247,6 +1276,20 @@ describe("box model", () => {
         ["padding-right", ""],
         ["padding-bottom", ""],
         ["padding-left", ""]
+      ])
+    );
+  });
+
+  it("padding shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "padding",
+      "initial",
+      "initial",
+      new Map([
+        ["padding-top", "initial"],
+        ["padding-right", "initial"],
+        ["padding-bottom", "initial"],
+        ["padding-left", "initial"]
       ])
     );
   });
@@ -1615,6 +1658,18 @@ describe("flex box", () => {
     testPropertyValue("flex", "initial", "initial");
   });
 
+  it("flex should set / get keyword", () => {
+    testPropertyValue("flex", "unset", "unset");
+  });
+
+  it("flex shorthand should not set / get longhand value", () => {
+    testPropertyValue("flex", "2 1 3", "");
+  });
+
+  it("flex shorthand should not set / get longhand value", () => {
+    testPropertyValue("flex", "2 1 calc(3)", "");
+  });
+
   it("flex shorthand should set / get longhand value", () => {
     testPropertyValue("flex", "2", "2 1 0%");
   });
@@ -1644,6 +1699,45 @@ describe("flex box", () => {
         ["flex-grow", ""],
         ["flex-shrink", ""],
         ["flex-basis", ""]
+      ])
+    );
+  });
+
+  it("flex shorthand should set / get longhand value", () => {
+    testImplicitPropertyValue(
+      "flex",
+      "calc(2px * 3)",
+      "1 1 calc(6px)",
+      new Map([
+        ["flex-grow", "1"],
+        ["flex-shrink", "1"],
+        ["flex-basis", "calc(6px)"]
+      ])
+    );
+  });
+
+  it("flex shorthand should set / get longhand value", () => {
+    testImplicitPropertyValue(
+      "flex",
+      "calc(2 * 3)",
+      "calc(6) 1 0%",
+      new Map([
+        ["flex-grow", "calc(6)"],
+        ["flex-shrink", "1"],
+        ["flex-basis", "0%"]
+      ])
+    );
+  });
+
+  it("flex shorthand should set / get longhand value", () => {
+    testImplicitPropertyValue(
+      "flex",
+      "initial",
+      "initial",
+      new Map([
+        ["flex-grow", "initial"],
+        ["flex-shrink", "initial"],
+        ["flex-basis", "initial"]
       ])
     );
   });

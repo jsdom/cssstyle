@@ -118,6 +118,36 @@ describe("prepareValue", () => {
   });
 });
 
+describe("isGlobalKeyword", () => {
+  it("should return false", () => {
+    const input = "";
+    const output = parsers.isGlobalKeyword(input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return false", () => {
+    const input = "foo";
+    const output = parsers.isGlobalKeyword(input);
+
+    assert.strictEqual(output, false);
+  });
+
+  it("should return true", () => {
+    const input = "initial";
+    const output = parsers.isGlobalKeyword(input);
+
+    assert.strictEqual(output, true);
+  });
+
+  it("should return true", () => {
+    const input = "INITIAL";
+    const output = parsers.isGlobalKeyword(input);
+
+    assert.strictEqual(output, true);
+  });
+});
+
 describe("hasVarFunc", () => {
   it("should return false", () => {
     const input = "";
@@ -186,6 +216,15 @@ describe("parseCalc", () => {
     assert.strictEqual(output, "");
   });
 
+  it('should return "calc(6)"', () => {
+    const input = "calc(2 * 3)";
+    const output = parsers.parseCalc(input, {
+      format: "specifiedValue"
+    });
+
+    assert.strictEqual(output, "calc(6)");
+  });
+
   it('should return "calc(6px)"', () => {
     const input = "calc(2px * 3)";
     const output = parsers.parseCalc(input, {
@@ -201,6 +240,13 @@ describe("parseCalc", () => {
 
     assert.strictEqual(output, "rgb(calc(255/3) 0 0)");
   });
+
+  it('should return "calc(100% - 2em)"', () => {
+    const input = "calc(100% - 2em)";
+    const output = parsers.parseCalc(input);
+
+    assert.strictEqual(output, "calc(100% - 2em)");
+  });
 });
 
 describe("parseNumber", () => {
@@ -214,13 +260,6 @@ describe("parseNumber", () => {
   it("should return undefined", () => {
     const input = "foo";
     const output = parsers.parseNumber(input);
-
-    assert.strictEqual(output, undefined);
-  });
-
-  it("should return undefined", () => {
-    const input = "-1";
-    const output = parsers.parseNumber(input, true);
 
     assert.strictEqual(output, undefined);
   });
@@ -252,6 +291,48 @@ describe("parseNumber", () => {
 
     assert.strictEqual(output, "calc(0.666667)");
   });
+
+  it("should return undefined", () => {
+    const input = "-50";
+    const output = parsers.parseNumber(input, {
+      min: 0,
+      max: 100
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = "150";
+    const output = parsers.parseNumber(input, {
+      min: 0,
+      max: 100
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return clamped value", () => {
+    const input = "-50";
+    const output = parsers.parseNumber(input, {
+      min: 0,
+      max: 100,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "0");
+  });
+
+  it("should return clamped value", () => {
+    const input = "150";
+    const output = parsers.parseNumber(input, {
+      min: 0,
+      max: 100,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "100");
+  });
 });
 
 describe("parseLength", () => {
@@ -262,11 +343,18 @@ describe("parseLength", () => {
     assert.strictEqual(output, "");
   });
 
-  it("should return undefined for negative length", () => {
-    const input = "-1em";
-    const output = parsers.parseLength(input, true);
+  it("should return empty string", () => {
+    const input = "100";
+    const output = parsers.parseLength(input);
 
     assert.strictEqual(output, undefined);
+  });
+
+  it("should return value", () => {
+    const input = "10px";
+    const output = parsers.parseLength(input);
+
+    assert.strictEqual(output, "10px");
   });
 
   it("should return value as is", () => {
@@ -296,6 +384,48 @@ describe("parseLength", () => {
 
     assert.strictEqual(output, "calc(10px + 100vh)");
   });
+
+  it("should return undefined", () => {
+    const input = "-50px";
+    const output = parsers.parseLength(input, {
+      min: 0,
+      max: 100
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = "150px";
+    const output = parsers.parseLength(input, {
+      min: 0,
+      max: 100
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return clamped value", () => {
+    const input = "-50px";
+    const output = parsers.parseLength(input, {
+      min: 0,
+      max: 100,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "0px");
+  });
+
+  it("should return clamped value", () => {
+    const input = "150px";
+    const output = parsers.parseLength(input, {
+      min: 0,
+      max: 100,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "100px");
+  });
 });
 
 describe("parsePercent", () => {
@@ -306,18 +436,18 @@ describe("parsePercent", () => {
     assert.strictEqual(output, "");
   });
 
+  it("should return empty string", () => {
+    const input = "100";
+    const output = parsers.parsePercent(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
   it("should return value", () => {
     const input = "10%";
     const output = parsers.parsePercent(input);
 
     assert.strictEqual(output, "10%");
-  });
-
-  it("should return undefined for negative percent", () => {
-    const input = "-10%";
-    const output = parsers.parsePercent(input, true);
-
-    assert.strictEqual(output, undefined);
   });
 
   it("should return value as is", () => {
@@ -340,6 +470,48 @@ describe("parsePercent", () => {
 
     assert.strictEqual(output, "calc(20% + 10px)");
   });
+
+  it("should return undefined", () => {
+    const input = "-50%";
+    const output = parsers.parsePercent(input, {
+      min: 0,
+      max: 100
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = "150%";
+    const output = parsers.parsePercent(input, {
+      min: 0,
+      max: 100
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return clamped value", () => {
+    const input = "-50%";
+    const output = parsers.parsePercent(input, {
+      min: 0,
+      max: 100,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "0%");
+  });
+
+  it("should return clamped value", () => {
+    const input = "150%";
+    const output = parsers.parsePercent(input, {
+      min: 0,
+      max: 100,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "100%");
+  });
 });
 
 describe("parseMeasurement", () => {
@@ -350,9 +522,9 @@ describe("parseMeasurement", () => {
     assert.strictEqual(output, "");
   });
 
-  it("should return undefined", () => {
-    const input = "-1em";
-    const output = parsers.parseMeasurement(input, true);
+  it("should return empty string", () => {
+    const input = "100";
+    const output = parsers.parseMeasurement(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -419,6 +591,48 @@ describe("parseMeasurement", () => {
 
     assert.strictEqual(output, "0px");
   });
+
+  it("should return undefined", () => {
+    const input = "-1em";
+    const output = parsers.parseMeasurement(input, {
+      min: 0,
+      max: 1
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = "1.1em";
+    const output = parsers.parseMeasurement(input, {
+      min: 0,
+      max: 1
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return clamped value", () => {
+    const input = "-1em";
+    const output = parsers.parseMeasurement(input, {
+      min: 0,
+      max: 1,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "0em");
+  });
+
+  it("should return clamped value", () => {
+    const input = "1.1em";
+    const output = parsers.parseMeasurement(input, {
+      min: 0,
+      max: 1,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "1em");
+  });
 });
 
 describe("parseAngle", () => {
@@ -429,6 +643,13 @@ describe("parseAngle", () => {
     assert.strictEqual(output, "");
   });
 
+  it("should return undefined", () => {
+    const input = "90";
+    const output = parsers.parseAngle(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
   it("should return value with deg unit", () => {
     const input = "90deg";
     const output = parsers.parseAngle(input);
@@ -437,10 +658,10 @@ describe("parseAngle", () => {
   });
 
   it("should return value with deg unit", () => {
-    const input = "480deg";
+    const input = "450deg";
     const output = parsers.parseAngle(input);
 
-    assert.strictEqual(output, "120deg");
+    assert.strictEqual(output, "450deg");
   });
 
   it("should return value with deg unit", () => {
@@ -451,17 +672,54 @@ describe("parseAngle", () => {
   });
 
   it("should return value with deg unit", () => {
-    const input = "270deg";
-    const output = parsers.parseAngle(input, true);
-
-    assert.strictEqual(output, "270deg");
-  });
-
-  it("should return value with grad unit", () => {
     const input = "100grad";
-    const output = parsers.parseAngle(input, true);
+    const output = parsers.parseAngle(input);
 
     assert.strictEqual(output, "100grad");
+  });
+
+  it("should return value with deg unit", () => {
+    const input = "500grad";
+    const output = parsers.parseAngle(input);
+
+    assert.strictEqual(output, "500grad");
+  });
+
+  it("should return value with deg unit", () => {
+    const input = "-100grad";
+    const output = parsers.parseAngle(input);
+
+    assert.strictEqual(output, "-100grad");
+  });
+
+  it("should return value with rad unit", () => {
+    const input = "1.57rad";
+    const output = parsers.parseAngle(input);
+
+    assert.strictEqual(output, "1.57rad");
+  });
+
+  it("should return value with rad unit", () => {
+    const input = "-1.57rad";
+    const output = parsers.parseAngle(input);
+
+    assert.strictEqual(output, "-1.57rad");
+  });
+
+  it("should return value with turn unit", () => {
+    const input = "0.25turn";
+    const output = parsers.parseAngle(input, {
+      min: 0
+    });
+
+    assert.strictEqual(output, "0.25turn");
+  });
+
+  it("should return value with turn unit", () => {
+    const input = "-0.25turn";
+    const output = parsers.parseAngle(input);
+
+    assert.strictEqual(output, "-0.25turn");
   });
 
   it("should return value as is", () => {
