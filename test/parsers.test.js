@@ -1545,9 +1545,39 @@ describe("parsePropertyValue", () => {
 
   it("should get string", () => {
     const property = "color";
-    const value = "green";
+    const value = "Green";
     const output = parsers.parsePropertyValue(property, value);
-    assert.strictEqual(output, "green");
+    assert.strictEqual(output, "Green");
+  });
+
+  it("should get array", () => {
+    const property = "color";
+    const value = "Green";
+    const output = parsers.parsePropertyValue(property, value, {
+      inArray: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Identifier",
+        name: "green"
+      }
+    ]);
+  });
+
+  it("should get string", () => {
+    const property = "color";
+    const value = "Green";
+    const output = parsers.parsePropertyValue(property, value, {
+      inArray: true,
+      caseSensitive: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Identifier",
+        name: "Green",
+        loc: null
+      }
+    ]);
   });
 
   it("should get string", () => {
@@ -1569,21 +1599,6 @@ describe("parsePropertyValue", () => {
         name: "color",
         value: "srgb 0 calc(1/2) 0",
         raw: "color(srgb 0 calc(1/2) 0)"
-      }
-    ]);
-  });
-
-  it("should get array", () => {
-    const property = "color";
-    const value = "green";
-    const output = parsers.parsePropertyValue(property, value, {
-      inArray: true
-    });
-    assert.deepEqual(output, [
-      {
-        type: "Identifier",
-        loc: null,
-        name: "green"
       }
     ]);
   });
@@ -1613,7 +1628,6 @@ describe("parsePropertyValue", () => {
     assert.deepEqual(output, [
       {
         type: "Identifier",
-        loc: null,
         name: "none"
       }
     ]);
@@ -1630,6 +1644,21 @@ describe("parsePropertyValue", () => {
         type: "Url",
         loc: null,
         value: "example.png"
+      }
+    ]);
+  });
+
+  it("should get array", () => {
+    const property = "background-image";
+    const value = "url(Example.png)";
+    const output = parsers.parsePropertyValue(property, value, {
+      inArray: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Url",
+        loc: null,
+        value: "Example.png"
       }
     ]);
   });

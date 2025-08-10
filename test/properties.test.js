@@ -717,8 +717,7 @@ describe("border", () => {
     );
   });
 
-  // FIXME:
-  it.skip("border-style should set / get keyword", () => {
+  it("border-style should set / get keyword", () => {
     testImplicitPropertyValue(
       "border-style",
       "none",
@@ -1784,15 +1783,6 @@ describe("font", () => {
     );
   });
 
-  // FIXME:
-  it.skip("font-variant should set / get keyword", () => {
-    testPropertyValue(
-      "font-variant",
-      "annotation(flowing) ornaments(flowing) swash(flowing) character-variant(flowing) styleset(flowing) historical-forms stylistic(flowing)",
-      "stylistic(flowing) historical-forms styleset(flowing) character-variant(flowing) swash(flowing) ornaments(flowing) annotation(flowing)"
-    );
-  });
-
   it("font-variant should set / get keyword", () => {
     testPropertyValue("font-variant", "jis78", "jis78");
   });
@@ -1809,15 +1799,15 @@ describe("font", () => {
     testPropertyValue("font-variant", "super", "super");
   });
 
-  it.skip("font-variant should not set / get invalid keywords", () => {
+  it("font-variant should not set / get invalid keywords", () => {
     testPropertyValue("font-variant", "normal none", "");
   });
 
-  it.skip("font-variant should not set / get invalid keywords", () => {
+  it("font-variant should not set / get invalid keywords", () => {
     testPropertyValue("font-variant", "normal small-caps", "");
   });
 
-  it.skip("font-variant should not set / get invalid keywords", () => {
+  it("font-variant should not set / get invalid keywords", () => {
     testPropertyValue("font-variant", "none small-caps", "");
   });
 

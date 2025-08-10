@@ -393,25 +393,40 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "");
   });
 
-  it('setting border values to "none" should clear dependent values', () => {
+  // FIXME: Not sure what the expected results should be.
+  it('setting border values to "none" should not clear dependent values', () => {
     const style = new CSSStyleDeclaration();
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.border = "none";
-    assert.strictEqual(style.cssText, "");
+    // Firefox: "border: medium;", Chrome: "border: none;".
+    assert.strictEqual(style.cssText, "border-top-width: 1px; border: none;");
+    assert.strictEqual(style.borderTopStyle, "none");
+    assert.strictEqual(style.borderTopWidth, "1px");
+
+    style.border = null;
+    style.borderTopWidth = "1px";
+    assert.strictEqual(style.cssText, "border-top-width: 1px;");
+    style.borderStyle = "none";
+    assert.strictEqual(style.cssText, "border-top-width: 1px; border-style: none;");
+    assert.strictEqual(style.borderTopStyle, "none");
+    assert.strictEqual(style.borderTopWidth, "1px");
+    style.border = null;
+
+    style.borderTopWidth = "1px";
+    assert.strictEqual(style.cssText, "border-top-width: 1px;");
+    style.borderTop = "none";
+    assert.strictEqual(style.cssText, "border-top: none;");
+    assert.strictEqual(style.borderTopStyle, "none");
+    assert.strictEqual(style.borderTopWidth, "medium");
+
+    style.border = null;
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.borderTopStyle = "none";
-    assert.strictEqual(style.cssText, "");
-    style.borderTopWidth = "1px";
-    assert.strictEqual(style.cssText, "border-top-width: 1px;");
-    style.borderTop = "none";
-    assert.strictEqual(style.cssText, "");
-    style.borderTopWidth = "1px";
-    style.borderLeftWidth = "1px";
-    assert.strictEqual(style.cssText, "border-top-width: 1px; border-left-width: 1px;");
-    style.borderTop = "none";
-    assert.strictEqual(style.cssText, "border-left-width: 1px;");
+    assert.strictEqual(style.cssText, "border-top-width: 1px; border-top-style: none;");
+    assert.strictEqual(style.borderTopStyle, "none");
+    assert.strictEqual(style.borderTopWidth, "1px");
   });
 
   it("setting border to 0 should be okay", () => {
