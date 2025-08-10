@@ -1749,7 +1749,76 @@ describe("font", () => {
   });
 
   it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "normal", "normal");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "none", "none");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "none", "none");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "common-ligatures", "common-ligatures");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "no-common-ligatures", "no-common-ligatures");
+  });
+
+  it("font-variant should set / get keyword", () => {
     testPropertyValue("font-variant", "small-caps", "small-caps");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "stylistic(flowing)", "stylistic(flowing)");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue(
+      "font-variant",
+      "stylistic(flowing) historical-forms styleset(flowing) character-variant(flowing) swash(flowing) ornaments(flowing) annotation(flowing)",
+      "stylistic(flowing) historical-forms styleset(flowing) character-variant(flowing) swash(flowing) ornaments(flowing) annotation(flowing)"
+    );
+  });
+
+  // FIXME:
+  it.skip("font-variant should set / get keyword", () => {
+    testPropertyValue(
+      "font-variant",
+      "annotation(flowing) ornaments(flowing) swash(flowing) character-variant(flowing) styleset(flowing) historical-forms stylistic(flowing)",
+      "stylistic(flowing) historical-forms styleset(flowing) character-variant(flowing) swash(flowing) ornaments(flowing) annotation(flowing)"
+    );
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "jis78", "jis78");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "ruby", "ruby");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "sub", "sub");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "super", "super");
+  });
+
+  it.skip("font-variant should not set / get invalid keywords", () => {
+    testPropertyValue("font-variant", "normal none", "");
+  });
+
+  it.skip("font-variant should not set / get invalid keywords", () => {
+    testPropertyValue("font-variant", "normal small-caps", "");
+  });
+
+  it.skip("font-variant should not set / get invalid keywords", () => {
+    testPropertyValue("font-variant", "none small-caps", "");
   });
 
   it("font-weight should set / get keyword", () => {
@@ -1822,6 +1891,10 @@ describe("font", () => {
 
   it("font-family should set / get keyword", () => {
     testPropertyValue("font-family", "sans-serif", "sans-serif");
+  });
+
+  it("font-family should set / get keyword", () => {
+    testPropertyValue("font-family", '"sans-serif"', '"sans-serif"');
   });
 
   it("font-family should set / get family name", () => {
@@ -1936,14 +2009,14 @@ describe("font", () => {
     testImplicitPropertyValue(
       "font",
       "normal medium Gill Sans Extrabold, sans-serif",
-      "medium Gill Sans Extrabold, sans-serif",
+      'medium "Gill Sans Extrabold", sans-serif',
       new Map([
         ["font-style", "normal"],
         ["font-variant", "normal"],
         ["font-weight", "normal"],
         ["font-size", "medium"],
         ["line-height", "normal"],
-        ["font-family", "Gill Sans Extrabold, sans-serif"]
+        ["font-family", '"Gill Sans Extrabold", sans-serif']
       ])
     );
   });
@@ -2152,6 +2225,22 @@ describe("font", () => {
         ["font-size", ""],
         ["line-height", ""],
         ["font-family", ""]
+      ])
+    );
+  });
+
+  it("font shorthand should set / get values", () => {
+    testImplicitPropertyValue(
+      "font",
+      "initial",
+      "initial",
+      new Map([
+        ["font-style", "initial"],
+        ["font-variant", "initial"],
+        ["font-weight", "initial"],
+        ["font-size", "initial"],
+        ["line-height", "initial"],
+        ["font-family", "initial"]
       ])
     );
   });
