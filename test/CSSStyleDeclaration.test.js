@@ -354,7 +354,7 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.color, "");
   });
 
-  it("short hand properties with embedded spaces", () => {
+  it("shorthand properties with embedded spaces", () => {
     let style = new CSSStyleDeclaration();
     style.background = "rgb(0, 0, 0) url(/something/somewhere.jpg)";
     assert.strictEqual(style.backgroundColor, "rgb(0, 0, 0)");
@@ -393,26 +393,26 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "");
   });
 
-  // FIXME: Not sure what the expected results should be.
-  it('setting border values to "none" should not clear dependent values', () => {
+  it('setting border values to "none" should change dependent values', () => {
     const style = new CSSStyleDeclaration();
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.border = "none";
-    // Firefox: "border: medium;", Chrome: "border: none;".
-    assert.strictEqual(style.cssText, "border-top-width: 1px; border: none;");
+    assert.strictEqual(style.cssText, "border: none;");
     assert.strictEqual(style.borderTopStyle, "none");
-    assert.strictEqual(style.borderTopWidth, "1px");
+    assert.strictEqual(style.borderTopWidth, "medium");
 
     style.border = null;
+    style.borderImage = null;
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.borderStyle = "none";
     assert.strictEqual(style.cssText, "border-top-width: 1px; border-style: none;");
     assert.strictEqual(style.borderTopStyle, "none");
     assert.strictEqual(style.borderTopWidth, "1px");
-    style.border = null;
 
+    style.border = null;
+    style.borderImage = null;
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.borderTop = "none";
@@ -421,6 +421,7 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.borderTopWidth, "medium");
 
     style.border = null;
+    style.borderImage = null;
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.borderTopStyle = "none";
@@ -429,10 +430,18 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.borderTopWidth, "1px");
   });
 
+  it("setting border to 1px should be okay", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "1px";
+    assert.strictEqual(style.cssText, "border: 1px;");
+    assert.strictEqual(style.border, "1px");
+  });
+
   it("setting border to 0 should be okay", () => {
     const style = new CSSStyleDeclaration();
     style.border = 0;
     assert.strictEqual(style.cssText, "border: 0px;");
+    assert.strictEqual(style.border, "0px");
   });
 
   it("setting borderColor to var() should be okay", () => {
