@@ -267,7 +267,7 @@ describe("CSSStyleDeclaration", () => {
   it("implicit properties", () => {
     const style = new CSSStyleDeclaration();
     style.borderWidth = 0;
-    assert.strictEqual(style.length, 1);
+    assert.strictEqual(style.border, "");
     assert.strictEqual(style.borderWidth, "0px");
     assert.strictEqual(style.borderTopWidth, "0px");
     assert.strictEqual(style.borderBottomWidth, "0px");
@@ -383,58 +383,294 @@ describe("CSSStyleDeclaration", () => {
 
   it("setting a shorthand property, whose shorthands are implicit properties, to an empty string should clear all dependent properties", () => {
     const style = new CSSStyleDeclaration();
-    style.borderTopWidth = "1px";
-    assert.strictEqual(style.cssText, "border-top-width: 1px;");
+    style.borderTopWidth = "2px";
+    assert.strictEqual(style.cssText, "border-top-width: 2px;");
     style.border = "";
     assert.strictEqual(style.cssText, "");
-    style.borderTop = "1px solid black";
-    assert.strictEqual(style.cssText, "border-top: 1px solid black;");
+    style.borderTop = "2px solid black";
+    assert.strictEqual(style.cssText, "border-top: 2px solid black;");
     style.border = "";
     assert.strictEqual(style.cssText, "");
   });
 
-  it('setting border values to "none" should change dependent values', () => {
+  it("set border as none", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "none";
+    assert.strictEqual(style.border, "medium", "border");
+    assert.strictEqual(style.borderWidth, "medium", "border-width");
+    assert.strictEqual(style.borderStyle, "none", "border-style");
+    assert.strictEqual(style.borderTop, "medium", "border-top");
+    assert.strictEqual(style.borderTopWidth, "medium", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "none", "border-image");
+    assert.strictEqual(style.cssText, "border: medium;", "cssText");
+  });
+
+  it("set border as none", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "none";
+    assert.strictEqual(style.border, "medium", "border");
+    assert.strictEqual(style.borderWidth, "medium", "border-width");
+    assert.strictEqual(style.borderStyle, "none", "border-style");
+    assert.strictEqual(style.borderTop, "medium", "border-top");
+    assert.strictEqual(style.borderTopWidth, "medium", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "none", "border-image");
+    assert.strictEqual(style.cssText, "border: medium;", "cssText");
+  });
+
+  it("set border-style as none", () => {
+    const style = new CSSStyleDeclaration();
+    style.borderStyle = "none";
+    assert.strictEqual(style.border, "", "border");
+    assert.strictEqual(style.borderWidth, "", "border-width");
+    assert.strictEqual(style.borderStyle, "none", "border-style");
+    assert.strictEqual(style.borderTop, "", "border-top");
+    assert.strictEqual(style.borderTopWidth, "", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "", "border-image");
+    assert.strictEqual(style.cssText, "border-style: none;", "cssText");
+  });
+
+  it("set border-top as none", () => {
+    const style = new CSSStyleDeclaration();
+    style.borderTop = "none";
+    assert.strictEqual(style.border, "", "border");
+    assert.strictEqual(style.borderWidth, "", "border-width");
+    assert.strictEqual(style.borderStyle, "", "border-style");
+    assert.strictEqual(style.borderTop, "medium", "border-top");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderTopWidth, "medium", "border-top-width");
+    assert.strictEqual(style.borderImage, "", "border-image");
+    assert.strictEqual(style.cssText, "border-top: medium;", "cssText");
+  });
+
+  it("set border as 1px and change border-style to none", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "1px";
+    style.borderStyle = "none";
+    assert.strictEqual(style.border, "1px", "border");
+    assert.strictEqual(style.borderWidth, "1px", "border-width");
+    assert.strictEqual(style.borderStyle, "none", "border-style");
+    assert.strictEqual(style.borderTop, "1px", "border-top");
+    assert.strictEqual(style.borderTopWidth, "1px", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "none", "border-image");
+    assert.strictEqual(style.cssText, "border: 1px;", "cssText");
+  });
+
+  it("set border as 1px and change border-style to none", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "1px";
+    style.borderStyle = "none";
+    assert.strictEqual(style.border, "1px", "border");
+    assert.strictEqual(style.borderWidth, "1px", "border-width");
+    assert.strictEqual(style.borderStyle, "none", "border-style");
+    assert.strictEqual(style.borderTop, "1px", "border-top");
+    assert.strictEqual(style.borderTopWidth, "1px", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "none", "border-image");
+    assert.strictEqual(style.cssText, "border: 1px;", "cssText");
+  });
+
+  it("set border as 1px and change border-top to none", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "1px";
+    style.borderTop = "none";
+    assert.strictEqual(style.border, "", "border");
+    assert.strictEqual(style.borderWidth, "medium 1px 1px", "border-width");
+    assert.strictEqual(style.borderStyle, "none", "border-style");
+    assert.strictEqual(style.borderTop, "medium", "border-top");
+    assert.strictEqual(style.borderTopWidth, "medium", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "none", "border-image");
+    assert.strictEqual(
+      style.cssText,
+      "border-width: medium 1px 1px; border-style: none; border-color: currentcolor; border-image: none;",
+      "cssText"
+    );
+  });
+
+  it("set border as 1px solid and change border-top to none", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "1px solid";
+    style.borderTop = "none";
+    assert.strictEqual(style.border, "", "border");
+    assert.strictEqual(style.borderWidth, "medium 1px 1px", "border-width");
+    assert.strictEqual(style.borderStyle, "none solid solid", "border-style");
+    assert.strictEqual(style.borderTop, "medium", "border-top");
+    assert.strictEqual(style.borderTopWidth, "medium", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "none", "border-image");
+    assert.strictEqual(
+      style.cssText,
+      "border-width: medium 1px 1px; border-style: none solid solid; border-color: currentcolor; border-image: none;",
+      "cssText"
+    );
+  });
+
+  it("set border as none and change border-style to null", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "none";
+    style.borderStyle = null;
+    assert.strictEqual(style.border, "", "border");
+    assert.strictEqual(style.borderWidth, "medium", "border-width");
+    assert.strictEqual(style.borderStyle, "", "border-style");
+    assert.strictEqual(style.borderTop, "", "border-top");
+    assert.strictEqual(style.borderTopWidth, "medium", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "", "border-top-style");
+    assert.strictEqual(style.borderImage, "none", "border-image");
+    assert.strictEqual(
+      style.cssText,
+      "border-width: medium; border-color: currentcolor; border-image: none;",
+      "cssText"
+    );
+  });
+
+  it("set border as solid and change border-top to none", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "solid";
+    style.borderTop = "none";
+    assert.strictEqual(style.border, "", "border");
+    assert.strictEqual(style.borderWidth, "medium", "border-width");
+    assert.strictEqual(style.borderStyle, "none solid solid", "border-style");
+    assert.strictEqual(style.borderTop, "medium", "border-top");
+    assert.strictEqual(style.borderTopWidth, "medium", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "none", "border-image");
+    assert.strictEqual(
+      style.cssText,
+      "border-width: medium; border-style: none solid solid; border-color: currentcolor; border-image: none;",
+      "cssText"
+    );
+  });
+
+  it("set border as solid and change border-style to none", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "solid";
+    style.borderStyle = "none";
+    assert.strictEqual(style.border, "medium", "border");
+    assert.strictEqual(style.borderWidth, "medium", "border-width");
+    assert.strictEqual(style.borderStyle, "none", "border-style");
+    assert.strictEqual(style.borderTop, "medium", "border-top");
+    assert.strictEqual(style.borderTopWidth, "medium", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "none", "border-image");
+    assert.strictEqual(style.cssText, "border: medium;", "cssText");
+  });
+
+  it("set border-style as solid and change border-top to null", () => {
+    const style = new CSSStyleDeclaration();
+    style.borderStyle = "solid";
+    style.borderTop = null;
+    assert.strictEqual(
+      style.cssText,
+      "border-right-style: solid; border-bottom-style: solid; border-left-style: solid;",
+      "cssText"
+    );
+    assert.strictEqual(style.border, "", "border");
+    assert.strictEqual(style.borderWidth, "", "border-width");
+    assert.strictEqual(style.borderStyle, "", "border-style");
+    assert.strictEqual(style.borderTop, "", "border-top");
+    assert.strictEqual(style.borderTopWidth, "", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "", "border-top-style");
+    assert.strictEqual(style.borderImage, "", "borrder-image");
+  });
+
+  it("setting border values to none should change dependent values", () => {
     const style = new CSSStyleDeclaration();
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.border = "none";
-    assert.strictEqual(style.cssText, "border: none;");
+    assert.strictEqual(style.border, "medium");
+    assert.strictEqual(style.borderTop, "medium");
     assert.strictEqual(style.borderTopStyle, "none");
     assert.strictEqual(style.borderTopWidth, "medium");
+    assert.strictEqual(style.cssText, "border: medium;");
 
     style.border = null;
     style.borderImage = null;
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.borderStyle = "none";
-    assert.strictEqual(style.cssText, "border-top-width: 1px; border-style: none;");
     assert.strictEqual(style.borderTopStyle, "none");
     assert.strictEqual(style.borderTopWidth, "1px");
+    assert.strictEqual(style.cssText, "border-top-width: 1px; border-style: none;");
 
     style.border = null;
     style.borderImage = null;
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.borderTop = "none";
-    assert.strictEqual(style.cssText, "border-top: none;");
     assert.strictEqual(style.borderTopStyle, "none");
     assert.strictEqual(style.borderTopWidth, "medium");
+    assert.strictEqual(style.cssText, "border-top: medium;");
 
     style.border = null;
     style.borderImage = null;
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.borderTopStyle = "none";
-    assert.strictEqual(style.cssText, "border-top-width: 1px; border-top-style: none;");
     assert.strictEqual(style.borderTopStyle, "none");
     assert.strictEqual(style.borderTopWidth, "1px");
-  });
+    assert.strictEqual(style.cssText, "border-top-width: 1px; border-top-style: none;");
 
-  it("setting border to 1px should be okay", () => {
-    const style = new CSSStyleDeclaration();
+    style.border = null;
+    style.borderImage = null;
     style.border = "1px";
     assert.strictEqual(style.cssText, "border: 1px;");
     assert.strictEqual(style.border, "1px");
+    assert.strictEqual(style.borderTopStyle, "none");
+    assert.strictEqual(style.borderTopWidth, "1px");
+    style.borderTop = "none";
+    assert.strictEqual(
+      style.cssText,
+      "border-width: medium 1px 1px; border-style: none; border-color: currentcolor; border-image: none;"
+    );
+  });
+
+  it("setting border to green", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "green";
+    assert.strictEqual(style.cssText, "border: green;");
+    assert.strictEqual(style.border, "green");
+  });
+
+  it("setting border to green", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "green";
+    assert.strictEqual(style.cssText, "border: green;");
+    assert.strictEqual(style.border, "green");
+  });
+
+  it("setting border to initial should set all properties initial", () => {
+    const style = new CSSStyleDeclaration();
+    style.border = "initial";
+    assert.strictEqual(style.cssText, "border: initial;");
+    assert.strictEqual(style.border, "initial");
+    assert.strictEqual(style.borderWidth, "initial");
+    assert.strictEqual(style.borderStyle, "initial");
+    assert.strictEqual(style.borderColor, "initial");
+    assert.strictEqual(style.borderTop, "initial");
+    assert.strictEqual(style.borderTopWidth, "initial");
+    assert.strictEqual(style.borderTopStyle, "initial");
+    assert.strictEqual(style.borderTopColor, "initial");
+    assert.strictEqual(style.borderImage, "none");
+  });
+
+  it("setting borderTop to initial should set top related properties initial", () => {
+    const style = new CSSStyleDeclaration();
+    style.borderTop = "initial";
+    assert.strictEqual(style.cssText, "border-top: initial;");
+    assert.strictEqual(style.border, "");
+    assert.strictEqual(style.borderWidth, "");
+    assert.strictEqual(style.borderStyle, "");
+    assert.strictEqual(style.borderColor, "");
+    assert.strictEqual(style.borderTop, "initial");
+    assert.strictEqual(style.borderTopWidth, "initial");
+    assert.strictEqual(style.borderTopStyle, "initial");
+    assert.strictEqual(style.borderTopColor, "initial");
+    assert.strictEqual(style.borderImage, "");
   });
 
   it("setting border to 0 should be okay", () => {

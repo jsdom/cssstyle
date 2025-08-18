@@ -343,7 +343,7 @@ describe("parseLength", () => {
     assert.strictEqual(output, "");
   });
 
-  it("should return empty string", () => {
+  it("should return undefined", () => {
     const input = "100";
     const output = parsers.parseLength(input);
 
