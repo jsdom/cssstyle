@@ -559,6 +559,42 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "border: medium;", "cssText");
   });
 
+  it("set border-style as solid and change border-top to none", () => {
+    const style = new CSSStyleDeclaration();
+    style.borderStyle = "solid";
+    style.borderTop = "none";
+    assert.strictEqual(style.border, "", "border");
+    assert.strictEqual(style.borderWidth, "", "border-width");
+    assert.strictEqual(style.borderStyle, "none solid solid", "border-style");
+    assert.strictEqual(style.borderTop, "medium", "border-top");
+    assert.strictEqual(style.borderTopWidth, "medium", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "", "border-image");
+    assert.strictEqual(
+      style.cssText,
+      "border-style: none solid solid; border-top-width: medium; border-top-color: currentcolor;",
+      "cssText"
+    );
+  });
+
+  it("set border-top as solid and change border-style to none", () => {
+    const style = new CSSStyleDeclaration();
+    style.borderTop = "solid";
+    style.borderStyle = "none";
+    assert.strictEqual(style.border, "", "border");
+    assert.strictEqual(style.borderWidth, "", "border-width");
+    assert.strictEqual(style.borderStyle, "none", "border-style");
+    assert.strictEqual(style.borderTop, "medium", "border-top");
+    assert.strictEqual(style.borderTopWidth, "medium", "border-top-width");
+    assert.strictEqual(style.borderTopStyle, "none", "border-top-style");
+    assert.strictEqual(style.borderImage, "", "border-image");
+    assert.strictEqual(
+      style.cssText,
+      "border-top-width: medium; border-top-color: currentcolor; border-style: none;",
+      "cssText"
+    );
+  });
+
   it("set border-style as solid and change border-top to null", () => {
     const style = new CSSStyleDeclaration();
     style.borderStyle = "solid";
@@ -574,7 +610,7 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.borderTop, "", "border-top");
     assert.strictEqual(style.borderTopWidth, "", "border-top-width");
     assert.strictEqual(style.borderTopStyle, "", "border-top-style");
-    assert.strictEqual(style.borderImage, "", "borrder-image");
+    assert.strictEqual(style.borderImage, "", "border-image");
   });
 
   it("setting border values to none should change dependent values", () => {
