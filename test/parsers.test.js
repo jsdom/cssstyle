@@ -207,17 +207,17 @@ describe("hasCalcFunc", () => {
   });
 });
 
-describe("parseCalc", () => {
+describe("resolveCalc", () => {
   it("should return empty string", () => {
     const input = "";
-    const output = parsers.parseCalc(input);
+    const output = parsers.resolveCalc(input);
 
     assert.strictEqual(output, "");
   });
 
   it('should return "calc(6)"', () => {
     const input = "calc(2 * 3)";
-    const output = parsers.parseCalc(input, {
+    const output = parsers.resolveCalc(input, {
       format: "specifiedValue"
     });
 
@@ -226,7 +226,7 @@ describe("parseCalc", () => {
 
   it('should return "calc(6px)"', () => {
     const input = "calc(2px * 3)";
-    const output = parsers.parseCalc(input, {
+    const output = parsers.resolveCalc(input, {
       format: "specifiedValue"
     });
 
@@ -235,35 +235,35 @@ describe("parseCalc", () => {
 
   it('should return "rgb(calc(255/3) 0 0)"', () => {
     const input = "rgb(calc(255 / 3) 0 0)";
-    const output = parsers.parseCalc(input);
+    const output = parsers.resolveCalc(input);
 
     assert.strictEqual(output, "rgb(calc(255/3) 0 0)");
   });
 
   it('should return "calc(100% - 2em)"', () => {
     const input = "calc(100% - 2em)";
-    const output = parsers.parseCalc(input);
+    const output = parsers.resolveCalc(input);
 
     assert.strictEqual(output, "calc(100% - 2em)");
   });
 
   it("should return calculated value", () => {
     const input = "calc(2em / 3)";
-    const output = parsers.parseCalc(input);
+    const output = parsers.resolveCalc(input);
 
     assert.strictEqual(output, "calc(0.666667em)");
   });
 
   it("should return serialized value", () => {
     const input = "calc(10px + 20%)";
-    const output = parsers.parseCalc(input);
+    const output = parsers.resolveCalc(input);
 
     assert.strictEqual(output, "calc(20% + 10px)");
   });
 
   it("should return serialized value", () => {
     const input = "calc(100vh + 10px)";
-    const output = parsers.parseCalc(input);
+    const output = parsers.resolveCalc(input);
 
     assert.strictEqual(output, "calc(10px + 100vh)");
   });
@@ -526,17 +526,17 @@ describe("parseLength", () => {
   });
 });
 
-describe("parsePercent", () => {
+describe("parsePercentage", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parsePercent(input);
+    const output = parsers.parsePercentage(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parsePercent(input);
+    const output = parsers.parsePercentage(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -549,7 +549,7 @@ describe("parsePercent", () => {
         value: "100"
       }
     ];
-    const output = parsers.parsePercent(input);
+    const output = parsers.parsePercentage(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -561,7 +561,7 @@ describe("parsePercent", () => {
         value: "100"
       }
     ];
-    const output = parsers.parsePercent(input);
+    const output = parsers.parsePercentage(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -573,7 +573,7 @@ describe("parsePercent", () => {
         value: "10"
       }
     ];
-    const output = parsers.parsePercent(input);
+    const output = parsers.parsePercentage(input);
 
     assert.strictEqual(output, "10%");
   });
@@ -585,7 +585,7 @@ describe("parsePercent", () => {
         value: "-50"
       }
     ];
-    const output = parsers.parsePercent(input, {
+    const output = parsers.parsePercentage(input, {
       min: 0,
       max: 100
     });
@@ -600,7 +600,7 @@ describe("parsePercent", () => {
         value: "150"
       }
     ];
-    const output = parsers.parsePercent(input, {
+    const output = parsers.parsePercentage(input, {
       min: 0,
       max: 100
     });
@@ -615,7 +615,7 @@ describe("parsePercent", () => {
         value: "-50"
       }
     ];
-    const output = parsers.parsePercent(input, {
+    const output = parsers.parsePercentage(input, {
       min: 0,
       max: 100,
       clamp: true
@@ -631,7 +631,7 @@ describe("parsePercent", () => {
         value: "150"
       }
     ];
-    const output = parsers.parsePercent(input, {
+    const output = parsers.parsePercentage(input, {
       min: 0,
       max: 100,
       clamp: true
@@ -641,17 +641,17 @@ describe("parsePercent", () => {
   });
 });
 
-describe("parseMeasurement", () => {
+describe("parseLengthPercentage", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parseMeasurement(input);
+    const output = parsers.parseLengthPercentage(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parseMeasurement(input);
+    const output = parsers.parseLengthPercentage(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -663,7 +663,7 @@ describe("parseMeasurement", () => {
         value: "100"
       }
     ];
-    const output = parsers.parseMeasurement(input);
+    const output = parsers.parseLengthPercentage(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -675,7 +675,7 @@ describe("parseMeasurement", () => {
         value: "100"
       }
     ];
-    const output = parsers.parseMeasurement(input);
+    const output = parsers.parseLengthPercentage(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -688,7 +688,7 @@ describe("parseMeasurement", () => {
         value: "180"
       }
     ];
-    const output = parsers.parseMeasurement(input);
+    const output = parsers.parseLengthPercentage(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -701,7 +701,7 @@ describe("parseMeasurement", () => {
         value: "1"
       }
     ];
-    const output = parsers.parseMeasurement(input);
+    const output = parsers.parseLengthPercentage(input);
 
     assert.strictEqual(output, "1em");
   });
@@ -713,7 +713,7 @@ describe("parseMeasurement", () => {
         value: "100"
       }
     ];
-    const output = parsers.parseMeasurement(input);
+    const output = parsers.parseLengthPercentage(input);
 
     assert.strictEqual(output, "100%");
   });
@@ -725,7 +725,7 @@ describe("parseMeasurement", () => {
         value: "0"
       }
     ];
-    const output = parsers.parseMeasurement(input);
+    const output = parsers.parseLengthPercentage(input);
 
     assert.strictEqual(output, "0px");
   });
@@ -738,7 +738,7 @@ describe("parseMeasurement", () => {
         value: "-1"
       }
     ];
-    const output = parsers.parseMeasurement(input, {
+    const output = parsers.parseLengthPercentage(input, {
       min: 0,
       max: 1
     });
@@ -754,7 +754,7 @@ describe("parseMeasurement", () => {
         value: "1.1"
       }
     ];
-    const output = parsers.parseMeasurement(input, {
+    const output = parsers.parseLengthPercentage(input, {
       min: 0,
       max: 1
     });
@@ -770,7 +770,7 @@ describe("parseMeasurement", () => {
         value: "-1"
       }
     ];
-    const output = parsers.parseMeasurement(input, {
+    const output = parsers.parseLengthPercentage(input, {
       min: 0,
       max: 1,
       clamp: true
@@ -787,7 +787,7 @@ describe("parseMeasurement", () => {
         value: "1.1"
       }
     ];
-    const output = parsers.parseMeasurement(input, {
+    const output = parsers.parseLengthPercentage(input, {
       min: 0,
       max: 1,
       clamp: true
@@ -1331,17 +1331,17 @@ describe("parseColor", () => {
   });
 });
 
-describe("parseImage", () => {
+describe("parseGradient", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parseImage(input);
+    const output = parsers.parseGradient(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parseImage(input);
+    const output = parsers.parseGradient(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -1353,7 +1353,7 @@ describe("parseImage", () => {
         name: "none"
       }
     ];
-    const output = parsers.parseImage(input);
+    const output = parsers.parseGradient(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -1366,7 +1366,7 @@ describe("parseImage", () => {
         value: "circle -10px at center, red, blue"
       }
     ];
-    const output = parsers.parseImage(input);
+    const output = parsers.parseGradient(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -1379,7 +1379,7 @@ describe("parseImage", () => {
         value: "green, blue"
       }
     ];
-    const output = parsers.parseImage(input);
+    const output = parsers.parseGradient(input);
 
     assert.strictEqual(output, "linear-gradient(green, blue)");
   });

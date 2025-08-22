@@ -3,9 +3,9 @@
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
-const allExtraProperties = require("../lib/allExtraProperties");
 const allProperties = require("../lib/generated/allProperties");
 const implementedProperties = require("../lib/generated/implementedProperties");
+const allExtraProperties = require("../lib/utils/allExtraProperties");
 const camelize = require("../lib/utils/camelize");
 
 describe("CSSStyleDeclaration", () => {
