@@ -760,6 +760,26 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.height, "auto");
   });
 
+  it("Shorthand serialization with just longhands", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "margin-right: 10px; margin-left: 10px; margin-top: 10px; margin-bottom: 10px;";
+    assert.strictEqual(style.cssText, "margin: 10px;");
+    assert.strictEqual(style.margin, "10px");
+
+    style.cssText =
+      "margin-right: 10px; margin-left: 10px; margin-top: 10px; margin-bottom: 10px!important;";
+    assert.strictEqual(
+      style.cssText,
+      "margin-right: 10px; margin-left: 10px; margin-top: 10px; margin-bottom: 10px !important;"
+    );
+    assert.strictEqual(style.margin, "");
+
+    style.cssText =
+      "margin-right: 10px !important; margin-left: 10px !important; margin-top: 10px !important; margin-bottom: 10px!important;";
+    assert.strictEqual(style.cssText, "margin: 10px !important;");
+    assert.strictEqual(style.margin, "10px");
+  });
+
   it("padding and margin should set/clear shorthand properties", () => {
     const style = new CSSStyleDeclaration();
     const parts = ["Top", "Right", "Bottom", "Left"];
@@ -827,7 +847,6 @@ describe("CSSStyleDeclaration", () => {
   it("removing and setting individual margin properties updates the combined property accordingly", () => {
     const style = new CSSStyleDeclaration();
     style.margin = "1px 2px 3px 4px";
-
     style.marginTop = "";
     assert.strictEqual(style.margin, "");
     assert.strictEqual(style.marginRight, "2px");
@@ -886,7 +905,6 @@ describe("CSSStyleDeclaration", () => {
       style[`${property}Right`] = "4px";
       style[`${property}Bottom`] = "5px";
       style[`${property}Left`] = "6px";
-
       assert.strictEqual(style.cssText.includes(importantProperty), true);
       assert.strictEqual(style.cssText.includes(`${property}-right: 4px;`), true);
       assert.strictEqual(style.cssText.includes(`${property}-bottom: 5px;`), true);
@@ -897,9 +915,7 @@ describe("CSSStyleDeclaration", () => {
     it(`setting individual ${property} keeps important status of others`, () => {
       const style = new CSSStyleDeclaration();
       style.cssText = `${property}: 3px !important;`;
-
       style[`${property}Top`] = "4px";
-
       assert.strictEqual(style.cssText.includes(`${property}-top: 4px;`), true);
       assert.strictEqual(style.cssText.includes(`${property}-right: 3px !important;`), true);
       assert.strictEqual(style.cssText.includes(`${property}-bottom: 3px !important;`), true);
