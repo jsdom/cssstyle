@@ -1307,6 +1307,37 @@ describe("CSSStyleDeclaration", () => {
     style.width = undefined;
     assert.strictEqual(style.getPropertyValue("width"), "10px");
   });
+
+  it("shorthand serialization with shorthand and longhands mixed", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "background-color: blue; background: red !important; background-color: green;";
+    assert.strictEqual(style.cssText, "background: red !important;");
+  });
+
+  it("shorthand serialization", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText =
+      "border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 1px; border-image: none;";
+    assert.strictEqual(style.cssText, "border: 1px;");
+  });
+
+  it("shorthand serialization", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "border-width: 1px;";
+    assert.strictEqual(style.cssText, "border-width: 1px;");
+  });
+
+  it("set cssText as none", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "border: none;";
+    assert.strictEqual(style.cssText, "border: medium;");
+  });
+
+  it("invalid cssText should be parsed", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "color: red; }";
+    assert.strictEqual(style.cssText, "color: red;");
+  });
 });
 
 /* regression tests */
