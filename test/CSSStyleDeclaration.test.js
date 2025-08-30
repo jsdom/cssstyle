@@ -1347,6 +1347,56 @@ describe("CSSStyleDeclaration", () => {
     style.cssText = "color: red; }";
     assert.strictEqual(style.cssText, "color: red;");
   });
+
+  it("single value flex with CSS-wide keyword", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "flex: initial;";
+    assert.strictEqual(style.flex, "initial");
+    assert.strictEqual(style.flexGrow, "initial");
+    assert.strictEqual(style.flexShrink, "initial");
+    assert.strictEqual(style.flexBasis, "initial");
+    assert.strictEqual(style.cssText, "flex: initial;");
+  });
+
+  it("single value flex with non-CSS-wide value", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "flex: 0;";
+    assert.strictEqual(style.flex, "0 1 0%");
+    assert.strictEqual(style.flexGrow, "0");
+    assert.strictEqual(style.flexShrink, "1");
+    assert.strictEqual(style.flexBasis, "0%");
+    assert.strictEqual(style.cssText, "flex: 0 1 0%;");
+  });
+
+  it("multiple values flex with CSS-wide keyword", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "flex: initial; flex-basis: initial; flex-shrink: initial;";
+    assert.strictEqual(style.flex, "initial");
+    assert.strictEqual(style.flexGrow, "initial");
+    assert.strictEqual(style.flexShrink, "initial");
+    assert.strictEqual(style.flexBasis, "initial");
+    assert.strictEqual(style.cssText, "flex: initial;");
+  });
+
+  it("multiple values flex with CSS-wide keywords and non-CSS-wide value", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "flex: initial; flex-shrink: 0;";
+    assert.strictEqual(style.flex, "");
+    assert.strictEqual(style.flexGrow, "initial");
+    assert.strictEqual(style.flexShrink, "0");
+    assert.strictEqual(style.flexBasis, "initial");
+    assert.strictEqual(style.cssText, "flex-grow: initial; flex-basis: initial; flex-shrink: 0;");
+  });
+
+  it("multiple values flex with CSS-wide and two non-CSS-wide-keyword values", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "flex: initial; flex-basis: 0; flex-shrink: 2;";
+    assert.strictEqual(style.flex, "");
+    assert.strictEqual(style.flexGrow, "initial");
+    assert.strictEqual(style.flexShrink, "2");
+    assert.strictEqual(style.flexBasis, "0px");
+    assert.strictEqual(style.cssText, "flex-grow: initial; flex-basis: 0px; flex-shrink: 2;");
+  });
 });
 
 /* regression tests */
