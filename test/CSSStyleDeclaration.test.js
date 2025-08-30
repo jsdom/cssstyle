@@ -1580,3 +1580,10 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/214", () 
     assert.strictEqual(style.backgroundAttachment, "var(--bar)");
   });
 });
+
+describe("static methods", () => {
+  it("should get property list", () => {
+    const list = CSSStyleDeclaration.getPropertyList();
+    assert.deepEqual(list, Object.fromEntries(implementedProperties));
+  });
+});
