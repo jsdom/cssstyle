@@ -1327,6 +1327,15 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "border-width: 1px;");
   });
 
+  it("shorthand serialization", () => {
+    const style = new CSSStyleDeclaration();
+    style.cssText = "border: 1px; border-top: 1px !important;";
+    assert.strictEqual(
+      style.cssText,
+      "border-right: 1px; border-bottom: 1px; border-left: 1px; border-image: none; border-top: 1px !important;"
+    );
+  });
+
   it("set cssText as none", () => {
     const style = new CSSStyleDeclaration();
     style.cssText = "border: none;";
