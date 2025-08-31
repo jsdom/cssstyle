@@ -2,7 +2,7 @@
 
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
-const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
+const { CSSStyleDeclaration, propertyList } = require("../lib/CSSStyleDeclaration");
 const allProperties = require("../lib/generated/allProperties");
 const implementedProperties = require("../lib/generated/implementedProperties");
 const allExtraProperties = require("../lib/utils/allExtraProperties");
@@ -1581,9 +1581,8 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/214", () 
   });
 });
 
-describe("static methods", () => {
+describe("propertyList", () => {
   it("should get property list", () => {
-    const list = CSSStyleDeclaration.getPropertyList();
-    assert.deepEqual(list, Object.fromEntries(implementedProperties));
+    assert.deepEqual(propertyList, Object.fromEntries(implementedProperties));
   });
 });
