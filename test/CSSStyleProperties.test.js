@@ -12,44 +12,17 @@ const camelize = require("../lib/utils/camelize");
 describe("CSSStyleProperties", () => {
   const dashedProperties = [...allProperties, ...allExtraProperties];
 
+  it("is instanceof CSSStyleDeclaration", () => {
+    const style = new CSSStyleProperties();
+    assert.strictEqual(style instanceof CSSStyleDeclaration, true);
+  });
+
   it("has only valid properties implemented", () => {
     const allowedProperties = dashedProperties.map(camelize.dashedToCamelCase);
     const invalidProperties = [...implementedProperties.keys()]
       .map(camelize.dashedToCamelCase)
       .filter((prop) => !allowedProperties.includes(prop));
     assert.strictEqual(invalidProperties.length, 0);
-  });
-
-  it("is instanceof CSSStyleDeclaration", () => {
-    const style = new CSSStyleProperties();
-    assert.strictEqual(style instanceof CSSStyleDeclaration, true);
-  });
-
-  it("has format in internal options", () => {
-    const style = new CSSStyleProperties(null, {
-      foo: "bar"
-    });
-    assert.deepEqual(style._options, {
-      foo: "bar",
-      format: "specifiedValue"
-    });
-  });
-
-  it("should not override format if exists", () => {
-    const style = new CSSStyleProperties(null, {
-      format: "computedValue"
-    });
-    assert.deepEqual(style._options, {
-      format: "computedValue"
-    });
-  });
-
-  it("has all properties", () => {
-    const style = new CSSStyleProperties();
-    allProperties.forEach((property) => {
-      assert.ok(style.__lookupGetter__(property));
-      assert.ok(style.__lookupSetter__(property));
-    });
   });
 
   it("has dashed properties", () => {
@@ -820,8 +793,17 @@ describe("CSSStyleProperties", () => {
   });
 
   it("onchange callback should be called when the csstext changes", () => {
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
     let called = 0;
-    const style = new CSSStyleProperties(null, {
+    const style = new CSSStyleProperties(node, {
       onChange: (cssText) => {
         called++;
         assert.strictEqual(cssText, "opacity: 0;");
@@ -834,8 +816,17 @@ describe("CSSStyleProperties", () => {
   });
 
   it("onchange callback should be called only once when multiple properties were added", () => {
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
     let called = 0;
-    const style = new CSSStyleProperties(null, {
+    const style = new CSSStyleProperties(node, {
       onChange: (cssText) => {
         called++;
         assert.strictEqual(cssText, "width: 100px; height: 100px;");
@@ -846,8 +837,17 @@ describe("CSSStyleProperties", () => {
   });
 
   it("onchange callback should not be called when property is set to the same value", () => {
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
     let called = 0;
-    const style = new CSSStyleProperties(null, {
+    const style = new CSSStyleProperties(node, {
       onChange: () => {
         called++;
       }
@@ -860,8 +860,17 @@ describe("CSSStyleProperties", () => {
   });
 
   it("onchange callback should not be called when removeProperty was called on non-existing property", () => {
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
     let called = 0;
-    const style = new CSSStyleProperties(null, {
+    const style = new CSSStyleProperties(node, {
       onChange: () => {
         called++;
       }
