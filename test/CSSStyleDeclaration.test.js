@@ -93,9 +93,7 @@ describe("CSSStyleDeclaration", () => {
       getComputedStyle: () => {},
       DOMException: globalThis.DOMException
     };
-    const style = new CSSStyleDeclaration(null, {
-      context: window
-    });
+    const style = new CSSStyleDeclaration(window);
 
     assert.strictEqual(style.cssText, "");
     assert.throws(
@@ -132,9 +130,7 @@ describe("CSSStyleDeclaration", () => {
         }
       }
     };
-    const style = new CSSStyleDeclaration(null, {
-      context: node
-    });
+    const style = new CSSStyleDeclaration(node);
     style.cssText = "color: green";
     assert.strictEqual(style.cssText, "color: green;");
   });
@@ -149,9 +145,7 @@ describe("CSSStyleDeclaration", () => {
         }
       }
     };
-    const style = new CSSStyleDeclaration(null, {
-      context: node
-    });
+    const style = new CSSStyleDeclaration(node);
     style.cssText = "color: green!";
     assert.strictEqual(style.cssText, "");
   });
@@ -166,9 +160,7 @@ describe("CSSStyleDeclaration", () => {
         }
       }
     };
-    const style = new CSSStyleDeclaration(null, {
-      context: node
-    });
+    const style = new CSSStyleDeclaration(node);
     style.cssText = "color: light-dark(#008000, #0000ff)";
     assert.strictEqual(style.cssText, "color: light-dark(rgb(0, 128, 0), rgb(0, 0, 255));");
   });
@@ -184,9 +176,7 @@ describe("CSSStyleDeclaration", () => {
         }
       }
     };
-    const style = new CSSStyleDeclaration(null, {
-      context: rule
-    });
+    const style = new CSSStyleDeclaration(rule);
     style.cssText = "color: green";
     assert.strictEqual(style.cssText, "");
   });
@@ -932,9 +922,11 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should be called when the csstext changes", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration(function (cssText) {
-      called++;
-      assert.strictEqual(cssText, "opacity: 0;");
+    const style = new CSSStyleDeclaration(null, {
+      onChange: (cssText) => {
+        called++;
+        assert.strictEqual(cssText, "opacity: 0;");
+      }
     });
     style.cssText = "opacity: 0;";
     assert.strictEqual(called, 1);
@@ -944,9 +936,11 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should be called only once when multiple properties were added", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration(function (cssText) {
-      called++;
-      assert.strictEqual(cssText, "width: 100px; height: 100px;");
+    const style = new CSSStyleDeclaration(null, {
+      onChange: (cssText) => {
+        called++;
+        assert.strictEqual(cssText, "width: 100px; height: 100px;");
+      }
     });
     style.cssText = "width: 100px;height:100px;";
     assert.strictEqual(called, 1);
@@ -954,8 +948,10 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should not be called when property is set to the same value", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration(function () {
-      called++;
+    const style = new CSSStyleDeclaration(null, {
+      onChange: () => {
+        called++;
+      }
     });
 
     style.setProperty("opacity", 0);
@@ -966,8 +962,10 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should not be called when removeProperty was called on non-existing property", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration(function () {
-      called++;
+    const style = new CSSStyleDeclaration(null, {
+      onChange: () => {
+        called++;
+      }
     });
     style.removeProperty("opacity");
     assert.strictEqual(called, 0);
@@ -1578,11 +1576,5 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/214", () 
     assert.strictEqual(style.backgroundAttachment, "var(--foo)");
     style.setProperty("background-attachment", "var(--bar)");
     assert.strictEqual(style.backgroundAttachment, "var(--bar)");
-  });
-});
-
-describe("propertyList", () => {
-  it("should get property list", () => {
-    assert.deepEqual(propertyList, Object.fromEntries(implementedProperties));
   });
 });
