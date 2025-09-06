@@ -876,6 +876,12 @@ describe("CSSStyleProperties", () => {
     assert.strictEqual(style.cssFloat, "left");
   });
 
+  it("setting cssFloat should set float", () => {
+    const style = new CSSStyleProperties();
+    style.cssFloat = "left";
+    assert.strictEqual(style.float, "left");
+  });
+
   it("setting improper css to csstext should not throw", () => {
     const style = new CSSStyleProperties();
     style.cssText = "color: ";

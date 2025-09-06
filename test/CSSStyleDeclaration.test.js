@@ -971,12 +971,6 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(called, 0);
   });
 
-  it("setting float should work the same as cssfloat", () => {
-    const style = new CSSStyleDeclaration();
-    style.float = "left";
-    assert.strictEqual(style.cssFloat, "left");
-  });
-
   it("setting improper css to csstext should not throw", () => {
     const style = new CSSStyleDeclaration();
     style.cssText = "color: ";
