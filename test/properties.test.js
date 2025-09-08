@@ -720,6 +720,20 @@ describe("border", () => {
   it("border-style should set / get keyword", () => {
     testImplicitPropertyValue(
       "border-style",
+      "none",
+      "none",
+      new Map([
+        ["border-top-style", "none"],
+        ["border-right-style", "none"],
+        ["border-bottom-style", "none"],
+        ["border-left-style", "none"]
+      ])
+    );
+  });
+
+  it("border-style should set / get keyword", () => {
+    testImplicitPropertyValue(
+      "border-style",
       "dotted groove",
       "dotted groove",
       new Map([
@@ -1101,6 +1115,20 @@ describe("box model", () => {
     );
   });
 
+  it("margin shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "margin",
+      "initial",
+      "initial",
+      new Map([
+        ["margin-top", "initial"],
+        ["margin-right", "initial"],
+        ["margin-bottom", "initial"],
+        ["margin-left", "initial"]
+      ])
+    );
+  });
+
   it("padding-top should set / get length", () => {
     testPropertyValue("padding-top", "0", "0px");
   });
@@ -1250,11 +1278,29 @@ describe("box model", () => {
       ])
     );
   });
+
+  it("padding shorthand should set / get value", () => {
+    testImplicitPropertyValue(
+      "padding",
+      "initial",
+      "initial",
+      new Map([
+        ["padding-top", "initial"],
+        ["padding-right", "initial"],
+        ["padding-bottom", "initial"],
+        ["padding-left", "initial"]
+      ])
+    );
+  });
 });
 
 describe("box sizing", () => {
   it("height should set / get keyword", () => {
     testPropertyValue("height", "auto", "auto");
+  });
+
+  it("height should set / get length", () => {
+    testPropertyValue("height", "0", "0px");
   });
 
   it("height should set / get length", () => {
@@ -1275,6 +1321,10 @@ describe("box sizing", () => {
 
   it("width should set / get keyword", () => {
     testPropertyValue("width", "auto", "auto");
+  });
+
+  it("height should set / get length", () => {
+    testPropertyValue("width", "0", "0px");
   });
 
   it("width should set / get length", () => {
@@ -1315,6 +1365,18 @@ describe("color", () => {
     );
   });
 
+  it("color should not should set / get invalid value", () => {
+    testPropertyValue(
+      "color",
+      "color-mix(in hsl, hsl(120deg 10% 20%) 0%, hsl(30deg 30% 40%) 0%)",
+      ""
+    );
+  });
+
+  it("color should not should set / get invalid value", () => {
+    testPropertyValue("color", "color(srgb 0 0 0 0)", "");
+  });
+
   it("opacity should set / get keyword", () => {
     testPropertyValue("opacity", "inherit", "inherit");
   });
@@ -1324,23 +1386,27 @@ describe("color", () => {
   });
 
   it("opacity should set / get number", () => {
-    testPropertyValue("opacity", "1.5", "1");
+    testPropertyValue("opacity", ".5", "0.5");
   });
 
-  it("opacity should set / get clamped number", () => {
-    testPropertyValue("opacity", "-1", "0");
+  it("opacity should set / get number", () => {
+    testPropertyValue("opacity", "1.5", "1.5");
+  });
+
+  it("opacity should set / get number", () => {
+    testPropertyValue("opacity", "-1", "-1");
   });
 
   it("opacity should set / get percent", () => {
     testPropertyValue("opacity", "50%", "50%");
   });
 
-  it("opacity should set / get clamped percent", () => {
-    testPropertyValue("opacity", "150%", "100%");
+  it("opacity should set / get percent", () => {
+    testPropertyValue("opacity", "150%", "150%");
   });
 
-  it("opacity should set / get clamped percent", () => {
-    testPropertyValue("opacity", "-50%", "0%");
+  it("opacity should set / get percent", () => {
+    testPropertyValue("opacity", "-50%", "-50%");
   });
 });
 
@@ -1584,11 +1650,23 @@ describe("flex box", () => {
   });
 
   it("flex should set / get keyword", () => {
-    testPropertyValue("flex", "initial", "0 1 auto");
+    testPropertyValue("flex", "auto", "1 1 auto");
   });
 
   it("flex should set / get keyword", () => {
-    testPropertyValue("flex", "auto", "1 1 auto");
+    testPropertyValue("flex", "initial", "initial");
+  });
+
+  it("flex should set / get keyword", () => {
+    testPropertyValue("flex", "unset", "unset");
+  });
+
+  it("flex shorthand should not set / get longhand value", () => {
+    testPropertyValue("flex", "2 1 3", "");
+  });
+
+  it("flex shorthand should not set / get longhand value", () => {
+    testPropertyValue("flex", "2 1 calc(3)", "");
   });
 
   it("flex shorthand should set / get longhand value", () => {
@@ -1623,6 +1701,45 @@ describe("flex box", () => {
       ])
     );
   });
+
+  it("flex shorthand should set / get longhand value", () => {
+    testImplicitPropertyValue(
+      "flex",
+      "calc(2px * 3)",
+      "1 1 calc(6px)",
+      new Map([
+        ["flex-grow", "1"],
+        ["flex-shrink", "1"],
+        ["flex-basis", "calc(6px)"]
+      ])
+    );
+  });
+
+  it("flex shorthand should set / get longhand value", () => {
+    testImplicitPropertyValue(
+      "flex",
+      "calc(2 * 3)",
+      "calc(6) 1 0%",
+      new Map([
+        ["flex-grow", "calc(6)"],
+        ["flex-shrink", "1"],
+        ["flex-basis", "0%"]
+      ])
+    );
+  });
+
+  it("flex shorthand should set / get longhand value", () => {
+    testImplicitPropertyValue(
+      "flex",
+      "initial",
+      "initial",
+      new Map([
+        ["flex-grow", "initial"],
+        ["flex-shrink", "initial"],
+        ["flex-basis", "initial"]
+      ])
+    );
+  });
 });
 
 describe("font", () => {
@@ -1631,7 +1748,67 @@ describe("font", () => {
   });
 
   it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "normal", "normal");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "none", "none");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "none", "none");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "common-ligatures", "common-ligatures");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "no-common-ligatures", "no-common-ligatures");
+  });
+
+  it("font-variant should set / get keyword", () => {
     testPropertyValue("font-variant", "small-caps", "small-caps");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "stylistic(flowing)", "stylistic(flowing)");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue(
+      "font-variant",
+      "stylistic(flowing) historical-forms styleset(flowing) character-variant(flowing) swash(flowing) ornaments(flowing) annotation(flowing)",
+      "stylistic(flowing) historical-forms styleset(flowing) character-variant(flowing) swash(flowing) ornaments(flowing) annotation(flowing)"
+    );
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "jis78", "jis78");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "ruby", "ruby");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "sub", "sub");
+  });
+
+  it("font-variant should set / get keyword", () => {
+    testPropertyValue("font-variant", "super", "super");
+  });
+
+  it("font-variant should not set / get invalid keywords", () => {
+    testPropertyValue("font-variant", "normal none", "");
+  });
+
+  it("font-variant should not set / get invalid keywords", () => {
+    testPropertyValue("font-variant", "normal small-caps", "");
+  });
+
+  it("font-variant should not set / get invalid keywords", () => {
+    testPropertyValue("font-variant", "none small-caps", "");
   });
 
   it("font-weight should set / get keyword", () => {
@@ -1706,6 +1883,10 @@ describe("font", () => {
     testPropertyValue("font-family", "sans-serif", "sans-serif");
   });
 
+  it("font-family should set / get keyword", () => {
+    testPropertyValue("font-family", '"sans-serif"', '"sans-serif"');
+  });
+
   it("font-family should set / get family name", () => {
     testPropertyValue("font-family", "Times", "Times");
   });
@@ -1720,6 +1901,14 @@ describe("font", () => {
       'Times, "Times New Roman", Georgia, serif',
       'Times, "Times New Roman", Georgia, serif'
     );
+  });
+
+  it("font-family should set / get family values", () => {
+    testPropertyValue("font-family", "Times\\ New Roman, serif", '"Times New Roman", serif');
+  });
+
+  it("font-family should set / get family values", () => {
+    testPropertyValue("font-family", '"Times\\ New Roman", serif', '"Times New Roman", serif');
   });
 
   it("font-family should set / get family values", () => {
@@ -1810,14 +1999,14 @@ describe("font", () => {
     testImplicitPropertyValue(
       "font",
       "normal medium Gill Sans Extrabold, sans-serif",
-      "medium Gill Sans Extrabold, sans-serif",
+      'medium "Gill Sans Extrabold", sans-serif',
       new Map([
         ["font-style", "normal"],
         ["font-variant", "normal"],
         ["font-weight", "normal"],
         ["font-size", "medium"],
         ["line-height", "normal"],
-        ["font-family", "Gill Sans Extrabold, sans-serif"]
+        ["font-family", '"Gill Sans Extrabold", sans-serif']
       ])
     );
   });
@@ -2026,6 +2215,22 @@ describe("font", () => {
         ["font-size", ""],
         ["line-height", ""],
         ["font-family", ""]
+      ])
+    );
+  });
+
+  it("font shorthand should set / get values", () => {
+    testImplicitPropertyValue(
+      "font",
+      "initial",
+      "initial",
+      new Map([
+        ["font-style", "initial"],
+        ["font-variant", "initial"],
+        ["font-weight", "initial"],
+        ["font-size", "initial"],
+        ["line-height", "initial"],
+        ["font-family", "initial"]
       ])
     );
   });
