@@ -979,17 +979,17 @@ describe("parseAngle", () => {
   });
 });
 
-describe("parseUrl", () => {
+describe("parseURL", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -1001,7 +1001,7 @@ describe("parseUrl", () => {
         value: "foo"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -1013,7 +1013,7 @@ describe("parseUrl", () => {
         value: ""
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("")');
   });
@@ -1025,7 +1025,7 @@ describe("parseUrl", () => {
         value: "sample.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("sample.png")');
   });
@@ -1037,7 +1037,7 @@ describe("parseUrl", () => {
         value: "sample\\\\-escaped.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("sample\\-escaped.png")');
   });
@@ -1049,7 +1049,7 @@ describe("parseUrl", () => {
         value: "sample escaped -space.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("sample escaped -space.png")');
   });
@@ -1061,7 +1061,7 @@ describe("parseUrl", () => {
         value: "sample\tescaped\t-tab.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("sample\tescaped\t-tab.png")');
   });
@@ -1073,7 +1073,7 @@ describe("parseUrl", () => {
         value: "sample'escaped'-quote.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     // prettier-ignore
     assert.strictEqual(output, "url(\"sample'escaped'-quote.png\")");
@@ -1086,7 +1086,7 @@ describe("parseUrl", () => {
         value: 'sample"escaped"-double-quote.png'
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("sample\\"escaped\\"-double-quote.png")');
   });
