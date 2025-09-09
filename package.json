@@ -48,7 +48,7 @@
     "@babel/traverse": "^7.28.4",
     "@babel/types": "^7.28.4",
     "@domenic/eslint-config": "^4.0.1",
-    "@webref/css": "^6.23.9",
+    "@webref/css": "^7.0.11",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
@@ -59,15 +59,16 @@
   },
   "scripts": {
     "download": "node ./scripts/downloadLatestProperties.mjs",
-    "generate": "run-p generate:*",
+    "generate": "run-s generate:*",
     "generate:implementedProperties": "node ./scripts/generateImplementedProperties.mjs",
     "generate:properties": "node ./scripts/generateProperties.js",
     "generate:propertyList": "node ./scripts/generatePropertyList.mjs",
     "lint": "npm run generate && eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
-    "prepublishOnly": "npm run lint && npm run test",
+    "prepublishOnly": "npm run lint && npm run test:unit",
     "test": "npm run generate && node --test",
-    "test-ci": "npm run lint && npm run test"
+    "test:unit": "node --test",
+    "test-ci": "npm run lint && npm run test:unit"
   },
   "license": "MIT",
   "engines": {

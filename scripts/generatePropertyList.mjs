@@ -9,15 +9,31 @@ const unifiedProperties =
     ? allProperties.union(allExtraProperties)
     : new Set([...allProperties, ...allExtraProperties]);
 
-const parsedFiles = await css.listAll();
+const { properties } = await css.listAll();
 const definitions = new Map();
-for (const { properties } of Object.values(parsedFiles)) {
-  if (Array.isArray(properties)) {
-    for (const definition of properties) {
-      const { name } = definition;
-      if (unifiedProperties.has(name)) {
-        definitions.set(name, definition);
-      }
+if (Array.isArray(properties)) {
+  for (const definition of properties) {
+    const {
+      computedValue,
+      href,
+      inherited,
+      initial,
+      legacyAliasOf,
+      name,
+      styleDeclaration,
+      syntax
+    } = definition;
+    if (unifiedProperties.has(name)) {
+      definitions.set(name, {
+        computedValue,
+        href,
+        inherited,
+        initial,
+        legacyAliasOf,
+        name,
+        styleDeclaration,
+        syntax
+      });
     }
   }
 }
