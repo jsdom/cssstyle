@@ -48,7 +48,7 @@
     "@babel/traverse": "^7.28.4",
     "@babel/types": "^7.28.4",
     "@domenic/eslint-config": "^4.0.1",
-    "@webref/css": "^7.0.11",
+    "@webref/css": "^6.23.9",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
@@ -59,7 +59,7 @@
   },
   "scripts": {
     "download": "node ./scripts/downloadLatestProperties.mjs",
-    "generate": "run-s generate:*",
+    "generate": "run-p generate:*",
     "generate:implementedProperties": "node ./scripts/generateImplementedProperties.mjs",
     "generate:properties": "node ./scripts/generateProperties.js",
     "generate:propertyList": "node ./scripts/generatePropertyList.mjs",
