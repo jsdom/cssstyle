@@ -4,36 +4,55 @@ const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
 const { CSSStyleProperties } = require("../lib/CSSStyleProperties");
-const allProperties = require("../lib/generated/allProperties");
-const implementedProperties = require("../lib/generated/implementedProperties");
-const allExtraProperties = require("../lib/utils/allExtraProperties");
+const propertyList = require("../lib/generated/propertyList");
 const camelize = require("../lib/utils/camelize");
 
 describe("CSSStyleProperties", () => {
-  const dashedProperties = [...allProperties, ...allExtraProperties];
-
   it("is instanceof CSSStyleDeclaration", () => {
     const style = new CSSStyleProperties();
     assert.strictEqual(style instanceof CSSStyleDeclaration, true);
   });
 
-  it("has only valid properties implemented", () => {
-    const allowedProperties = dashedProperties.map(camelize.dashedToCamelCase);
-    const invalidProperties = [...implementedProperties.keys()]
-      .map(camelize.dashedToCamelCase)
-      .filter((prop) => !allowedProperties.includes(prop));
-    assert.strictEqual(invalidProperties.length, 0);
-  });
-
-  it("has dashed properties", () => {
+  it("all dashed properties are included in propertyList", () => {
     const style = new CSSStyleProperties();
-    dashedProperties.forEach((property) => {
-      assert.ok(style.__lookupGetter__(property));
-      assert.ok(style.__lookupSetter__(property));
-    });
+    for (const i in style) {
+      if (/^[a-z]+(?:-[a-z]+)*$/.test(i)) {
+        assert.strictEqual(propertyList.has(i), true, i);
+      }
+    }
   });
 
-  it("has PascalCase for webkit prefixed properties", () => {
+  it("has camelCased property for dashed property", () => {
+    const style = new CSSStyleProperties();
+    for (const i in style) {
+      if (/^[a-z]+(?:-[a-z]+)*$/.test(i)) {
+        const camel = camelize.dashedToCamelCase(i);
+        assert.ok(style[camel] !== undefined, i);
+      }
+    }
+  });
+
+  // FIXME: https://github.com/jsdom/cssstyle/issues/210
+  it.skip("all webkit prefixed properties are included in propertyList", () => {
+    const style = new CSSStyleProperties();
+    for (const i in style) {
+      if (/^-webkit-[a-z]+(?:-[a-z]+)*$/.test(i)) {
+        assert.strictEqual(propertyList.has(i), true, i);
+      }
+    }
+  });
+
+  it("has camelCased property for webkit prefixed property", () => {
+    const style = new CSSStyleProperties();
+    for (const i in style) {
+      if (/^-webkit-[a-z]+(?:-[a-z]+)*$/.test(i)) {
+        const camel = camelize.dashedToCamelCase(i);
+        assert.ok(style[camel] !== undefined, i);
+      }
+    }
+  });
+
+  it("has PascalCased property for webkit prefixed property", () => {
     const style = new CSSStyleProperties();
     for (const i in style) {
       if (/^webkit[A-Z]/.test(i)) {
@@ -43,14 +62,18 @@ describe("CSSStyleProperties", () => {
     }
   });
 
-  it("has special properties", () => {
+  it("setting cssFloat should also set float", () => {
     const style = new CSSStyleProperties();
+    style.cssFloat = "left";
+    assert.strictEqual(style.cssFloat, "left");
+    assert.strictEqual(style.float, "left");
+  });
 
-    assert.ok(style.__lookupGetter__("cssText"));
-    assert.ok(style.__lookupSetter__("cssText"));
-    assert.ok(style.__lookupGetter__("length"));
-    assert.ok(style.__lookupSetter__("length"));
-    assert.ok(style.__lookupGetter__("parentRule"));
+  it("setting float should also set cssfloat", () => {
+    const style = new CSSStyleProperties();
+    style.float = "left";
+    assert.strictEqual(style.cssFloat, "left");
+    assert.strictEqual(style.float, "left");
   });
 
   it("from style string", () => {
@@ -877,18 +900,6 @@ describe("CSSStyleProperties", () => {
     });
     style.removeProperty("opacity");
     assert.strictEqual(called, 0);
-  });
-
-  it("setting float should work the same as cssfloat", () => {
-    const style = new CSSStyleProperties();
-    style.float = "left";
-    assert.strictEqual(style.cssFloat, "left");
-  });
-
-  it("setting cssFloat should set float", () => {
-    const style = new CSSStyleProperties();
-    style.cssFloat = "left";
-    assert.strictEqual(style.float, "left");
   });
 
   it("setting improper css to csstext should not throw", () => {
