@@ -53,20 +53,19 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.4.0",
-    "npm-run-all": "^4.1.5",
+    "npm-run-all2": "^8.0.4",
     "prettier": "^3.6.2",
     "resolve": "^1.22.10"
   },
   "scripts": {
     "download": "node ./scripts/downloadLatestProperties.mjs",
     "generate": "run-p generate:*",
-    "generate:implementedProperties": "node ./scripts/generateImplementedProperties.mjs",
     "generate:properties": "node ./scripts/generateProperties.js",
     "generate:propertyList": "node ./scripts/generatePropertyList.mjs",
     "lint": "npm run generate && eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
-    "prepublishOnly": "npm run lint && npm run test:unit",
-    "test": "npm run generate && node --test",
+    "prepublishOnly": "npm run test-ci",
+    "test": "npm run generate && npm run test:unit",
     "test:unit": "node --test",
     "test-ci": "npm run lint && npm run test:unit"
   },
