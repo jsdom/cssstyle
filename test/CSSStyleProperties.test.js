@@ -816,17 +816,19 @@ describe("CSSStyleProperties", () => {
   });
 
   it("onchange callback should be called when the csstext changes", () => {
+    const window = {
+      DOMException: globalThis.DOMException
+    };
     const node = {
       nodeType: 1,
       style: {},
       ownerDocument: {
-        defaultView: {
-          DOMException: globalThis.DOMException
-        }
+        defaultView: window
       }
     };
     let called = 0;
-    const style = new CSSStyleProperties(node, {
+    const style = new CSSStyleProperties(window, {
+      context: node,
       onChange: (cssText) => {
         called++;
         assert.strictEqual(cssText, "opacity: 0;");
@@ -839,17 +841,19 @@ describe("CSSStyleProperties", () => {
   });
 
   it("onchange callback should be called only once when multiple properties were added", () => {
+    const window = {
+      DOMException: globalThis.DOMException
+    };
     const node = {
       nodeType: 1,
       style: {},
       ownerDocument: {
-        defaultView: {
-          DOMException: globalThis.DOMException
-        }
+        defaultView: window
       }
     };
     let called = 0;
-    const style = new CSSStyleProperties(node, {
+    const style = new CSSStyleProperties(window, {
+      context: node,
       onChange: (cssText) => {
         called++;
         assert.strictEqual(cssText, "width: 100px; height: 100px;");
@@ -860,17 +864,19 @@ describe("CSSStyleProperties", () => {
   });
 
   it("onchange callback should not be called when property is set to the same value", () => {
+    const window = {
+      DOMException: globalThis.DOMException
+    };
     const node = {
       nodeType: 1,
       style: {},
       ownerDocument: {
-        defaultView: {
-          DOMException: globalThis.DOMException
-        }
+        defaultView: window
       }
     };
     let called = 0;
-    const style = new CSSStyleProperties(node, {
+    const style = new CSSStyleProperties(window, {
+      context: node,
       onChange: () => {
         called++;
       }
@@ -883,17 +889,19 @@ describe("CSSStyleProperties", () => {
   });
 
   it("onchange callback should not be called when removeProperty was called on non-existing property", () => {
+    const window = {
+      DOMException: globalThis.DOMException
+    };
     const node = {
       nodeType: 1,
       style: {},
       ownerDocument: {
-        defaultView: {
-          DOMException: globalThis.DOMException
-        }
+        defaultView: window
       }
     };
     let called = 0;
-    const style = new CSSStyleProperties(node, {
+    const style = new CSSStyleProperties(window, {
+      context: node,
       onChange: () => {
         called++;
       }

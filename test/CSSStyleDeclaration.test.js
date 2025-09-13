@@ -5,9 +5,8 @@ const assert = require("node:assert/strict");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
 
 describe("CSSStyleDeclaration", () => {
-  it("does not enumerate constructor or internals", () => {
+  it("does not enumerate internals", () => {
     const style = new CSSStyleDeclaration();
-    assert.strictEqual(Object.getOwnPropertyDescriptor(style, "constructor").enumerable, false);
     for (const i in style) {
       assert.strictEqual(i.startsWith("_"), false);
     }
@@ -36,7 +35,9 @@ describe("CSSStyleDeclaration", () => {
       getComputedStyle: () => {},
       DOMException: globalThis.DOMException
     };
-    const style = new CSSStyleDeclaration(window);
+    const style = new CSSStyleDeclaration(window, {
+      context: window
+    });
     assert.throws(
       () => {
         style.cssText = "color: green;";
@@ -62,20 +63,22 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("sets internals for Element", () => {
+    const window = {
+      DOMException: globalThis.DOMException
+    };
     const node = {
       nodeType: 1,
       style: {},
       ownerDocument: {
-        defaultView: {
-          DOMException: globalThis.DOMException
-        }
+        defaultView: window
       }
     };
     let callCount = 0;
     const callback = () => {
       callCount++;
     };
-    const style = new CSSStyleDeclaration(node, {
+    const style = new CSSStyleDeclaration(window, {
+      context: node,
       onChange: callback
     });
     style.cssText = "color: green;";
@@ -83,17 +86,22 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("sets internals for CSSRule", () => {
+    const window = {
+      DOMException: globalThis.DOMException
+    };
     const rule = {
       parentRule: {},
       parentStyleSheet: {
         ownerDocument: {
           defaultView: {
-            DOMException: globalThis.DOMException
+            DOMException: window.DOMException
           }
         }
       }
     };
-    const style = new CSSStyleDeclaration(rule);
+    const style = new CSSStyleDeclaration(window, {
+      context: rule
+    });
     assert.deepEqual(style.parentRule, rule);
   });
 
@@ -121,7 +129,9 @@ describe("CSSStyleDeclaration", () => {
       getComputedStyle: () => {},
       DOMException: globalThis.DOMException
     };
-    const style = new CSSStyleDeclaration(window);
+    const style = new CSSStyleDeclaration(window, {
+      context: window
+    });
     assert.strictEqual(style.cssText, "");
   });
 
@@ -130,7 +140,9 @@ describe("CSSStyleDeclaration", () => {
       getComputedStyle: () => {},
       DOMException: globalThis.DOMException
     };
-    const style = new CSSStyleDeclaration(window);
+    const style = new CSSStyleDeclaration(window, {
+      context: window
+    });
     assert.throws(
       () => {
         style.cssText = "color: green;";
@@ -199,5 +211,17 @@ describe("CSSStyleDeclaration", () => {
     style["--baz"] = "yellow";
 
     assert.strictEqual(style.getPropertyValue("--baz"), "");
+  });
+
+  it("getPropertyPriority for property", () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty("color", "green", "important");
+    assert.strictEqual(style.getPropertyPriority("color"), "important");
+  });
+
+  it("getPropertyPriority for custom property", () => {
+    const style = new CSSStyleDeclaration();
+    style.setProperty("--foo", "green", "important");
+    assert.strictEqual(style.getPropertyPriority("--foo"), "important");
   });
 });
