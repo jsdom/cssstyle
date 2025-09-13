@@ -2,10 +2,10 @@
 
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
-const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
+const { CSSStyleProperties } = require("../lib/CSSStyleProperties");
 
 function testPropertyValue(property, value, expected) {
-  const style = new CSSStyleDeclaration();
+  const style = new CSSStyleProperties();
   let res;
 
   style.setProperty(property, value);
@@ -34,7 +34,7 @@ function testPropertyValue(property, value, expected) {
 }
 
 function testImplicitPropertyValue(property, value, expected, sub) {
-  const style = new CSSStyleDeclaration();
+  const style = new CSSStyleProperties();
   let res;
 
   style.setProperty(property, value);
