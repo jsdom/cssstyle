@@ -1143,6 +1143,18 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.getPropertyValue("flex-shrink"), "1");
     assert.strictEqual(style.getPropertyValue("flex-basis"), "250px");
     style.removeProperty("flex");
+    style.setProperty("flex", "0 0 auto");
+    assert.strictEqual(style.getPropertyValue("flex"), "0 0 auto");
+    assert.strictEqual(style.getPropertyValue("flex-grow"), "0");
+    assert.strictEqual(style.getPropertyValue("flex-shrink"), "0");
+    assert.strictEqual(style.getPropertyValue("flex-basis"), "auto");
+    style.removeProperty("flex");
+    style.setProperty("flex", "0 auto");
+    assert.strictEqual(style.getPropertyValue("flex"), "0 1 auto");
+    assert.strictEqual(style.getPropertyValue("flex-grow"), "0");
+    assert.strictEqual(style.getPropertyValue("flex-shrink"), "1");
+    assert.strictEqual(style.getPropertyValue("flex-basis"), "auto");
+    style.removeProperty("flex");
     style.setProperty("flex", "2");
     assert.strictEqual(style.getPropertyValue("flex-grow"), "2");
     assert.strictEqual(style.getPropertyValue("flex-shrink"), "1");
