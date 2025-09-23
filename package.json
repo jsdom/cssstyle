@@ -38,9 +38,10 @@
   ],
   "main": "./lib/index.js",
   "dependencies": {
-    "@asamuzakjp/css-color": "^4.0.4",
+    "@asamuzakjp/css-color": "^4.0.5",
     "@csstools/css-syntax-patches-for-csstree": "^1.0.14",
-    "css-tree": "^3.1.0"
+    "css-tree": "^3.1.0",
+    "lru-cache": "^11.2.1"
   },
   "devDependencies": {
     "@babel/generator": "^7.28.3",
@@ -48,7 +49,7 @@
     "@babel/traverse": "^7.28.4",
     "@babel/types": "^7.28.4",
     "@domenic/eslint-config": "^4.0.1",
-    "@webref/css": "^7.0.11",
+    "@webref/css": "^7.1.0",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",

@@ -1389,8 +1389,10 @@ describe("parseCSS", () => {
   it("should get ast", () => {
     const input = "color: green !important;";
     const opt = {
-      context: "declarationList",
-      parseValue: false
+      options: {
+        context: "declarationList",
+        parseValue: false
+      }
     };
     const output = parsers.parseCSS(input, opt);
     assert.strictEqual(output.type, "DeclarationList");
@@ -1400,8 +1402,10 @@ describe("parseCSS", () => {
   it("should get ast", () => {
     const input = "green";
     const opt = {
-      context: "value",
-      parseValue: false
+      options: {
+        context: "value",
+        parseValue: false
+      }
     };
     const output = parsers.parseCSS(input, opt);
     assert.strictEqual(output.type, "Value");
@@ -1411,8 +1415,10 @@ describe("parseCSS", () => {
   it("should get object", () => {
     const input = "color: green !important;";
     const opt = {
-      context: "declarationList",
-      parseValue: false
+      options: {
+        context: "declarationList",
+        parseValue: false
+      }
     };
     const output = parsers.parseCSS(input, opt, true);
     const [
