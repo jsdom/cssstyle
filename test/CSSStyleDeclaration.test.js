@@ -171,11 +171,16 @@ describe("CSSStyleDeclaration", () => {
     });
     style.cssText = "color: olivedrab; &.d { color: peru; }";
     assert.strictEqual(style.cssText, "color: olivedrab;");
+    style.cssText = "color: blue; @media screen { color: red; } color: orange;";
+    assert.strictEqual(style.cssText, "color: orange;");
     style.cssText = "color: green; color: invalid!; background: blue;";
     assert.strictEqual(style.cssText, "color: green; background: blue;");
     style.cssText =
       "color: olivedrab; &.d { color: peru; } color: green; background: red; invalid: rule;";
     assert.strictEqual(style.cssText, "color: olivedrab; background: red;");
+    style.cssText =
+      "color: blue; &.d { color: peru; } @media screen { color: red; } @layer { color: black; } color: pink; background: orange;";
+    assert.strictEqual(style.cssText, "color: blue; background: orange;");
   });
 
   it("sets internals for Element", () => {
