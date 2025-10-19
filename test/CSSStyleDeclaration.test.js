@@ -156,6 +156,28 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "");
   });
 
+  it("sets only the valid properties for partially valid cssText", () => {
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
+    const style = new CSSStyleDeclaration(null, {
+      context: node
+    });
+    style.cssText = "color: olivedrab; &.d { color: peru; }";
+    assert.strictEqual(style.cssText, "color: olivedrab;");
+    style.cssText = "color: green; color: invalid!; background: blue;";
+    assert.strictEqual(style.cssText, "color: green; background: blue;");
+    style.cssText =
+      "color: olivedrab; &.d { color: peru; } color: green; background: red; invalid: rule;";
+    assert.strictEqual(style.cssText, "color: olivedrab; background: red;");
+  });
+
   it("sets internals for Element", () => {
     const node = {
       nodeType: 1,
