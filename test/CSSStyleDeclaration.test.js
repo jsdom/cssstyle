@@ -156,6 +156,58 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "");
   });
 
+  it("sets only the valid properties for partially valid cssText", () => {
+    const node = {
+      nodeType: 1,
+      style: {},
+      ownerDocument: {
+        defaultView: {
+          DOMException: globalThis.DOMException
+        }
+      }
+    };
+    const style = new CSSStyleDeclaration(null, {
+      context: node
+    });
+
+    // valid property followed by invalid property followed by valid property
+    style.cssText = "color: green; color: invalid!; background: blue;";
+    // ignores invalid properties
+    assert.strictEqual(style.cssText, "color: green; background: blue;");
+
+    // only valid properties
+    style.cssText = "color: olivedrab; color: peru; background: bisque;";
+    // keeps the last one of the same property
+    assert.strictEqual(style.cssText, "color: peru; background: bisque;");
+
+    // valid property followed by a nested selector rule
+    style.cssText = "color: olivedrab; &.d { color: peru; }";
+    // ignores the nested selector rule
+    assert.strictEqual(style.cssText, "color: olivedrab;");
+
+    // valid property followed by a nested selector rule followed by two valid properties and an invalid property
+    style.cssText =
+      "color: olivedrab; &.d { color: peru; } color: green; background: red; invalid: rule;";
+    // ignores the property immediately after the nested rule
+    assert.strictEqual(style.cssText, "color: olivedrab; background: red;");
+
+    // valid property followed by a at-rule followed by a valid property
+    style.cssText = "color: blue; @media screen { color: red; } color: orange;";
+    // includes the the property immediately after an at-rule
+    assert.strictEqual(style.cssText, "color: orange;");
+
+    // valid property followed by a nested rule, two at-rules and two valid properties
+    style.cssText = `
+      color: blue;
+      &.d { color: peru; }
+      @media screen { color: red; }
+      @layer { color: black; }
+      color: pink;
+      background: orange;`;
+    // ignores the first property found after the nested selector rule along with the at-rules
+    assert.strictEqual(style.cssText, "color: blue; background: orange;");
+  });
+
   it("sets internals for Element", () => {
     const node = {
       nodeType: 1,
