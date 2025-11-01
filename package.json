@@ -4,6 +4,7 @@
   "keywords": [
     "CSS",
     "CSSStyleDeclaration",
+    "CSSStyleProperties",
     "StyleSheet"
   ],
   "version": "5.3.3",
@@ -35,37 +36,39 @@
   "files": [
     "lib/"
   ],
-  "main": "./lib/CSSStyleDeclaration.js",
+  "main": "./lib/index.js",
   "dependencies": {
-    "@asamuzakjp/css-color": "^4.0.3",
-    "@csstools/css-syntax-patches-for-csstree": "^1.0.14",
-    "css-tree": "^3.1.0"
+    "@asamuzakjp/css-color": "^4.0.5",
+    "@csstools/css-syntax-patches-for-csstree": "^1.0.15",
+    "css-tree": "^3.1.0",
+    "lru-cache": "^11.2.2"
   },
   "devDependencies": {
-    "@babel/generator": "^7.28.0",
-    "@babel/parser": "^7.28.0",
-    "@babel/traverse": "^7.28.0",
-    "@babel/types": "^7.28.2",
+    "@babel/generator": "^7.28.5",
+    "@babel/parser": "^7.28.5",
+    "@babel/traverse": "^7.28.5",
+    "@babel/types": "^7.28.5",
     "@domenic/eslint-config": "^4.0.1",
-    "@webref/css": "^6.23.6",
-    "eslint": "^9.32.0",
+    "@webref/css": "^8.0.0",
+    "eslint": "^9.39.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.3",
-    "globals": "^16.3.0",
-    "npm-run-all": "^4.1.5",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
+    "npm-run-all2": "^8.0.4",
     "prettier": "^3.6.2",
-    "resolve": "^1.22.10"
+    "resolve": "^1.22.11"
   },
   "scripts": {
-    "download": "node ./scripts/downloadLatestProperties.mjs",
+    "download": "node ./scripts/downloadLatestProperties.mjs && npm run generate",
     "generate": "run-p generate:*",
-    "generate:implemented_properties": "node ./scripts/generateImplementedProperties.mjs",
     "generate:properties": "node ./scripts/generateProperties.js",
+    "generate:propertyList": "node ./scripts/generatePropertyList.mjs",
     "lint": "npm run generate && eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
-    "prepublishOnly": "npm run lint && npm run test",
-    "test": "npm run generate && node --test",
-    "test-ci": "npm run lint && npm run test"
+    "prepublishOnly": "npm run test-ci",
+    "test": "npm run generate && npm run test:unit",
+    "test:unit": "node --test",
+    "test-ci": "npm run lint && npm run test:unit"
   },
   "license": "MIT",
   "engines": {

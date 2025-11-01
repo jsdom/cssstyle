@@ -1,6 +1,6 @@
 "use strict";
 
-const { asciiLowercase } = require("./strings");
+const { asciiLowercase } = require("../lib/utils/strings");
 
 // Utility to translate from `border-width` to `borderWidth`.
 // NOTE: For values prefixed with webkit, e.g. `-webkit-foo`, we need to provide
