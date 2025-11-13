@@ -3,7 +3,7 @@
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
-const propertyList = require("../lib/generated/propertyList");
+const propertyDefinitions = require("../lib/generated/propertyDefinitions");
 const camelize = require("../scripts/camelize");
 
 const window = {
@@ -320,11 +320,11 @@ describe("properties", () => {
     assert.strictEqual(style instanceof CSSStyleDeclaration, true);
   });
 
-  it("all dashed properties are included in propertyList", () => {
+  it("all dashed properties are included in propertyDefinitions", () => {
     const style = new CSSStyleDeclaration(window);
     for (const i in style) {
       if (/^[a-z]+(?:-[a-z]+)*$/.test(i)) {
-        assert.strictEqual(propertyList.has(i), true, i);
+        assert.strictEqual(propertyDefinitions.has(i), true, i);
       }
     }
   });
@@ -340,11 +340,11 @@ describe("properties", () => {
   });
 
   // FIXME: https://github.com/jsdom/cssstyle/issues/210
-  it.skip("all webkit prefixed properties are included in propertyList", () => {
+  it.skip("all webkit prefixed properties are included in propertyDefinitions", () => {
     const style = new CSSStyleDeclaration(window);
     for (const i in style) {
       if (/^-webkit-[a-z]+(?:-[a-z]+)*$/.test(i)) {
-        assert.strictEqual(propertyList.has(i), true, i);
+        assert.strictEqual(propertyDefinitions.has(i), true, i);
       }
     }
   });

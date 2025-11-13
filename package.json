@@ -4,7 +4,6 @@
   "keywords": [
     "CSS",
     "CSSStyleDeclaration",
-    "CSSStyleProperties",
     "StyleSheet"
   ],
   "version": "5.3.3",
@@ -62,7 +61,7 @@
     "download": "node ./scripts/downloadLatestProperties.mjs && npm run generate",
     "generate": "run-p generate:*",
     "generate:properties": "node ./scripts/generateProperties.js",
-    "generate:propertyList": "node ./scripts/generatePropertyList.mjs",
+    "generate:propertyDefinitions": "node ./scripts/generatePropertyDefinitions.mjs",
     "lint": "npm run generate && eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
     "prepublishOnly": "npm run test-ci",
