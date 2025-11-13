@@ -560,10 +560,10 @@ describe("properties", () => {
     style.clip = "elipse(5px, 10px)";
     assert.strictEqual(style.clip, "");
     assert.strictEqual(style.length, 1);
-    style.clip = "rect(0, 3Em, 2pt, 50%)";
-    assert.strictEqual(style.clip, "rect(0px, 3em, 2pt, 50%)");
+    style.clip = "rect(0, 3Em, 2pt, 5px)";
+    assert.strictEqual(style.clip, "rect(0px, 3em, 2pt, 5px)");
     assert.strictEqual(style.length, 2);
-    assert.strictEqual(style.cssText, "clear: both; clip: rect(0px, 3em, 2pt, 50%);");
+    assert.strictEqual(style.cssText, "clear: both; clip: rect(0px, 3em, 2pt, 5px);");
   });
 
   it("colors", () => {
@@ -3821,7 +3821,7 @@ describe("masking", () => {
   });
 
   it("clip should set / get legacy <shape>", () => {
-    testPropertyValue("clip", "rect(0, 10px, 20%, 40EM)", "rect(0px, 10px, 20%, 40em)");
+    testPropertyValue("clip", "rect(0, 10px, 2cm, 40EM)", "rect(0px, 10px, 2cm, 40em)");
   });
 });
 
