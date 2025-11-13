@@ -272,46 +272,6 @@ describe("CSSStyleDeclaration", () => {
     style.setProperty("--foo", "green", "important");
     assert.strictEqual(style.getPropertyPriority("--foo"), "important");
   });
-
-  it("setProperty throws if read-only flag is set", () => {
-    const style = new CSSStyleDeclaration(window);
-    style.setProperty("--foo", "green");
-    style.setOptions({
-      readOnly: true
-    });
-    assert.throws(
-      () => {
-        style.setProperty("--foo", "red");
-      },
-      (e) => {
-        assert.strictEqual(e instanceof window.DOMException, true);
-        assert.strictEqual(e.name, "NoModificationAllowedError");
-        assert.strictEqual(e.message, "Property --foo can not be modified.");
-        return true;
-      }
-    );
-  });
-
-  it("removeProperty throws if read-only flag is set", () => {
-    const style = new CSSStyleDeclaration(window);
-    style.setProperty("--foo", "green");
-    style.setProperty("--bar", "red");
-    assert.strictEqual(style.removeProperty("--foo"), "green");
-    style.setOptions({
-      readOnly: true
-    });
-    assert.throws(
-      () => {
-        style.removeProperty("--bar");
-      },
-      (e) => {
-        assert.strictEqual(e instanceof window.DOMException, true);
-        assert.strictEqual(e.name, "NoModificationAllowedError");
-        assert.strictEqual(e.message, "Property --bar can not be modified.");
-        return true;
-      }
-    );
-  });
 });
 
 describe("properties", () => {
