@@ -7,7 +7,7 @@ const t = require("@babel/types");
 const generate = require("@babel/generator").default;
 const traverse = require("@babel/traverse").default;
 const resolve = require("resolve");
-const { camelCaseToDashed } = require("../lib/utils/camelize");
+const { camelCaseToDashed } = require("./camelize");
 
 const { basename, dirname } = nodePath;
 
