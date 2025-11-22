@@ -267,6 +267,13 @@ describe("resolveCalc", () => {
 
     assert.strictEqual(output, "calc(10px + 100vh)");
   });
+
+  it("should return serialized value", () => {
+    const input = "translate(calc(10%), 10%)";
+    const output = parsers.resolveCalc(input);
+
+    assert.strictEqual(output, "translate(calc(10%), 10%)");
+  });
 });
 
 describe("parseNumber", () => {
@@ -979,17 +986,17 @@ describe("parseAngle", () => {
   });
 });
 
-describe("parseUrl", () => {
+describe("parseURL", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -1001,7 +1008,7 @@ describe("parseUrl", () => {
         value: "foo"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -1013,7 +1020,7 @@ describe("parseUrl", () => {
         value: ""
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("")');
   });
@@ -1025,7 +1032,7 @@ describe("parseUrl", () => {
         value: "sample.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("sample.png")');
   });
@@ -1037,7 +1044,7 @@ describe("parseUrl", () => {
         value: "sample\\\\-escaped.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("sample\\-escaped.png")');
   });
@@ -1049,7 +1056,7 @@ describe("parseUrl", () => {
         value: "sample escaped -space.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("sample escaped -space.png")');
   });
@@ -1061,7 +1068,7 @@ describe("parseUrl", () => {
         value: "sample\tescaped\t-tab.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("sample\tescaped\t-tab.png")');
   });
@@ -1073,7 +1080,7 @@ describe("parseUrl", () => {
         value: "sample'escaped'-quote.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     // prettier-ignore
     assert.strictEqual(output, "url(\"sample'escaped'-quote.png\")");
@@ -1086,7 +1093,7 @@ describe("parseUrl", () => {
         value: 'sample"escaped"-double-quote.png'
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.parseURL(input);
 
     assert.strictEqual(output, 'url("sample\\"escaped\\"-double-quote.png")');
   });
@@ -1389,8 +1396,10 @@ describe("parseCSS", () => {
   it("should get ast", () => {
     const input = "color: green !important;";
     const opt = {
-      context: "declarationList",
-      parseValue: false
+      options: {
+        context: "declarationList",
+        parseValue: false
+      }
     };
     const output = parsers.parseCSS(input, opt);
     assert.strictEqual(output.type, "DeclarationList");
@@ -1400,8 +1409,10 @@ describe("parseCSS", () => {
   it("should get ast", () => {
     const input = "green";
     const opt = {
-      context: "value",
-      parseValue: false
+      options: {
+        context: "value",
+        parseValue: false
+      }
     };
     const output = parsers.parseCSS(input, opt);
     assert.strictEqual(output.type, "Value");
@@ -1411,8 +1422,10 @@ describe("parseCSS", () => {
   it("should get object", () => {
     const input = "color: green !important;";
     const opt = {
-      context: "declarationList",
-      parseValue: false
+      options: {
+        context: "declarationList",
+        parseValue: false
+      }
     };
     const output = parsers.parseCSS(input, opt, true);
     const [

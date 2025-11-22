@@ -6,11 +6,8 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 const url = "https://www.w3.org/Style/CSS/all-properties.en.json";
-const outputFile = resolve("../lib/generated/allProperties.js");
-const unwantedStatuses = new Set(["NOTE", "ED"]);
 
 console.log("Downloading CSS properties...");
 
@@ -22,17 +19,17 @@ if (res.status !== 200) {
 const rawCSSProperties = await res.json();
 
 const propertyNames = new Set();
+const unwantedStatuses = new Set(["NOTE", "ED"]);
 for (const cssProp of rawCSSProperties) {
   // Filter out properties from too-new statuses.
   // Also, '--*' needs additional logic to this module, so filter it out for now.
   if (unwantedStatuses.has(cssProp.status) || cssProp.property === "--*") {
     continue;
   }
-
   propertyNames.add(cssProp.property);
 }
 
-const propertyNamesJSON = JSON.stringify(Array.from(propertyNames), undefined, 2);
+const propertyNamesJSON = JSON.stringify([...propertyNames], undefined, 2);
 const dateToday = new Date();
 const [dateTodayFormatted] = dateToday.toISOString().split("T");
 const output = `"use strict";
@@ -42,9 +39,6 @@ const output = `"use strict";
 module.exports = new Set(${propertyNamesJSON});
 `;
 
+const { dirname } = import.meta;
+const outputFile = path.resolve(dirname, "../lib/generated/allProperties.js");
 fs.writeFileSync(outputFile, output);
-
-// TODO: remove when we can drop Node.js 18 support and use import.meta.dirname.
-function resolve(relativePath) {
-  return path.resolve(path.dirname(fileURLToPath(import.meta.url)), relativePath);
-}

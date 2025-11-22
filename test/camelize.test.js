@@ -2,7 +2,7 @@
 
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
-const camelize = require("../lib/utils/camelize");
+const camelize = require("../scripts/camelize");
 
 describe("dashedToCamelCase", () => {
   it("should not camelize custom property", () => {
