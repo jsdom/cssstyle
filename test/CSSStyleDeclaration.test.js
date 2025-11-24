@@ -1362,6 +1362,24 @@ describe("properties", () => {
     assert.strictEqual(style.getPropertyValue("font-size"), "12px");
   });
 
+  it("support global keywords in border-spacing", () => {
+    const style = new CSSStyleDeclaration(window);
+    style.borderSpacing = "inherit";
+    assert.strictEqual(style.cssText, "border-spacing: inherit;");
+  });
+
+  it("support 1 value in border-spacing", () => {
+    const style = new CSSStyleDeclaration(window);
+    style.borderSpacing = "1px";
+    assert.strictEqual(style.cssText, "border-spacing: 1px;");
+  });
+
+  it("support 2 values in border-spacing", () => {
+    const style = new CSSStyleDeclaration(window);
+    style.borderSpacing = "1px 2px";
+    assert.strictEqual(style.cssText, "border-spacing: 1px 2px;");
+  });
+
   it("support non string entries in border-spacing", () => {
     const style = new CSSStyleDeclaration(window);
     style.borderSpacing = 0;
