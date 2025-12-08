@@ -37,24 +37,27 @@
   ],
   "main": "./lib/CSSStyleDeclaration.js",
   "dependencies": {
-    "@asamuzakjp/css-color": "^4.0.3",
-    "@csstools/css-syntax-patches-for-csstree": "^1.0.14",
+    "@asamuzakjp/css-color": "^4.1.0",
+    "@csstools/css-syntax-patches-for-csstree": "1.0.14",
     "css-tree": "^3.1.0"
   },
+  "//dependenciesComments": {
+    "@csstools/css-syntax-patches-for-csstree": "pinned at 1.0.14 for now due to https://github.com/jsdom/cssstyle/issues/256"
+  },
   "devDependencies": {
-    "@babel/generator": "^7.28.0",
-    "@babel/parser": "^7.28.0",
-    "@babel/traverse": "^7.28.0",
-    "@babel/types": "^7.28.2",
+    "@babel/generator": "^7.28.5",
+    "@babel/parser": "^7.28.5",
+    "@babel/traverse": "^7.28.5",
+    "@babel/types": "^7.28.5",
     "@domenic/eslint-config": "^4.0.1",
     "@webref/css": "^6.23.6",
-    "eslint": "^9.32.0",
+    "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.3",
-    "globals": "^16.3.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^3.6.2",
-    "resolve": "^1.22.10"
+    "prettier": "^3.7.4",
+    "resolve": "^1.22.11"
   },
   "scripts": {
     "download": "node ./scripts/downloadLatestProperties.mjs",
