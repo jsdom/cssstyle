@@ -6,7 +6,7 @@
     "CSSStyleDeclaration",
     "StyleSheet"
   ],
-  "version": "5.3.3",
+  "version": "5.3.4",
   "homepage": "https://github.com/jsdom/cssstyle",
   "maintainers": [
     {
