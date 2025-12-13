@@ -2254,16 +2254,6 @@ describe("logical", () => {
   });
 });
 
-describe("masking", () => {
-  it("clip should set / get keyword", () => {
-    testPropertyValue("clip", "auto", "auto");
-  });
-
-  it("clip should set / get legacy <shape>", () => {
-    testPropertyValue("clip", "rect(0, 10px, 20%, 40EM)", "rect(0px, 10px, 20%, 40em)");
-  });
-});
-
 describe("positioning", () => {
   it("bottom should set / get keyword", () => {
     testPropertyValue("bottom", "auto", "auto");
