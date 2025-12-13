@@ -38,7 +38,7 @@
   "main": "./lib/CSSStyleDeclaration.js",
   "dependencies": {
     "@asamuzakjp/css-color": "^4.1.0",
-    "@csstools/css-syntax-patches-for-csstree": "1.0.14",
+    "@csstools/css-syntax-patches-for-csstree": "^1.0.21",
     "css-tree": "^3.1.0"
   },
   "//dependenciesComments": {

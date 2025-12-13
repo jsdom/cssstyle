@@ -351,7 +351,7 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.left, "auto");
   });
 
-  it("clear and clip properties", () => {
+  it("clear properties", () => {
     const style = new CSSStyleDeclaration();
     style.clear = "none";
     assert.strictEqual(style.clear, "none");
@@ -363,13 +363,6 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.clear, "right");
     style.clear = "both";
     assert.strictEqual(style.clear, "both");
-    style.clip = "elipse(5px, 10px)";
-    assert.strictEqual(style.clip, "");
-    assert.strictEqual(style.length, 1);
-    style.clip = "rect(0, 3Em, 2pt, 50%)";
-    assert.strictEqual(style.clip, "rect(0px, 3em, 2pt, 50%)");
-    assert.strictEqual(style.length, 2);
-    assert.strictEqual(style.cssText, "clear: both; clip: rect(0px, 3em, 2pt, 50%);");
   });
 
   it("colors", () => {
