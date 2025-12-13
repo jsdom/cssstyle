@@ -42,6 +42,7 @@
     "prepare": "run-p prepare:*",
     "prepare:implemented_properties": "node ./scripts/generateImplementedProperties.mjs",
     "prepare:properties": "node ./scripts/generateProperties.js",
+    "prepare:propertyDefinitions": "node ./scripts/generatePropertyDefinitions.mjs",
     "test": "node --test"
   },
   "license": "MIT",
