@@ -3,15 +3,13 @@ import path from "node:path";
 import css from "@webref/css";
 import { camelCaseToDashed } from "../lib/utils/camelize.js";
 
-const parsedFiles = await css.listAll();
+const { properties } = await css.listAll();
 const definitions = new Map();
-for (const { properties } of Object.values(parsedFiles)) {
-  if (Array.isArray(properties)) {
-    for (const definition of properties) {
-      const { name } = definition;
-      if (name) {
-        definitions.set(name, definition);
-      }
+if (Array.isArray(properties)) {
+  for (const definition of properties) {
+    const { name } = definition;
+    if (name) {
+      definitions.set(name, definition);
     }
   }
 }
