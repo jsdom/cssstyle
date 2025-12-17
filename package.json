@@ -58,14 +58,12 @@
   },
   "scripts": {
     "download": "node ./scripts/downloadLatestProperties.mjs",
-    "generate": "run-p generate:*",
-    "generate:implemented_properties": "node ./scripts/generateImplementedProperties.mjs",
-    "generate:properties": "node ./scripts/generateProperties.js",
-    "lint": "npm run generate && eslint --max-warnings 0",
+    "lint": "eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
-    "prepublishOnly": "npm run lint && npm run test",
-    "test": "npm run generate && node --test",
-    "test-ci": "npm run lint && npm run test"
+    "prepare": "run-p prepare:*",
+    "prepare:implemented_properties": "node ./scripts/generateImplementedProperties.mjs",
+    "prepare:properties": "node ./scripts/generateProperties.js",
+    "test": "node --test"
   },
   "license": "MIT",
   "engines": {
