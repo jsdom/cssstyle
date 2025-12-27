@@ -18,7 +18,8 @@
   "dependencies": {
     "@asamuzakjp/css-color": "^4.1.1",
     "@csstools/css-syntax-patches-for-csstree": "^1.0.21",
-    "css-tree": "^3.1.0"
+    "css-tree": "^3.1.0",
+    "lru-cache": "^11.2.4"
   },
   "devDependencies": {
     "@babel/generator": "^7.28.5",
