@@ -2,3 +2,4 @@ node_modules
 npm-debug.log
 lib/generated/implementedProperties.js
 lib/generated/properties.js
+lib/generated/propertyDefinitions.js
