@@ -4,7 +4,7 @@ const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
 const propertyDefinitions = require("../lib/generated/propertyDefinitions");
-const { dashedToCamelCase } = require("../lib/utils/camelize");
+const { dashedToCamelCase } = require("../scripts/camelize.mjs");
 
 describe("CSSStyleDeclaration", () => {
   it("does not enumerate constructor or internals", () => {

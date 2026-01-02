@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { camelCaseToDashed } from "../lib/utils/camelize.js";
+import { camelCaseToDashed } from "./camelize.mjs";
 
 const { dirname } = import.meta;
 
