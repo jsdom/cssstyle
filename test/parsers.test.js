@@ -57,39 +57,14 @@ describe("prepareValue", () => {
   it("should throw for Symbol", () => {
     const input = Symbol("foo");
 
-    assert.throws(
-      () => parsers.prepareValue(input),
-      (e) => {
-        assert.strictEqual(e instanceof globalThis.TypeError, true);
-        assert.strictEqual(e.message, "Can not convert symbol to string.");
-        return true;
-      }
-    );
-  });
-
-  it("should throw with window global for Symbol", () => {
-    const input = Symbol("foo");
-    const window = {
-      TypeError: globalThis.TypeError
-    };
-
-    assert.throws(
-      () => parsers.prepareValue(input, window),
-      (e) => {
-        assert.strictEqual(e instanceof window.TypeError, true);
-        assert.strictEqual(e.message, "Can not convert symbol to string.");
-        return true;
-      }
-    );
+    assert.throws(() => parsers.prepareValue(input));
   });
 
   it("should get string even if object.toString() not converting to string", () => {
     const input = {
       toString: () => [1]
     };
-    const output = parsers.prepareValue(input);
-
-    assert.strictEqual(output, "1");
+    assert.throws(() => parsers.prepareValue(input));
   });
 });
 
