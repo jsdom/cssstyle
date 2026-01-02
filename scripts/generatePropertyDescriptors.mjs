@@ -22,16 +22,16 @@ for (const [key, value] of propertyDefinitions.entries()) {
   if (camelCasedProperties.has(camel)) {
     requires.push(`const ${camel} = require("../properties/${camel}");`);
     for (const property of styleDeclaration) {
-      descriptors.push(`["${property}", ${camel}.definition]`);
+      descriptors.push(`"${property}": ${camel}.definition`);
     }
   } else if (camelCasedProperties.has(aliasCamel)) {
     requires.push(`const ${aliasCamel} = require("../properties/${aliasCamel}");`);
     for (const property of styleDeclaration) {
-      descriptors.push(`["${property}", ${aliasCamel}.definition]`);
+      descriptors.push(`"${property}": ${aliasCamel}.definition`);
     }
   } else {
     for (const property of styleDeclaration) {
-      descriptors.push(`["${property}", getPropertyDescriptor("${key}")]`);
+      descriptors.push(`"${property}": getPropertyDescriptor("${key}")`);
     }
   }
 }
@@ -46,12 +46,8 @@ const output = `"use strict";
 ${requires.sort().join("\n")}
 const { getPropertyDescriptor } = require("../utils/propertyDescriptors");
 
-const propertyDescriptorsMap = new Map([
-  ${descriptors.join(",\n  ")}
-]);
-
 module.exports = {
-  propertyDescriptors: Object.fromEntries(propertyDescriptorsMap)
+  ${descriptors.join(",\n  ")}
 };
 `;
 
