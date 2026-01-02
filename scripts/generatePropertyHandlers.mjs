@@ -32,13 +32,10 @@ const implementedHandlers = new Map([
 ]);
 
 const getHandler = (property) => {
-  let handler;
   if (implementedHandlers.has(property)) {
-    handler = implementedHandlers.get(property).definition;
-  } else {
-    handler = getPropertyDescriptor(property);
+    return implementedHandlers.get(property).definition;
   }
-  return handler;
+  return getPropertyDescriptor(property);
 };
 
 const preparePropertyHandlers = () => {
