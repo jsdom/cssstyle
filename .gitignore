@@ -1,4 +1,4 @@
 node_modules
 npm-debug.log
 lib/generated/propertyDefinitions.js
-lib/generated/propertyHandlers.js
+lib/generated/propertyDescriptors.js
