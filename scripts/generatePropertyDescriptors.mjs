@@ -7,7 +7,7 @@ const { dirname } = import.meta;
 
 const list = fs
   .readdirSync(path.resolve(dirname, "../lib/properties"))
-  .map((file) => file.replace(/\.[cm]?js$/, ""));
+  .map((file) => file.replace(/\.js$/, ""));
 const camelCasedProperties = new Set(list);
 
 const requires = [];
