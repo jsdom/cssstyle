@@ -7,15 +7,15 @@ const { dirname } = import.meta;
 
 const list = fs
   .readdirSync(path.resolve(dirname, "../lib/properties"))
-  .map((file) => file.replace(/\.js$/, ""));
-const camelCasedProperties = new Set(list);
+  .map((file) => [file.replace(/\.js$/, ""), file]);
+const camelCasedProperties = new Map(list);
 
 const requires = [];
 const descriptors = [];
 for (const [canonicalPropertyName, { styleDeclaration }] of propertyDefinitions) {
   const camel = dashedToCamelCase(canonicalPropertyName);
   if (camelCasedProperties.has(camel)) {
-    requires.push(`const ${camel} = require("../properties/${camel}");`);
+    requires.push(`const ${camel} = require("../properties/${camelCasedProperties.get(camel)}");`);
     for (const property of styleDeclaration) {
       descriptors.push(`"${property}": ${camel}.definition`);
     }
