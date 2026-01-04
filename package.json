@@ -32,7 +32,6 @@
     "prettier": "^3.7.4"
   },
   "scripts": {
-    "download": "node ./scripts/downloadLatestProperties.mjs",
     "lint": "eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
     "prepare": "run-s prepare:*",
