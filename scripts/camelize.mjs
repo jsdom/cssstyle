@@ -1,11 +1,9 @@
-"use strict";
-
-const { asciiLowercase } = require("./strings");
+import { asciiLowercase } from "../lib/utils/strings.js";
 
 // Utility to translate from `border-width` to `borderWidth`.
 // NOTE: For values prefixed with webkit, e.g. `-webkit-foo`, we need to provide
 // both `webkitFoo` and `WebkitFoo`. Here we only return `webkitFoo`.
-exports.dashedToCamelCase = function (dashed) {
+export const dashedToCamelCase = (dashed) => {
   if (dashed.startsWith("--")) {
     return dashed;
   }
@@ -25,7 +23,7 @@ exports.dashedToCamelCase = function (dashed) {
 };
 
 // Utility to translate from `borderWidth` to `border-width`.
-exports.camelCaseToDashed = function (camelCase) {
+export const camelCaseToDashed = (camelCase) => {
   if (camelCase.startsWith("--")) {
     return camelCase;
   }

@@ -1,18 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import css from "@webref/css";
-import allProperties from "../lib/generated/allProperties.js";
-import allExtraProperties from "../lib/utils/allExtraProperties.js";
 
 const { properties } = await css.listAll();
-const unifiedProperties =
-  typeof allProperties.union === "function"
-    ? allProperties.union(allExtraProperties)
-    : new Set([...allProperties, ...allExtraProperties]);
-const definitions = properties
-  .filter((definition) => unifiedProperties.has(definition.name))
-  .sort((a, b) => a.name.localeCompare(b.name))
-  .map((definition) => [definition.name, definition]);
+const definitions = properties.map((definition) => [definition.name, definition]);
 
 const [dateTodayFormatted] = new Date().toISOString().split("T");
 const output = `"use strict";
@@ -20,6 +11,12 @@ const output = `"use strict";
 
 module.exports = new Map(${JSON.stringify(definitions, null, 2)});
 `;
+
 const { dirname } = import.meta;
-const outputFile = path.resolve(dirname, "../lib/generated/propertyDefinitions.js");
-fs.writeFileSync(outputFile, output);
+const dir = path.resolve(dirname, "../lib/generated/");
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir, {
+    recursive: true
+  });
+}
+fs.writeFileSync(path.resolve(dir, "propertyDefinitions.js"), output);

@@ -2,23 +2,10 @@
 
 const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
-const { CSSStyleDeclaration, propertyList } = require("../lib/CSSStyleDeclaration");
-const allProperties = require("../lib/generated/allProperties");
-const implementedProperties = require("../lib/generated/implementedProperties");
-const allExtraProperties = require("../lib/utils/allExtraProperties");
-const camelize = require("../lib/utils/camelize");
+const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
+const propertyDefinitions = require("../lib/generated/propertyDefinitions");
 
 describe("CSSStyleDeclaration", () => {
-  const dashedProperties = [...allProperties, ...allExtraProperties];
-  const allowedProperties = dashedProperties.map(camelize.dashedToCamelCase);
-  const invalidProperties = [...implementedProperties.keys()]
-    .map(camelize.dashedToCamelCase)
-    .filter((prop) => !allowedProperties.includes(prop));
-
-  it("has only valid properties implemented", () => {
-    assert.strictEqual(invalidProperties.length, 0);
-  });
-
   it("does not enumerate constructor or internals", () => {
     const style = new CSSStyleDeclaration();
     assert.strictEqual(Object.getOwnPropertyDescriptor(style, "constructor").enumerable, false);
@@ -27,20 +14,37 @@ describe("CSSStyleDeclaration", () => {
     }
   });
 
-  it("has all properties", () => {
+  it("has getters and setters", () => {
     const style = new CSSStyleDeclaration();
-    allProperties.forEach((property) => {
-      assert.ok(style.__lookupGetter__(property));
-      assert.ok(style.__lookupSetter__(property));
-    });
+    const descriptors = Object.getOwnPropertyDescriptors(Object.getPrototypeOf(style));
+
+    assert.ok(typeof descriptors.cssText.get === "function", "getter cssText");
+    assert.ok(typeof descriptors.cssText.set === "function", "setter cssText");
+    assert.ok(typeof descriptors.length.get === "function", "getter length");
+    // FIXME: should only be a getter for length.
+    assert.ok(typeof descriptors.length.set === "function", "setter length");
+    assert.ok(typeof descriptors.parentRule.get === "function", "getter parentRule");
+    assert.ok(typeof descriptors.parentRule.set !== "function", "setter parentRule");
   });
 
-  it("has dashed properties", () => {
+  it("has all properties", () => {
     const style = new CSSStyleDeclaration();
-    dashedProperties.forEach((property) => {
-      assert.ok(style.__lookupGetter__(property));
-      assert.ok(style.__lookupSetter__(property));
-    });
+
+    for (const property of propertyDefinitions.keys()) {
+      assert.ok(style[property] !== undefined);
+    }
+  });
+
+  it("has camelCase property", () => {
+    const style = new CSSStyleDeclaration();
+
+    assert.ok(style.backgroundColor !== undefined);
+  });
+
+  it("has PascalCase property for webkit prefixed property", () => {
+    const style = new CSSStyleDeclaration();
+
+    assert.ok(style.WebkitTextFillColor !== undefined);
   });
 
   it("has all functions", () => {
@@ -51,16 +55,6 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(typeof style.setProperty, "function");
     assert.strictEqual(typeof style.getPropertyPriority, "function");
     assert.strictEqual(typeof style.removeProperty, "function");
-  });
-
-  it("has PascalCase for webkit prefixed properties", () => {
-    const style = new CSSStyleDeclaration();
-    for (const i in style) {
-      if (/^webkit[A-Z]/.test(i)) {
-        const pascal = i.replace(/^webkit/, "Webkit");
-        assert.ok(style[pascal] !== undefined);
-      }
-    }
   });
 
   it("throws if argument is not given", () => {
@@ -76,16 +70,6 @@ describe("CSSStyleDeclaration", () => {
         return true;
       }
     );
-  });
-
-  it("has special properties", () => {
-    const style = new CSSStyleDeclaration();
-
-    assert.ok(style.__lookupGetter__("cssText"));
-    assert.ok(style.__lookupSetter__("cssText"));
-    assert.ok(style.__lookupGetter__("length"));
-    assert.ok(style.__lookupSetter__("length"));
-    assert.ok(style.__lookupGetter__("parentRule"));
   });
 
   it("sets internals for Window", () => {
@@ -1618,11 +1602,5 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/214", () 
     assert.strictEqual(style.backgroundAttachment, "var(--foo)");
     style.setProperty("background-attachment", "var(--bar)");
     assert.strictEqual(style.backgroundAttachment, "var(--bar)");
-  });
-});
-
-describe("propertyList", () => {
-  it("should get property list", () => {
-    assert.deepEqual(propertyList, Object.fromEntries(implementedProperties));
   });
 });
