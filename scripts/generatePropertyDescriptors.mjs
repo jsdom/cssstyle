@@ -12,21 +12,23 @@ const implementedProperties = new Map(list);
 
 const requires = [];
 const descriptors = [];
-for (const [canonicalPropertyName, { legacyAliasOf, styleDeclaration }] of propertyDefinitions) {
-  const camel = dashedToCamelCase(canonicalPropertyName);
-  const aliasCamel = legacyAliasOf ? dashedToCamelCase(legacyAliasOf) : "";
-  if (implementedProperties.has(camel)) {
-    requires.push(`const ${camel} = require("../properties/${implementedProperties.get(camel)}");`);
+for (const [canonicalProperty, { legacyAliasOf, styleDeclaration }] of propertyDefinitions) {
+  const camelizedProperty = dashedToCamelCase(canonicalProperty);
+  const camelizedAliasProperty = legacyAliasOf ? dashedToCamelCase(legacyAliasOf) : "";
+  if (implementedProperties.has(camelizedProperty)) {
+    requires.push(
+      `const ${camelizedProperty} = require("../properties/${implementedProperties.get(camelizedProperty)}");`
+    );
     for (const property of styleDeclaration) {
-      descriptors.push(`"${property}": ${camel}.definition`);
+      descriptors.push(`"${property}": ${camelizedProperty}.definition`);
     }
-  } else if (implementedProperties.has(aliasCamel)) {
+  } else if (implementedProperties.has(camelizedAliasProperty)) {
     for (const property of styleDeclaration) {
-      descriptors.push(`"${property}": ${aliasCamel}.definition`);
+      descriptors.push(`"${property}": ${camelizedAliasProperty}.definition`);
     }
   } else {
     for (const property of styleDeclaration) {
-      descriptors.push(`"${property}": getPropertyDescriptor("${canonicalPropertyName}")`);
+      descriptors.push(`"${property}": getPropertyDescriptor("${canonicalProperty}")`);
     }
   }
 }
