@@ -13,10 +13,4 @@ module.exports = new Map(${JSON.stringify(definitions, null, 2)});
 `;
 
 const { dirname } = import.meta;
-const dir = path.resolve(dirname, "../lib/generated/");
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir, {
-    recursive: true
-  });
-}
-fs.writeFileSync(path.resolve(dir, "propertyDefinitions.js"), output);
+fs.writeFileSync(path.resolve(dirname, "../lib/generated/propertyDefinitions.js"), output);
