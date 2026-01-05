@@ -23,6 +23,8 @@ for (const [canonicalProperty, { legacyAliasOf, styleDeclaration }] of propertyD
       descriptors.push(`"${property}": ${camelizedProperty}.definition`);
     }
   } else if (implementedProperties.has(camelizedAliasProperty)) {
+    // No need to add to `requires` since the non-alias branch of the outer loop
+    // will ensure the corresponding handler file is included there.
     for (const property of styleDeclaration) {
       descriptors.push(`"${property}": ${camelizedAliasProperty}.definition`);
     }
