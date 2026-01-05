@@ -1,9 +1,30 @@
 import fs from "node:fs";
 import path from "node:path";
 import propertyDefinitions from "../lib/generated/propertyDefinitions.js";
-import { dashedToCamelCase } from "./camelize.mjs";
 
 const { dirname } = import.meta;
+
+// Utility to translate from `border-width` to `borderWidth`.
+// NOTE: For values prefixed with webkit, e.g. `-webkit-foo`, we need to provide
+// both `webkitFoo` and `WebkitFoo`. Here we only return `webkitFoo`.
+const dashedToCamelCase = (dashed) => {
+  if (dashed.startsWith("--")) {
+    return dashed;
+  }
+  let camel = "";
+  let nextCap = false;
+  // skip leading hyphen in vendor prefixed value, e.g. -webkit-foo
+  let i = /^-webkit-/.test(dashed) ? 1 : 0;
+  for (; i < dashed.length; i++) {
+    if (dashed[i] !== "-") {
+      camel += nextCap ? dashed[i].toUpperCase() : dashed[i];
+      nextCap = false;
+    } else {
+      nextCap = true;
+    }
+  }
+  return camel;
+};
 
 const list = fs
   .readdirSync(path.resolve(dirname, "../lib/properties"))
