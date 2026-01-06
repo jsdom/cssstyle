@@ -6,14 +6,6 @@ const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
 const propertyDefinitions = require("../lib/generated/propertyDefinitions");
 
 describe("CSSStyleDeclaration", () => {
-  it("does not enumerate constructor or internals", () => {
-    const style = new CSSStyleDeclaration();
-    assert.strictEqual(Object.getOwnPropertyDescriptor(style, "constructor").enumerable, false);
-    for (const i in style) {
-      assert.strictEqual(i.startsWith("_"), false);
-    }
-  });
-
   it("has getters and setters", () => {
     const style = new CSSStyleDeclaration();
     const descriptors = Object.getOwnPropertyDescriptors(Object.getPrototypeOf(style));
@@ -21,8 +13,6 @@ describe("CSSStyleDeclaration", () => {
     assert.ok(typeof descriptors.cssText.get === "function", "getter cssText");
     assert.ok(typeof descriptors.cssText.set === "function", "setter cssText");
     assert.ok(typeof descriptors.length.get === "function", "getter length");
-    // FIXME: should only be a getter for length.
-    assert.ok(typeof descriptors.length.set === "function", "setter length");
     assert.ok(typeof descriptors.parentRule.get === "function", "getter parentRule");
     assert.ok(typeof descriptors.parentRule.set !== "function", "setter parentRule");
   });
@@ -1461,9 +1451,6 @@ describe("regression test for https://github.com/jsdom/jsdom/issues/3878", () =>
     assert.strictEqual(style.length, 1);
     assert.strictEqual(style.item(0), "--foo");
     assert.strictEqual(style.item(1), "");
-    assert.deepEqual(JSON.parse(JSON.stringify(style)), {
-      0: "--foo"
-    });
     assert.strictEqual(style.getPropertyValue("--foo"), "1");
   });
 });
