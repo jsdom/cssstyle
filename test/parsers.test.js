@@ -1252,54 +1252,79 @@ describe("parsePropertyValue", () => {
     assert.strictEqual(output, "var(--foo)");
   });
 
-  it("should get string", () => {
+  it("should get array for calc with number result", () => {
     const property = "background-size";
     const value = "calc(3 / 2)";
     const output = parsers.parsePropertyValue(property, value);
-    assert.strictEqual(output, "calc(1.5)");
+    assert.deepEqual(output, [
+      {
+        type: "Calc",
+        isNumber: true,
+        value: "1.5",
+        name: "calc",
+        raw: "calc(1.5)"
+      }
+    ]);
   });
 
-  it("should get string", () => {
+  it("should get array for calc with dimension result", () => {
     const property = "background-size";
     const value = "calc(3em / 2)";
     const output = parsers.parsePropertyValue(property, value);
-    assert.strictEqual(output, "calc(1.5em)");
+    assert.deepEqual(output, [
+      {
+        type: "Calc",
+        isNumber: false,
+        value: "1.5em",
+        name: "calc",
+        raw: "calc(1.5em)"
+      }
+    ]);
   });
 
-  it("should get string", () => {
+  it("should get array for calc with mixed units", () => {
     const property = "background-size";
     const value = "calc(10px + 20%)";
     const output = parsers.parsePropertyValue(property, value);
-    assert.strictEqual(output, "calc(20% + 10px)");
+    assert.deepEqual(output, [
+      {
+        type: "Calc",
+        isNumber: false,
+        value: "20% + 10px",
+        name: "calc",
+        raw: "calc(20% + 10px)"
+      }
+    ]);
   });
 
-  it("should get string", () => {
+  it("should get array for global keyword", () => {
     const property = "color";
     const value = "initial";
     const output = parsers.parsePropertyValue(property, value);
-    assert.strictEqual(output, "initial");
+    assert.deepEqual(output, [
+      {
+        type: "GlobalKeyword",
+        name: "initial"
+      }
+    ]);
   });
 
-  it("should get string", () => {
+  it("should get array for system color", () => {
     const property = "color";
     const value = "CanvasText";
     const output = parsers.parsePropertyValue(property, value);
-    assert.strictEqual(output, "canvastext");
+    assert.deepEqual(output, [
+      {
+        type: "Identifier",
+        name: "canvastext"
+      }
+    ]);
   });
 
-  it("should get string", () => {
+  it("should get array for color name", () => {
     const property = "color";
     const value = "Green";
     const output = parsers.parsePropertyValue(property, value);
-    assert.strictEqual(output, "Green");
-  });
-
-  it("should get array", () => {
-    const property = "color";
-    const value = "Green";
-    const output = parsers.parsePropertyValue(property, value, {
-      inArray: true
-    });
     assert.deepEqual(output, [
       {
         type: "Identifier",
@@ -1308,11 +1333,10 @@ describe("parsePropertyValue", () => {
     ]);
   });
 
-  it("should get string", () => {
+  it("should get array with caseSensitive option", () => {
     const property = "color";
     const value = "Green";
     const output = parsers.parsePropertyValue(property, value, {
-      inArray: true,
       caseSensitive: true
     });
     assert.deepEqual(output, [
@@ -1324,19 +1348,10 @@ describe("parsePropertyValue", () => {
     ]);
   });
 
-  it("should get string", () => {
+  it("should get array for color function", () => {
     const property = "color";
     const value = "color(srgb 0 calc(1 / 2) 0)";
     const output = parsers.parsePropertyValue(property, value);
-    assert.strictEqual(output, "color(srgb 0 calc(1/2) 0)");
-  });
-
-  it("should get array", () => {
-    const property = "color";
-    const value = "color(srgb 0 calc(1 / 2) 0)";
-    const output = parsers.parsePropertyValue(property, value, {
-      inArray: true
-    });
     assert.deepEqual(output, [
       {
         type: "Function",
@@ -1347,12 +1362,10 @@ describe("parsePropertyValue", () => {
     ]);
   });
 
-  it("should get array", () => {
+  it("should get array for rgb function", () => {
     const property = "color";
     const value = "rgb(0 128 0)";
-    const output = parsers.parsePropertyValue(property, value, {
-      inArray: true
-    });
+    const output = parsers.parsePropertyValue(property, value);
     assert.deepEqual(output, [
       {
         type: "Function",
@@ -1363,12 +1376,10 @@ describe("parsePropertyValue", () => {
     ]);
   });
 
-  it("should get array", () => {
+  it("should get array for none keyword", () => {
     const property = "background-image";
     const value = "none";
-    const output = parsers.parsePropertyValue(property, value, {
-      inArray: true
-    });
+    const output = parsers.parsePropertyValue(property, value);
     assert.deepEqual(output, [
       {
         type: "Identifier",
@@ -1377,12 +1388,10 @@ describe("parsePropertyValue", () => {
     ]);
   });
 
-  it("should get array", () => {
+  it("should get array for url", () => {
     const property = "background-image";
     const value = "url(example.png)";
-    const output = parsers.parsePropertyValue(property, value, {
-      inArray: true
-    });
+    const output = parsers.parsePropertyValue(property, value);
     assert.deepEqual(output, [
       {
         type: "Url",
@@ -1392,12 +1401,10 @@ describe("parsePropertyValue", () => {
     ]);
   });
 
-  it("should get array", () => {
+  it("should get array for url with case preserved", () => {
     const property = "background-image";
     const value = "url(Example.png)";
-    const output = parsers.parsePropertyValue(property, value, {
-      inArray: true
-    });
+    const output = parsers.parsePropertyValue(property, value);
     assert.deepEqual(output, [
       {
         type: "Url",
@@ -1407,12 +1414,10 @@ describe("parsePropertyValue", () => {
     ]);
   });
 
-  it("should get array", () => {
+  it("should get array for gradient", () => {
     const property = "background-image";
     const value = "linear-gradient(green, blue)";
-    const output = parsers.parsePropertyValue(property, value, {
-      inArray: true
-    });
+    const output = parsers.parsePropertyValue(property, value);
     assert.deepEqual(output, [
       {
         type: "Function",
