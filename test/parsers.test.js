@@ -1209,7 +1209,7 @@ describe("parseCSS", () => {
       context: "declarationList",
       parseValue: false
     };
-    const output = parsers.parseCSS(input, opt, true);
+    const output = parsers.parseCSS(input, opt);
     const [
       {
         important,
