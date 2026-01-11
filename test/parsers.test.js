@@ -1465,11 +1465,11 @@ describe("isValidPropertyValue", () => {
     assert.strictEqual(output, true);
   });
 
-  it("should return true", () => {
+  it("should return false", () => {
     const input = "canvas";
     const output = parsers.isValidPropertyValue("-webkit-border-after-color", input);
 
-    assert.strictEqual(output, true);
+    assert.strictEqual(output, false);
   });
 
   it("should return false", () => {
