@@ -16,12 +16,7 @@ export default [
   prettierRecommended,
   {
     rules: {
-      "array-element-newline": "off",
       "consistent-return": "off",
-      "new-cap": ["error", { capIsNewExceptions: ["ByteString", "USVString", "DOMString"] }],
-      "no-implied-eval": "off",
-      "no-invalid-this": "off",
-      "prefer-template": "off",
       "require-unicode-regexp": "off"
     }
   },
@@ -29,9 +24,6 @@ export default [
     files: ["scripts/**/*"],
     languageOptions: {
       globals: globals.node
-    },
-    rules: {
-      "no-console": "off"
     }
   },
   {
