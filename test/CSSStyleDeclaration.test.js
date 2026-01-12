@@ -72,6 +72,28 @@ describe("CSSStyleDeclaration", () => {
     });
 
     assert.strictEqual(style.cssText, "");
+    assert.throws(
+      () => {
+        style.cssText = "color: green;";
+      },
+      (e) => {
+        assert.strictEqual(e instanceof window.DOMException, true);
+        assert.strictEqual(e.name, "NoModificationAllowedError");
+        assert.strictEqual(e.message, "cssText can not be modified.");
+        return true;
+      }
+    );
+    assert.throws(
+      () => {
+        style.removeProperty("color");
+      },
+      (e) => {
+        assert.strictEqual(e instanceof window.DOMException, true);
+        assert.strictEqual(e.name, "NoModificationAllowedError");
+        assert.strictEqual(e.message, "Property color can not be modified.");
+        return true;
+      }
+    );
   });
 
   it("sets internals for Element", () => {
