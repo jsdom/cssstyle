@@ -16,9 +16,12 @@ export default [
   prettierRecommended,
   {
     rules: {
+      "array-element-newline": "off",
       "consistent-return": "off",
-      "func-style": "off",
-      "prefer-destructuring": "off",
+      "new-cap": ["error", { capIsNewExceptions: ["ByteString", "USVString", "DOMString"] }],
+      "no-implied-eval": "off",
+      "no-invalid-this": "off",
+      "prefer-template": "off",
       "require-unicode-regexp": "off"
     }
   },
@@ -35,6 +38,9 @@ export default [
     files: ["test/**/*"],
     languageOptions: {
       globals: globals.node
+    },
+    rules: {
+      "func-style": "off"
     }
   }
 ];

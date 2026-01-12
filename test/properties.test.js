@@ -54,11 +54,7 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   assert.strictEqual(res, expected, `setProperty("${property}", undefined)`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(
-      res,
-      subExpected,
-      `setProperty("${property}", undefined) does not change the value of ${key}`
-    );
+    assert.strictEqual(res, subExpected, `setProperty("${property}", undefined) does not change the value of ${key}`);
   }
 
   style.setProperty(property, null);
@@ -66,22 +62,14 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   assert.strictEqual(res, "", `setProperty("${property}", null)`);
   for (const [key] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(
-      res,
-      "",
-      `setProperty("${property}", null) implicitly changes the value of ${key}`
-    );
+    assert.strictEqual(res, "", `setProperty("${property}", null) implicitly changes the value of ${key}`);
   }
 
   for (const key of sub.keys()) {
     style.setProperty(property, value);
     style.setProperty(key, "var(--foo)");
     res = style.getPropertyValue(property);
-    assert.strictEqual(
-      res,
-      "",
-      `setProperty("${key}", "var(--foo)") implicitly changes the value of ${property}`
-    );
+    assert.strictEqual(res, "", `setProperty("${key}", "var(--foo)") implicitly changes the value of ${property}`);
     style.setProperty(property, null);
   }
 
@@ -90,11 +78,7 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   assert.strictEqual(res, expected, `set["${property}"] = '${value}'`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(
-      res,
-      subExpected,
-      `set["${property}"] = '${value}' implicitly changes the value of ${key}`
-    );
+    assert.strictEqual(res, subExpected, `set["${property}"] = '${value}' implicitly changes the value of ${key}`);
   }
 
   style[property] = undefined;
@@ -102,11 +86,7 @@ function testImplicitPropertyValue(property, value, expected, sub) {
   assert.strictEqual(res, expected, `set["${property}"] = undefined`);
   for (const [key, subExpected] of sub) {
     res = style.getPropertyValue(key);
-    assert.strictEqual(
-      res,
-      subExpected,
-      `set["${property}"] = undefined does not change the value of ${key}`
-    );
+    assert.strictEqual(res, subExpected, `set["${property}"] = undefined does not change the value of ${key}`);
   }
 
   style[property] = null;
@@ -1358,19 +1338,11 @@ describe("color", () => {
   });
 
   it("color should set / get color function", () => {
-    testPropertyValue(
-      "color",
-      "light-dark(#008000, #0000ff)",
-      "light-dark(rgb(0, 128, 0), rgb(0, 0, 255))"
-    );
+    testPropertyValue("color", "light-dark(#008000, #0000ff)", "light-dark(rgb(0, 128, 0), rgb(0, 0, 255))");
   });
 
   it("color should not should set / get invalid value", () => {
-    testPropertyValue(
-      "color",
-      "color-mix(in hsl, hsl(120deg 10% 20%) 0%, hsl(30deg 30% 40%) 0%)",
-      ""
-    );
+    testPropertyValue("color", "color-mix(in hsl, hsl(120deg 10% 20%) 0%, hsl(30deg 30% 40%) 0%)", "");
   });
 
   it("color should not should set / get invalid value", () => {
@@ -1912,19 +1884,11 @@ describe("font", () => {
   });
 
   it("font-family should set / get family values", () => {
-    testPropertyValue(
-      "font-family",
-      '"Gill Sans Extrabold", sans-serif',
-      '"Gill Sans Extrabold", sans-serif'
-    );
+    testPropertyValue("font-family", '"Gill Sans Extrabold", sans-serif', '"Gill Sans Extrabold", sans-serif');
   });
 
   it("font-family should set / get family values", () => {
-    testPropertyValue(
-      "font-family",
-      '"Goudy Bookletter 1911", sans-serif',
-      '"Goudy Bookletter 1911", sans-serif'
-    );
+    testPropertyValue("font-family", '"Goudy Bookletter 1911", sans-serif', '"Goudy Bookletter 1911", sans-serif');
   });
 
   it("font-family should not set / get invalid family values", () => {
