@@ -160,8 +160,7 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "color: olivedrab;");
 
     // valid property followed by a nested selector rule followed by two valid properties and an invalid property
-    style.cssText =
-      "color: olivedrab; &.d { color: peru; } color: green; background: red; invalid: rule;";
+    style.cssText = "color: olivedrab; &.d { color: peru; } color: green; background: red; invalid: rule;";
     // ignores the property immediately after the nested rule
     assert.strictEqual(style.cssText, "color: olivedrab; background: red;");
 
@@ -221,10 +220,7 @@ describe("CSSStyleDeclaration", () => {
     const style = new CSSStyleDeclaration();
     style.cssText = "color: blue; background-color: red; width: 78%; height: 50vh;";
     assert.strictEqual(style.length, 4);
-    assert.strictEqual(
-      style.cssText,
-      "color: blue; background-color: red; width: 78%; height: 50vh;"
-    );
+    assert.strictEqual(style.cssText, "color: blue; background-color: red; width: 78%; height: 50vh;");
     assert.strictEqual(style.getPropertyValue("color"), "blue");
     assert.strictEqual(style.item(0), "color");
     assert.strictEqual(style[1], "background-color");
@@ -785,8 +781,7 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.cssText, "margin: 10px;");
     assert.strictEqual(style.margin, "10px");
 
-    style.cssText =
-      "margin-right: 10px; margin-left: 10px; margin-top: 10px; margin-bottom: 10px!important;";
+    style.cssText = "margin-right: 10px; margin-left: 10px; margin-top: 10px; margin-bottom: 10px!important;";
     assert.strictEqual(
       style.cssText,
       "margin-right: 10px; margin-left: 10px; margin-top: 10px; margin-bottom: 10px !important;"
@@ -802,7 +797,8 @@ describe("CSSStyleDeclaration", () => {
   it("padding and margin should set/clear shorthand properties", () => {
     const style = new CSSStyleDeclaration();
     const parts = ["Top", "Right", "Bottom", "Left"];
-    const testParts = function (name, v, V) {
+
+    function testParts(name, v, V) {
       style[name] = v;
       for (let i = 0; i < 4; i++) {
         const part = name + parts[i];
@@ -811,7 +807,8 @@ describe("CSSStyleDeclaration", () => {
 
       assert.strictEqual(style[name], v);
       style[name] = "";
-    };
+    }
+
     testParts("padding", "1px", ["1px", "1px", "1px", "1px"]);
     testParts("padding", "1px 2%", ["1px", "2%", "1px", "2%"]);
     testParts("padding", "1px 2px 3px", ["1px", "2px", "3px", "2px"]);
@@ -829,7 +826,8 @@ describe("CSSStyleDeclaration", () => {
   it("padding and margin shorthands should set main properties", () => {
     const style = new CSSStyleDeclaration();
     const parts = ["Top", "Right", "Bottom", "Left"];
-    const testParts = function (name, v, V) {
+
+    function testParts(name, v, V) {
       let expected;
       for (let i = 0; i < 4; i++) {
         style[name] = v;
@@ -840,7 +838,8 @@ describe("CSSStyleDeclaration", () => {
 
         assert.strictEqual(style[name], expected);
       }
-    };
+    }
+
     testParts("padding", "1px 2px 3px 4px", "10px");
     testParts("margin", "1px 2px 3px 4px", "10px");
     testParts("margin", "1px 2px 3px 4px", "auto");
@@ -951,7 +950,7 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should be called when the csstext changes", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration(function (cssText) {
+    const style = new CSSStyleDeclaration((cssText) => {
       called++;
       assert.strictEqual(cssText, "opacity: 0;");
     });
@@ -963,7 +962,7 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should be called only once when multiple properties were added", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration(function (cssText) {
+    const style = new CSSStyleDeclaration((cssText) => {
       called++;
       assert.strictEqual(cssText, "width: 100px; height: 100px;");
     });
@@ -973,7 +972,7 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should not be called when property is set to the same value", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration(function () {
+    const style = new CSSStyleDeclaration(() => {
       called++;
     });
 
@@ -985,7 +984,7 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should not be called when removeProperty was called on non-existing property", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration(function () {
+    const style = new CSSStyleDeclaration(() => {
       called++;
     });
     style.removeProperty("opacity");
@@ -1230,15 +1229,7 @@ describe("CSSStyleDeclaration", () => {
     assert.strictEqual(style.getPropertyValue("--fOo"), "purple");
   });
 
-  for (const property of [
-    "width",
-    "height",
-    "margin",
-    "margin-top",
-    "bottom",
-    "right",
-    "padding"
-  ]) {
+  for (const property of ["width", "height", "margin", "margin-top", "bottom", "right", "padding"]) {
     it(`supports calc for ${property}`, () => {
       const style = new CSSStyleDeclaration();
       style.setProperty(property, "calc(100% - 100px)");
@@ -1297,10 +1288,7 @@ describe("CSSStyleDeclaration", () => {
   it("should not normalize if var() is included", () => {
     const style = new CSSStyleDeclaration();
     style.setProperty("line-height", "calc( /* comment */ 100% - calc(var(--foo) *2 ))");
-    assert.strictEqual(
-      style.getPropertyValue("line-height"),
-      "calc( /* comment */ 100% - calc(var(--foo) *2 ))"
-    );
+    assert.strictEqual(style.getPropertyValue("line-height"), "calc( /* comment */ 100% - calc(var(--foo) *2 ))");
   });
 
   it("supports abs", () => {
@@ -1347,8 +1335,7 @@ describe("CSSStyleDeclaration", () => {
 
   it("shorthand serialization", () => {
     const style = new CSSStyleDeclaration();
-    style.cssText =
-      "border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 1px; border-image: none;";
+    style.cssText = "border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 1px; border-image: none;";
     assert.strictEqual(style.cssText, "border: 1px;");
   });
 
@@ -1532,12 +1519,7 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/212", () 
   });
 
   it("should support generic() function keywords", () => {
-    const keywords = [
-      "generic(fangsong)",
-      "generic(kai)",
-      "generic(khmer-mul)",
-      "generic(nastaliq)"
-    ];
+    const keywords = ["generic(fangsong)", "generic(kai)", "generic(khmer-mul)", "generic(nastaliq)"];
     const style = new CSSStyleDeclaration();
     for (const keyword of keywords) {
       style.fontFamily = keyword;
