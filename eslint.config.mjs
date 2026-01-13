@@ -9,7 +9,8 @@ export default [
   {
     files: ["**/*.js"],
     languageOptions: {
-      sourceType: "commonjs"
+      sourceType: "commonjs",
+      globals: globals.node
     }
   },
   ...domenicConfig,
@@ -18,21 +19,6 @@ export default [
     rules: {
       "consistent-return": "off",
       "require-unicode-regexp": "off"
-    }
-  },
-  {
-    files: ["scripts/**/*"],
-    languageOptions: {
-      globals: globals.node
-    }
-  },
-  {
-    files: ["test/**/*"],
-    languageOptions: {
-      globals: globals.node
-    },
-    rules: {
-      "func-style": "off"
     }
   }
 ];

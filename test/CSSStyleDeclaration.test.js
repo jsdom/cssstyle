@@ -797,7 +797,8 @@ describe("CSSStyleDeclaration", () => {
   it("padding and margin should set/clear shorthand properties", () => {
     const style = new CSSStyleDeclaration();
     const parts = ["Top", "Right", "Bottom", "Left"];
-    const testParts = function (name, v, V) {
+
+    function testParts(name, v, V) {
       style[name] = v;
       for (let i = 0; i < 4; i++) {
         const part = name + parts[i];
@@ -806,7 +807,8 @@ describe("CSSStyleDeclaration", () => {
 
       assert.strictEqual(style[name], v);
       style[name] = "";
-    };
+    }
+
     testParts("padding", "1px", ["1px", "1px", "1px", "1px"]);
     testParts("padding", "1px 2%", ["1px", "2%", "1px", "2%"]);
     testParts("padding", "1px 2px 3px", ["1px", "2px", "3px", "2px"]);
@@ -824,7 +826,8 @@ describe("CSSStyleDeclaration", () => {
   it("padding and margin shorthands should set main properties", () => {
     const style = new CSSStyleDeclaration();
     const parts = ["Top", "Right", "Bottom", "Left"];
-    const testParts = function (name, v, V) {
+
+    function testParts(name, v, V) {
       let expected;
       for (let i = 0; i < 4; i++) {
         style[name] = v;
@@ -835,7 +838,8 @@ describe("CSSStyleDeclaration", () => {
 
         assert.strictEqual(style[name], expected);
       }
-    };
+    }
+
     testParts("padding", "1px 2px 3px 4px", "10px");
     testParts("margin", "1px 2px 3px 4px", "10px");
     testParts("margin", "1px 2px 3px 4px", "auto");
