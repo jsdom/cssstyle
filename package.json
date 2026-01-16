@@ -14,7 +14,7 @@
   "files": [
     "lib/"
   ],
-  "main": "./lib/CSSStyleDeclaration.js",
+  "main": "./lib/index.js",
   "dependencies": {
     "@asamuzakjp/css-color": "^4.1.1",
     "@csstools/css-syntax-patches-for-csstree": "^1.0.24",
