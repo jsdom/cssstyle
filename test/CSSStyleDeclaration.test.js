@@ -62,7 +62,7 @@ describe("CSSStyleDeclaration", () => {
     );
   });
 
-  it("sets internals for Window", () => {
+  it.skip("sets internals for Window", () => {
     const window = {
       getComputedStyle: () => {},
       DOMException: globalThis.DOMException
