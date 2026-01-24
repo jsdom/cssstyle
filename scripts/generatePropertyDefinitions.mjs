@@ -1,9 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import css from "@webref/css";
+import { definitionSyntax } from "css-tree";
 
-const { properties } = await css.listAll();
-const definitions = properties.map((definition) => [definition.name, definition]);
+const { properties, types } = await css.listAll();
+const syntaxes = new Map([...types.map((definition) => [`<${definition.name}>`, definition])]);
+const definitions = properties.map(extendDefinition);
 
 const [dateTodayFormatted] = new Date().toISOString().split("T");
 const output = `"use strict";
@@ -14,3 +16,59 @@ module.exports = new Map(${JSON.stringify(definitions, null, 2)});
 
 const { dirname } = import.meta;
 fs.writeFileSync(path.resolve(dirname, "../lib/generated/propertyDefinitions.js"), output);
+
+/**
+ * Extends a property definition.
+ *
+ * @param {object} definition - The CSS property definition object to extend.
+ * @returns {Array} A key-value pair consisting of the property name and the extended definition.
+ */
+function extendDefinition(definition) {
+  const { name, syntax } = definition;
+  definition.caseSensitive = isSyntaxCaseSensitive(syntax);
+  return [name, definition];
+}
+
+/**
+ * Checks if the syntax is case-sensitive.
+ *
+ * @param {string} syntax - The CSS syntax definition.
+ * @returns {boolean} True if the syntax is case-sensitive, false otherwise.
+ */
+function isSyntaxCaseSensitive(syntax) {
+  try {
+    const ast = parseSyntax(syntax);
+    if (ast.type === "Group") {
+      const typesList = new Set();
+      definitionSyntax.walk(ast, {
+        enter(node) {
+          if (node.type === "Type" && !node.name.endsWith("()")) {
+            typesList.add(node.name);
+          }
+        }
+      });
+      if (typesList.has("custom-ident") || typesList.has("dashed-ident") || typesList.has("string")) {
+        return true;
+      }
+      for (const type of typesList) {
+        const { syntax: typeSyntax } = syntaxes.get(`<${type}>`);
+        if (isSyntaxCaseSensitive(typeSyntax)) {
+          return true;
+        }
+      }
+    }
+  } catch {
+    // ignore
+  }
+  return false;
+}
+
+/**
+ * Parses a syntax definition into an AST.
+ *
+ * @param {string} syntax - The syntax definition to parse.
+ * @returns {object} The AST.
+ */
+function parseSyntax(syntax) {
+  return definitionSyntax.parse(syntax);
+}
