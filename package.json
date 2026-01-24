@@ -35,7 +35,7 @@
     "lint": "eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
     "prepare": "run-s prepare:*",
-    "prepare:propertyDefinitions": "node ./scripts/generatePropertyDefinitions.mjs",
+    "prepare:definitions": "node ./scripts/generateDefinitions.mjs",
     "prepare:propertyDescriptors": "node ./scripts/generatePropertyDescriptors.mjs",
     "test": "node --test"
   },
