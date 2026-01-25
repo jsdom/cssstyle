@@ -11,7 +11,7 @@ const implementedProperties = new Map(list);
 
 const requires = [];
 const descriptors = [];
-for (const [canonicalProperty, { caseSensitive, legacyAliasOf, styleDeclaration }] of propertyDefinitions) {
+for (const [canonicalProperty, { legacyAliasOf, styleDeclaration }] of propertyDefinitions) {
   const camelizedProperty = dashedToCamelCase(canonicalProperty);
   const camelizedAliasProperty = legacyAliasOf ? dashedToCamelCase(legacyAliasOf) : "";
   if (implementedProperties.has(camelizedProperty)) {
@@ -29,7 +29,7 @@ for (const [canonicalProperty, { caseSensitive, legacyAliasOf, styleDeclaration 
     }
   } else {
     for (const property of styleDeclaration) {
-      descriptors.push(`"${property}": createGenericPropertyDescriptor("${canonicalProperty}", ${caseSensitive})`);
+      descriptors.push(`"${property}": createGenericPropertyDescriptor("${canonicalProperty}")`);
     }
   }
 }

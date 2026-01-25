@@ -5,7 +5,7 @@ import { definitionSyntax } from "css-tree";
 
 const { properties, types } = await css.listAll();
 const syntaxes = new Map([...types.map((definition) => [`<${definition.name}>`, definition])]);
-const definitions = properties.map(extendDefinition);
+const definitions = properties.map(prepareDefinition);
 
 const [dateTodayFormatted] = new Date().toISOString().split("T");
 const output = `"use strict";
@@ -18,57 +18,70 @@ const { dirname } = import.meta;
 fs.writeFileSync(path.resolve(dirname, "../lib/generated/propertyDefinitions.js"), output);
 
 /**
- * Extends a property definition.
+ * Prepares a property definition.
  *
- * @param {object} definition - The CSS property definition object to extend.
- * @returns {Array} A key-value pair consisting of the property name and the extended definition.
+ * @param {object} definition - The CSS property definition object.
+ * @returns {Array} A key-value pair consisting of the property name and the property definition.
  */
-function extendDefinition(definition) {
+function prepareDefinition(definition) {
   const { name, syntax } = definition;
-  definition.caseSensitive = isSyntaxCaseSensitive(syntax);
+  const caseSensitiveTypes = ["custom-ident", "dashed-ident", "string"];
+  const typeList = collectTypes(syntax, new Set(caseSensitiveTypes));
+  if (typeList.size) {
+    for (const type of caseSensitiveTypes) {
+      if (typeList.has(type)) {
+        definition.caseSensitive = true;
+        break;
+      }
+    }
+  }
+  delete definition.extended;
   return [name, definition];
 }
 
 /**
- * Checks if the syntax is case-sensitive.
+ * Collects CSS data types from syntax.
  *
  * @param {string} syntax - The CSS syntax definition.
- * @returns {boolean} True if the syntax is case-sensitive, false otherwise.
+ * @param {Set} nameList - The name of types to collect.
+ * @returns {Set} The list of collected types.
  */
-function isSyntaxCaseSensitive(syntax) {
+function collectTypes(syntax, nameList) {
+  let typeList = new Set();
   try {
-    const ast = parseSyntax(syntax);
+    const ast = definitionSyntax.parse(syntax);
     if (ast.type === "Group") {
-      const typesList = new Set();
+      const subList = new Set();
       definitionSyntax.walk(ast, {
         enter(node) {
-          if (node.type === "Type" && !node.name.endsWith("()")) {
-            typesList.add(node.name);
+          if (node.type === "Type") {
+            if (nameList.has(node.name)) {
+              typeList.add(node.name);
+            } else if (!node.name.endsWith("()")) {
+              subList.add(node.name);
+            }
           }
         }
       });
-      if (typesList.has("custom-ident") || typesList.has("dashed-ident") || typesList.has("string")) {
-        return true;
-      }
-      for (const type of typesList) {
-        const { syntax: typeSyntax } = syntaxes.get(`<${type}>`);
-        if (isSyntaxCaseSensitive(typeSyntax)) {
-          return true;
+      if (subList.size) {
+        for (const type of subList) {
+          const { syntax: typeSyntax } = syntaxes.get(`<${type}>`);
+          const expandedList = collectTypes(typeSyntax, nameList);
+          if (expandedList.size) {
+            if (typeof typeList.union === "function") {
+              typeList = typeList.union(expandedList);
+            } else {
+              // TODO: We can remove this loop once Node.js 20 reaches EOL.
+              for (const list of expandedList) {
+                typeList.add(list);
+              }
+            }
+          }
         }
       }
     }
   } catch {
     // ignore
   }
-  return false;
-}
-
-/**
- * Parses a syntax definition into an AST.
- *
- * @param {string} syntax - The syntax definition to parse.
- * @returns {object} The AST.
- */
-function parseSyntax(syntax) {
-  return definitionSyntax.parse(syntax);
+  return typeList;
 }
