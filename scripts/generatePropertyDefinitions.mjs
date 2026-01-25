@@ -41,13 +41,14 @@ function prepareDefinition(definition) {
 
 /**
  * Collects CSS data types from syntax.
+ * NOTE: Returns a map as we plan to collect dimensions etc. in the near future.
  *
  * @param {string} syntax - The CSS syntax definition.
  * @param {Set} nameList - The name of types to collect.
- * @returns {Set} The list of collected types.
+ * @returns {Map} The collection of types.
  */
 function collectTypes(syntax, nameList) {
-  let typeList = new Set();
+  const typeList = new Map();
   try {
     const ast = definitionSyntax.parse(syntax);
     if (ast.type === "Group") {
@@ -56,7 +57,7 @@ function collectTypes(syntax, nameList) {
         enter(node) {
           if (node.type === "Type") {
             if (nameList.has(node.name)) {
-              typeList.add(node.name);
+              typeList.set(node.name, node);
             } else if (!node.name.endsWith("()")) {
               subList.add(node.name);
             }
@@ -68,13 +69,8 @@ function collectTypes(syntax, nameList) {
           const { syntax: typeSyntax } = syntaxes.get(`<${type}>`);
           const expandedList = collectTypes(typeSyntax, nameList);
           if (expandedList.size) {
-            if (typeof typeList.union === "function") {
-              typeList = typeList.union(expandedList);
-            } else {
-              // TODO: We can remove this loop once Node.js 20 reaches EOL.
-              for (const list of expandedList) {
-                typeList.add(list);
-              }
+            for (const [key, value] of expandedList) {
+              typeList.set(key, value);
             }
           }
         }
