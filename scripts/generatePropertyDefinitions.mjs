@@ -3,6 +3,9 @@ import path from "node:path";
 import css from "@webref/css";
 import { definitionSyntax } from "css-tree";
 
+const caseSensitiveTypes = ["custom-ident", "dashed-ident", "string"];
+const typeList = new Set([...caseSensitiveTypes]);
+
 const { properties, types } = await css.listAll();
 const syntaxes = new Map([...types.map((definition) => [`<${definition.name}>`, definition])]);
 const definitions = properties.map(prepareDefinition);
@@ -18,18 +21,18 @@ const { dirname } = import.meta;
 fs.writeFileSync(path.resolve(dirname, "../lib/generated/propertyDefinitions.js"), output);
 
 /**
- * Prepares a property definition.
+ * Transforms the raw property definitions in @webref/css into the format needed for css-tree and jsdom,
+ * while removing unnecessary fields.
  *
  * @param {object} definition - The CSS property definition object.
  * @returns {Array} A key-value pair consisting of the property name and the property definition.
  */
 function prepareDefinition(definition) {
   const { name, syntax } = definition;
-  const caseSensitiveTypes = ["custom-ident", "dashed-ident", "string"];
-  const typeList = collectTypes(syntax, new Set(caseSensitiveTypes));
-  if (typeList.size) {
+  const collectedTypes = collectTypes(syntax);
+  if (collectedTypes.size) {
     for (const type of caseSensitiveTypes) {
-      if (typeList.has(type)) {
+      if (collectedTypes.has(type)) {
         definition.caseSensitive = true;
         break;
       }
@@ -44,11 +47,10 @@ function prepareDefinition(definition) {
  * NOTE: Returns a map as we plan to collect dimensions etc. in the near future.
  *
  * @param {string} syntax - The CSS syntax definition.
- * @param {Set} nameList - The name of types to collect.
  * @returns {Map} The collection of types.
  */
-function collectTypes(syntax, nameList) {
-  const typeList = new Map();
+function collectTypes(syntax) {
+  const collectedTypes = new Map();
   try {
     const ast = definitionSyntax.parse(syntax);
     if (ast.type === "Group") {
@@ -56,8 +58,8 @@ function collectTypes(syntax, nameList) {
       definitionSyntax.walk(ast, {
         enter(node) {
           if (node.type === "Type") {
-            if (nameList.has(node.name)) {
-              typeList.set(node.name, node);
+            if (typeList.has(node.name)) {
+              collectedTypes.set(node.name, node);
             } else if (!node.name.endsWith("()")) {
               subList.add(node.name);
             }
@@ -67,10 +69,10 @@ function collectTypes(syntax, nameList) {
       if (subList.size) {
         for (const type of subList) {
           const { syntax: typeSyntax } = syntaxes.get(`<${type}>`);
-          const expandedList = collectTypes(typeSyntax, nameList);
+          const expandedList = collectTypes(typeSyntax);
           if (expandedList.size) {
             for (const [key, value] of expandedList) {
-              typeList.set(key, value);
+              collectedTypes.set(key, value);
             }
           }
         }
@@ -79,5 +81,5 @@ function collectTypes(syntax, nameList) {
   } catch {
     // ignore
   }
-  return typeList;
+  return collectedTypes;
 }
