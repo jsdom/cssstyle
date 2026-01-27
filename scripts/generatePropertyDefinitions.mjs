@@ -29,12 +29,14 @@ fs.writeFileSync(path.resolve(dirname, "../lib/generated/propertyDefinitions.js"
  */
 function prepareDefinition(definition) {
   const { name, syntax } = definition;
-  const collectedTypes = collectTypes(syntax);
-  if (collectedTypes.size) {
-    for (const type of caseSensitiveTypes) {
-      if (collectedTypes.has(type)) {
-        definition.caseSensitive = true;
-        break;
+  if (syntax) {
+    const collectedTypes = collectTypes(syntax);
+    if (collectedTypes.size) {
+      for (const type of caseSensitiveTypes) {
+        if (collectedTypes.has(type)) {
+          definition.caseSensitive = true;
+          break;
+        }
       }
     }
   }
@@ -51,24 +53,24 @@ function prepareDefinition(definition) {
  */
 function collectTypes(syntax) {
   const collectedTypes = new Map();
-  try {
-    const ast = definitionSyntax.parse(syntax);
-    if (ast.type === "Group") {
-      const subList = new Set();
-      definitionSyntax.walk(ast, {
-        enter(node) {
-          if (node.type === "Type") {
-            if (typeList.has(node.name)) {
-              collectedTypes.set(node.name, node);
-            } else if (!node.name.endsWith("()")) {
-              subList.add(node.name);
-            }
+  const ast = definitionSyntax.parse(syntax);
+  if (ast.type === "Group") {
+    const subList = new Set();
+    definitionSyntax.walk(ast, {
+      enter(node) {
+        if (node.type === "Type") {
+          if (typeList.has(node.name)) {
+            collectedTypes.set(node.name, node);
+          } else if (!node.name.endsWith("()")) {
+            subList.add(node.name);
           }
         }
-      });
-      if (subList.size) {
-        for (const type of subList) {
-          const { syntax: typeSyntax } = syntaxes.get(`<${type}>`);
+      }
+    });
+    if (subList.size) {
+      for (const type of subList) {
+        const { syntax: typeSyntax } = syntaxes.get(`<${type}>`);
+        if (typeSyntax) {
           const expandedList = collectTypes(typeSyntax);
           if (expandedList.size) {
             for (const [key, value] of expandedList) {
@@ -78,8 +80,6 @@ function collectTypes(syntax) {
         }
       }
     }
-  } catch {
-    // ignore
   }
   return collectedTypes;
 }
