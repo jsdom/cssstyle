@@ -477,6 +477,138 @@ describe("parseLength", () => {
   });
 });
 
+describe("parseDimension", () => {
+  it("should return undefined", () => {
+    const input = "";
+    const output = parsers.parseDimension(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = [];
+    const output = parsers.parseDimension(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = [
+      {
+        type: "Percentage",
+        value: "100"
+      }
+    ];
+    const output = parsers.parseDimension(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = [
+      {
+        type: "Number",
+        value: "0"
+      }
+    ];
+    const output = parsers.parseDimension(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return value", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "0"
+      }
+    ];
+    const output = parsers.parseDimension(input);
+
+    assert.strictEqual(output, "0s");
+  });
+
+  it("should return value", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "10"
+      }
+    ];
+    const output = parsers.parseDimension(input);
+
+    assert.strictEqual(output, "10s");
+  });
+
+  it("should return undefined", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "-50"
+      }
+    ];
+    const output = parsers.parseDimension(input, {
+      min: 0,
+      max: 100
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "150"
+      }
+    ];
+    const output = parsers.parseDimension(input, {
+      min: 0,
+      max: 100
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return clamped value", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "-50"
+      }
+    ];
+    const output = parsers.parseDimension(input, {
+      min: 0,
+      max: 100,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "0s");
+  });
+
+  it("should return clamped value", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "150"
+      }
+    ];
+    const output = parsers.parseDimension(input, {
+      min: 0,
+      max: 100,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "100s");
+  });
+});
+
 describe("parsePercentage", () => {
   it("should return undefined", () => {
     const input = "";
