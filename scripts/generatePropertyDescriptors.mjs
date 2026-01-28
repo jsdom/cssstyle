@@ -11,7 +11,7 @@ const implementedProperties = new Map(list);
 
 const requires = [];
 const descriptors = [];
-for (const [canonicalProperty, { legacyAliasOf, styleDeclaration }] of propertyDefinitions) {
+for (const [canonicalProperty, { caseSensitive, legacyAliasOf, styleDeclaration }] of propertyDefinitions) {
   const camelizedProperty = dashedToCamelCase(canonicalProperty);
   const camelizedAliasProperty = legacyAliasOf ? dashedToCamelCase(legacyAliasOf) : "";
   if (implementedProperties.has(camelizedProperty)) {
@@ -28,8 +28,11 @@ for (const [canonicalProperty, { legacyAliasOf, styleDeclaration }] of propertyD
       descriptors.push(`"${property}": ${camelizedAliasProperty}.descriptor`);
     }
   } else {
+    const opts = JSON.stringify({
+      caseSensitive: caseSensitive ?? false
+    });
     for (const property of styleDeclaration) {
-      descriptors.push(`"${property}": createGenericPropertyDescriptor("${canonicalProperty}")`);
+      descriptors.push(`"${property}": createGenericPropertyDescriptor("${canonicalProperty}", ${opts})`);
     }
   }
 }
@@ -48,9 +51,14 @@ module.exports = {
 
 fs.writeFileSync(path.resolve(dirname, "../lib/generated/propertyDescriptors.js"), output);
 
-// Utility to translate from `border-width` to `borderWidth`.
-// NOTE: For values prefixed with webkit, e.g. `-webkit-foo`, we need to provide
-// both `webkitFoo` and `WebkitFoo`. Here we only return `webkitFoo`.
+/**
+ * Utility to translate from `border-width` to `borderWidth`.
+ * NOTE: For values prefixed with webkit, e.g. `-webkit-foo`, we need to provide
+ * both `webkitFoo` and `WebkitFoo`. Here we only return `webkitFoo`.
+ *
+ * @param {string} dashed - The dashed property name.
+ * @returns {string} The camel cased property name.
+ */
 function dashedToCamelCase(dashed) {
   if (dashed.startsWith("--")) {
     return dashed;
