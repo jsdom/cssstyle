@@ -18,9 +18,24 @@ const syntaxes = new Map(types.map((definition) => [`<${definition.name}>`, defi
 const propertyFiles = await fs.readdir(path.resolve(dirname, "../lib/properties"));
 const implementedProperties = new Map(propertyFiles.map((file) => [file.replace(/\.js$/, ""), file]));
 
-// TODO: Add more types.
 const caseSensitiveTypes = ["custom-ident", "dashed-ident", "string"];
-const typeList = new Set([...caseSensitiveTypes]);
+const functionTypes = ["color", "image"];
+const dimensionTypes = [
+  "angle",
+  "angle-percentage",
+  "flex",
+  "frequency",
+  "frequency-percentage",
+  "integer",
+  "length",
+  "length-percentage",
+  "number",
+  "percentage",
+  "ratio",
+  "time",
+  "time-percentage"
+];
+const typeList = new Set([...caseSensitiveTypes, ...functionTypes, ...dimensionTypes]);
 
 await Promise.all([generateDefinitions(), generateDescriptors()]);
 
@@ -89,14 +104,69 @@ module.exports = {
  * @returns {object} The property descriptor options object.
  */
 function createDescriptorOpts(syntax) {
-  const collectedTypes = collectTypes(syntax);
   const opts = new Map([["caseSensitive", false]]);
+  const collectedTypes = collectTypes(syntax);
   if (collectedTypes.size) {
     for (const type of caseSensitiveTypes) {
       if (collectedTypes.has(type)) {
         opts.set("caseSensitive", true);
         break;
       }
+    }
+    const dimensions = new Map();
+    for (const key of dimensionTypes) {
+      if (collectedTypes.has(key)) {
+        const { opts: keyOpts } = collectedTypes.get(key);
+        const opt = {};
+        if (keyOpts) {
+          const { max, min } = keyOpts;
+          if (max !== undefined) {
+            opt.max = max;
+          }
+          if (min !== undefined) {
+            opt.min = min;
+          }
+        }
+        let type;
+        switch (key) {
+          case "angle":
+          case "angle-percentage": {
+            type = "angle";
+            break;
+          }
+          case "integer":
+          case "number": {
+            type = "number";
+            break;
+          }
+          case "length":
+          case "length-percentage": {
+            type = "length";
+            break;
+          }
+          case "percentage": {
+            type = "percentage";
+            break;
+          }
+          default: {
+            type = "dimension";
+          }
+        }
+        opt.type = type;
+        dimensions.set(type, opt);
+      }
+    }
+    if (dimensions.size) {
+      opts.set("dimensionTypes", Object.fromEntries(dimensions));
+    }
+    const functions = new Map();
+    for (const type of functionTypes) {
+      if (collectedTypes.has(type)) {
+        functions.set(type, type);
+      }
+    }
+    if (functions.size) {
+      opts.set("functionTypes", Object.fromEntries(functions));
     }
   }
   return Object.fromEntries(opts);
@@ -115,25 +185,45 @@ function collectTypes(syntax) {
   }
   const ast = definitionSyntax.parse(syntax);
   if (ast.type === "Group") {
-    const subList = new Set();
+    const subTypeList = new Set();
+    const propertyList = new Set();
     definitionSyntax.walk(ast, {
       enter(node) {
-        if (node.type === "Type") {
-          if (typeList.has(node.name)) {
-            collectedTypes.set(node.name, node);
-          } else if (!node.name.endsWith("()")) {
-            subList.add(node.name);
+        const { name, type } = node;
+        if (type === "Type") {
+          if (typeList.has(name)) {
+            collectedTypes.set(name, node);
+          } else if (!name.endsWith("()")) {
+            subTypeList.add(name);
           }
+        } else if (type === "Property") {
+          propertyList.add(name);
         }
       }
     });
-    if (subList.size) {
-      for (const type of subList) {
-        const { syntax: typeSyntax } = syntaxes.get(`<${type}>`);
-        const expandedList = collectTypes(typeSyntax);
-        if (expandedList.size) {
-          for (const [key, value] of expandedList) {
-            collectedTypes.set(key, value);
+    if (subTypeList.size) {
+      for (const type of subTypeList) {
+        const typeKey = `<${type}>`;
+        if (syntaxes.has(typeKey)) {
+          const { syntax: typeSyntax } = syntaxes.get(typeKey);
+          const expandedList = collectTypes(typeSyntax);
+          if (expandedList.size) {
+            for (const [key, value] of expandedList) {
+              collectedTypes.set(key, value);
+            }
+          }
+        }
+      }
+    }
+    if (propertyList.size) {
+      for (const property of propertyList) {
+        if (definitions.has(property)) {
+          const { syntax: propertySyntax } = definitions.get(property);
+          const expandedList = collectTypes(propertySyntax);
+          if (expandedList.size) {
+            for (const [key, value] of expandedList) {
+              collectedTypes.set(key, value);
+            }
           }
         }
       }
