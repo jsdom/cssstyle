@@ -5,6 +5,8 @@ import { definitionSyntax } from "css-tree";
 
 const { dirname } = import.meta;
 const outputDir = path.resolve(dirname, "../lib/generated");
+const propertyFiles = await fs.readdir(path.resolve(dirname, "../lib/properties"));
+const implementedProperties = new Map(propertyFiles.map((file) => [file.replace(/\.js$/, ""), file]));
 
 const [dateToday] = new Date().toISOString().split("T");
 const fileHeader = `"use strict";
@@ -19,9 +21,6 @@ const definitions = new Map(
   })
 );
 const syntaxes = new Map(types.map((definition) => [`<${definition.name}>`, definition]));
-
-const propertyFiles = await fs.readdir(path.resolve(dirname, "../lib/properties"));
-const implementedProperties = new Map(propertyFiles.map((file) => [file.replace(/\.js$/, ""), file]));
 
 const caseSensitiveTypes = ["custom-ident", "dashed-ident", "string"];
 const dimensionTypes = [
@@ -67,24 +66,21 @@ function generateDescriptors() {
   for (const [canonicalProperty, { legacyAliasOf, styleDeclaration, syntax }] of definitions) {
     const camelizedProperty = dashedToCamelCase(canonicalProperty);
     const camelizedAliasProperty = legacyAliasOf ? dashedToCamelCase(legacyAliasOf) : "";
+    let descriptorSource;
     if (implementedProperties.has(camelizedProperty)) {
-      requires.push(
-        `const ${camelizedProperty} = require("../properties/${implementedProperties.get(camelizedProperty)}");`
-      );
-      for (const property of styleDeclaration) {
-        descriptors.push(`"${property}": ${camelizedProperty}.descriptor`);
-      }
+      const fileName = implementedProperties.get(camelizedProperty);
+      requires.push(`const ${camelizedProperty} = require("../properties/${fileName}");`);
+      descriptorSource = `${camelizedProperty}.descriptor`;
     } else if (implementedProperties.has(camelizedAliasProperty)) {
       // No need to add to `requires` since the non-alias branch of the outer
       // loop will ensure the corresponding handler file is included there.
-      for (const property of styleDeclaration) {
-        descriptors.push(`"${property}": ${camelizedAliasProperty}.descriptor`);
-      }
+      descriptorSource = `${camelizedAliasProperty}.descriptor`;
     } else {
       const opts = JSON.stringify(createDescriptorOpts(syntax));
-      for (const property of styleDeclaration) {
-        descriptors.push(`"${property}": createGenericPropertyDescriptor("${canonicalProperty}", ${opts})`);
-      }
+      descriptorSource = `createGenericPropertyDescriptor("${canonicalProperty}", ${opts})`;
+    }
+    for (const property of styleDeclaration) {
+      descriptors.push(`"${property}": ${descriptorSource}`);
     }
   }
   const output = `${fileHeader}
@@ -105,72 +101,75 @@ module.exports = {
  * @returns {object} The property descriptor options object.
  */
 function createDescriptorOpts(syntax) {
-  const opts = new Map([["caseSensitive", false]]);
+  const opts = {
+    caseSensitive: false
+  };
   const collectedTypes = collectTypes(syntax);
-  if (collectedTypes.size) {
-    for (const type of caseSensitiveTypes) {
-      if (collectedTypes.has(type)) {
-        opts.set("caseSensitive", true);
-        break;
-      }
-    }
-    const dimensions = new Map();
-    for (const key of dimensionTypes) {
-      if (collectedTypes.has(key)) {
-        const { opts: keyOpts } = collectedTypes.get(key);
-        const opt = {};
-        if (keyOpts) {
-          const { max, min } = keyOpts;
-          if (max !== undefined) {
-            opt.max = max;
-          }
-          if (min !== undefined) {
-            opt.min = min;
-          }
-        }
-        let type;
-        switch (key) {
-          case "angle":
-          case "angle-percentage": {
-            type = "angle";
-            break;
-          }
-          case "integer":
-          case "number": {
-            type = "number";
-            break;
-          }
-          case "length":
-          case "length-percentage": {
-            type = "length";
-            break;
-          }
-          case "percentage": {
-            type = "percentage";
-            break;
-          }
-          default: {
-            type = "dimension";
-          }
-        }
-        opt.type = type;
-        dimensions.set(type, opt);
-      }
-    }
-    if (dimensions.size) {
-      opts.set("dimensionTypes", Object.fromEntries(dimensions));
-    }
-    const functions = new Map();
-    for (const type of functionTypes) {
-      if (collectedTypes.has(type)) {
-        functions.set(type, type);
-      }
-    }
-    if (functions.size) {
-      opts.set("functionTypes", Object.fromEntries(functions));
+  if (!collectedTypes.size) {
+    return opts;
+  }
+  for (const type of caseSensitiveTypes) {
+    if (collectedTypes.has(type)) {
+      opts.caseSensitive = true;
+      break;
     }
   }
-  return Object.fromEntries(opts);
+  const dimensions = {};
+  for (const key of dimensionTypes) {
+    if (collectedTypes.has(key)) {
+      const { opts: keyOpts } = collectedTypes.get(key);
+      const opt = {};
+      if (keyOpts) {
+        const { max, min } = keyOpts;
+        if (max !== undefined) {
+          opt.max = max;
+        }
+        if (min !== undefined) {
+          opt.min = min;
+        }
+      }
+      let type;
+      switch (key) {
+        case "angle":
+        case "angle-percentage": {
+          type = "angle";
+          break;
+        }
+        case "integer":
+        case "number": {
+          type = "number";
+          break;
+        }
+        case "length":
+        case "length-percentage": {
+          type = "length";
+          break;
+        }
+        case "percentage": {
+          type = "percentage";
+          break;
+        }
+        default: {
+          type = "dimension";
+        }
+      }
+      opt.type = type;
+      dimensions[type] = opt;
+    }
+  }
+  if (Object.keys(dimensions).length) {
+    opts.dimensionTypes = dimensions;
+  }
+  const functions = {};
+  for (const type of functionTypes) {
+    if (collectedTypes.has(type)) {
+      functions[type] = type;
+    }
+  }
+  if (Object.keys(functions).length) {
+    opts.functionTypes = functions;
+  }
+  return opts;
 }
 
 /**
@@ -202,30 +201,22 @@ function collectTypes(syntax) {
         }
       }
     });
-    if (subTypeList.size) {
-      for (const type of subTypeList) {
-        const typeKey = `<${type}>`;
-        if (syntaxes.has(typeKey)) {
-          const { syntax: typeSyntax } = syntaxes.get(typeKey);
-          const expandedList = collectTypes(typeSyntax);
-          if (expandedList.size) {
-            for (const [key, value] of expandedList) {
-              collectedTypes.set(key, value);
-            }
-          }
+    for (const type of subTypeList) {
+      const typeKey = `<${type}>`;
+      if (syntaxes.has(typeKey)) {
+        const { syntax: typeSyntax } = syntaxes.get(typeKey);
+        const expandedList = collectTypes(typeSyntax);
+        for (const [key, value] of expandedList) {
+          collectedTypes.set(key, value);
         }
       }
     }
-    if (propertyList.size) {
-      for (const property of propertyList) {
-        if (definitions.has(property)) {
-          const { syntax: propertySyntax } = definitions.get(property);
-          const expandedList = collectTypes(propertySyntax);
-          if (expandedList.size) {
-            for (const [key, value] of expandedList) {
-              collectedTypes.set(key, value);
-            }
-          }
+    for (const property of propertyList) {
+      if (definitions.has(property)) {
+        const { syntax: propertySyntax } = definitions.get(property);
+        const expandedList = collectTypes(propertySyntax);
+        for (const [key, value] of expandedList) {
+          collectedTypes.set(key, value);
         }
       }
     }
@@ -245,17 +236,5 @@ function dashedToCamelCase(dashed) {
   if (dashed.startsWith("--")) {
     return dashed;
   }
-  let camel = "";
-  let nextCap = false;
-  // Skip leading hyphen in vendor prefixed value, e.g. `-webkit-foo`.
-  let i = /^-webkit-/.test(dashed) ? 1 : 0;
-  for (; i < dashed.length; i++) {
-    if (dashed[i] !== "-") {
-      camel += nextCap ? dashed[i].toUpperCase() : dashed[i];
-      nextCap = false;
-    } else {
-      nextCap = true;
-    }
-  }
-  return camel;
+  return dashed.replace(/^-(webkit)/, "$1").replace(/-([a-z])/g, (_, ch) => ch.toUpperCase());
 }
