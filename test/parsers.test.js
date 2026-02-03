@@ -220,17 +220,17 @@ describe("resolveCalc", () => {
   });
 });
 
-describe("parseNumber", () => {
+describe("serializeNumber", () => {
   it("should return undefind", () => {
     const input = "";
-    const output = parsers.parseNumber(input);
+    const output = parsers.serializeNumber(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefind", () => {
     const input = [];
-    const output = parsers.parseNumber(input);
+    const output = parsers.serializeNumber(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -242,7 +242,7 @@ describe("parseNumber", () => {
         value: "100"
       }
     ];
-    const output = parsers.parseNumber(input);
+    const output = parsers.serializeNumber(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -254,7 +254,7 @@ describe("parseNumber", () => {
         value: "1"
       }
     ];
-    const output = parsers.parseNumber(input);
+    const output = parsers.serializeNumber(input);
 
     assert.strictEqual(output, "1");
   });
@@ -266,7 +266,7 @@ describe("parseNumber", () => {
         value: "0.5"
       }
     ];
-    const output = parsers.parseNumber(input);
+    const output = parsers.serializeNumber(input);
 
     assert.strictEqual(output, "0.5");
   });
@@ -278,7 +278,7 @@ describe("parseNumber", () => {
         value: ".5"
       }
     ];
-    const output = parsers.parseNumber(input);
+    const output = parsers.serializeNumber(input);
 
     assert.strictEqual(output, "0.5");
   });
@@ -290,7 +290,7 @@ describe("parseNumber", () => {
         value: "-50"
       }
     ];
-    const output = parsers.parseNumber(input, {
+    const output = parsers.serializeNumber(input, {
       min: 0,
       max: 100
     });
@@ -305,7 +305,7 @@ describe("parseNumber", () => {
         value: "150"
       }
     ];
-    const output = parsers.parseNumber(input, {
+    const output = parsers.serializeNumber(input, {
       min: 0,
       max: 100
     });
@@ -320,7 +320,7 @@ describe("parseNumber", () => {
         value: "-50"
       }
     ];
-    const output = parsers.parseNumber(input, {
+    const output = parsers.serializeNumber(input, {
       min: 0,
       max: 100,
       clamp: true
@@ -336,7 +336,7 @@ describe("parseNumber", () => {
         value: "150"
       }
     ];
-    const output = parsers.parseNumber(input, {
+    const output = parsers.serializeNumber(input, {
       min: 0,
       max: 100,
       clamp: true
@@ -346,17 +346,17 @@ describe("parseNumber", () => {
   });
 });
 
-describe("parseLength", () => {
+describe("serializeLength", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parseLength(input);
+    const output = parsers.serializeLength(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parseLength(input);
+    const output = parsers.serializeLength(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -368,7 +368,7 @@ describe("parseLength", () => {
         value: "100"
       }
     ];
-    const output = parsers.parseLength(input);
+    const output = parsers.serializeLength(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -380,7 +380,7 @@ describe("parseLength", () => {
         value: "100"
       }
     ];
-    const output = parsers.parseLength(input);
+    const output = parsers.serializeLength(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -392,7 +392,7 @@ describe("parseLength", () => {
         value: "0"
       }
     ];
-    const output = parsers.parseLength(input);
+    const output = parsers.serializeLength(input);
 
     assert.strictEqual(output, "0px");
   });
@@ -405,7 +405,7 @@ describe("parseLength", () => {
         value: "10"
       }
     ];
-    const output = parsers.parseLength(input);
+    const output = parsers.serializeLength(input);
 
     assert.strictEqual(output, "10px");
   });
@@ -418,7 +418,7 @@ describe("parseLength", () => {
         value: "-50"
       }
     ];
-    const output = parsers.parseLength(input, {
+    const output = parsers.serializeLength(input, {
       min: 0,
       max: 100
     });
@@ -434,7 +434,7 @@ describe("parseLength", () => {
         value: "150"
       }
     ];
-    const output = parsers.parseLength(input, {
+    const output = parsers.serializeLength(input, {
       min: 0,
       max: 100
     });
@@ -450,7 +450,7 @@ describe("parseLength", () => {
         value: "-50"
       }
     ];
-    const output = parsers.parseLength(input, {
+    const output = parsers.serializeLength(input, {
       min: 0,
       max: 100,
       clamp: true
@@ -467,7 +467,7 @@ describe("parseLength", () => {
         value: "150"
       }
     ];
-    const output = parsers.parseLength(input, {
+    const output = parsers.serializeLength(input, {
       min: 0,
       max: 100,
       clamp: true
@@ -477,17 +477,149 @@ describe("parseLength", () => {
   });
 });
 
-describe("parsePercentage", () => {
+describe("serializeDimension", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parsePercentage(input);
+    const output = parsers.serializeDimension(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parsePercentage(input);
+    const output = parsers.serializeDimension(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = [
+      {
+        type: "Percentage",
+        value: "100"
+      }
+    ];
+    const output = parsers.serializeDimension(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = [
+      {
+        type: "Number",
+        value: "0"
+      }
+    ];
+    const output = parsers.serializeDimension(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return value", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "0"
+      }
+    ];
+    const output = parsers.serializeDimension(input);
+
+    assert.strictEqual(output, "0s");
+  });
+
+  it("should return value", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "10"
+      }
+    ];
+    const output = parsers.serializeDimension(input);
+
+    assert.strictEqual(output, "10s");
+  });
+
+  it("should return undefined", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "-50"
+      }
+    ];
+    const output = parsers.serializeDimension(input, {
+      min: 0,
+      max: 100
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "150"
+      }
+    ];
+    const output = parsers.serializeDimension(input, {
+      min: 0,
+      max: 100
+    });
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return clamped value", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "-50"
+      }
+    ];
+    const output = parsers.serializeDimension(input, {
+      min: 0,
+      max: 100,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "0s");
+  });
+
+  it("should return clamped value", () => {
+    const input = [
+      {
+        type: "Dimension",
+        unit: "s",
+        value: "150"
+      }
+    ];
+    const output = parsers.serializeDimension(input, {
+      min: 0,
+      max: 100,
+      clamp: true
+    });
+
+    assert.strictEqual(output, "100s");
+  });
+});
+
+describe("serializePercentage", () => {
+  it("should return undefined", () => {
+    const input = "";
+    const output = parsers.serializePercentage(input);
+
+    assert.strictEqual(output, undefined);
+  });
+
+  it("should return undefined", () => {
+    const input = [];
+    const output = parsers.serializePercentage(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -500,7 +632,7 @@ describe("parsePercentage", () => {
         value: "100"
       }
     ];
-    const output = parsers.parsePercentage(input);
+    const output = parsers.serializePercentage(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -512,7 +644,7 @@ describe("parsePercentage", () => {
         value: "100"
       }
     ];
-    const output = parsers.parsePercentage(input);
+    const output = parsers.serializePercentage(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -524,7 +656,7 @@ describe("parsePercentage", () => {
         value: "10"
       }
     ];
-    const output = parsers.parsePercentage(input);
+    const output = parsers.serializePercentage(input);
 
     assert.strictEqual(output, "10%");
   });
@@ -536,7 +668,7 @@ describe("parsePercentage", () => {
         value: "-50"
       }
     ];
-    const output = parsers.parsePercentage(input, {
+    const output = parsers.serializePercentage(input, {
       min: 0,
       max: 100
     });
@@ -551,7 +683,7 @@ describe("parsePercentage", () => {
         value: "150"
       }
     ];
-    const output = parsers.parsePercentage(input, {
+    const output = parsers.serializePercentage(input, {
       min: 0,
       max: 100
     });
@@ -566,7 +698,7 @@ describe("parsePercentage", () => {
         value: "-50"
       }
     ];
-    const output = parsers.parsePercentage(input, {
+    const output = parsers.serializePercentage(input, {
       min: 0,
       max: 100,
       clamp: true
@@ -582,7 +714,7 @@ describe("parsePercentage", () => {
         value: "150"
       }
     ];
-    const output = parsers.parsePercentage(input, {
+    const output = parsers.serializePercentage(input, {
       min: 0,
       max: 100,
       clamp: true
@@ -592,17 +724,17 @@ describe("parsePercentage", () => {
   });
 });
 
-describe("parseAngle", () => {
+describe("serializeAngle", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -614,7 +746,7 @@ describe("parseAngle", () => {
         value: "90"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -626,7 +758,7 @@ describe("parseAngle", () => {
         value: "90"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -638,7 +770,7 @@ describe("parseAngle", () => {
         value: "0"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "0deg");
   });
@@ -651,7 +783,7 @@ describe("parseAngle", () => {
         value: "90"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "90deg");
   });
@@ -664,7 +796,7 @@ describe("parseAngle", () => {
         value: "450"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "450deg");
   });
@@ -677,7 +809,7 @@ describe("parseAngle", () => {
         value: "-90"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "-90deg");
   });
@@ -690,7 +822,7 @@ describe("parseAngle", () => {
         value: "100"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "100grad");
   });
@@ -703,7 +835,7 @@ describe("parseAngle", () => {
         value: "500"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "500grad");
   });
@@ -716,7 +848,7 @@ describe("parseAngle", () => {
         value: "-100"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "-100grad");
   });
@@ -729,7 +861,7 @@ describe("parseAngle", () => {
         value: "1.57"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "1.57rad");
   });
@@ -742,7 +874,7 @@ describe("parseAngle", () => {
         value: "-1.57"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "-1.57rad");
   });
@@ -755,7 +887,7 @@ describe("parseAngle", () => {
         value: "0.25"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "0.25turn");
   });
@@ -768,23 +900,23 @@ describe("parseAngle", () => {
         value: "-0.25"
       }
     ];
-    const output = parsers.parseAngle(input);
+    const output = parsers.serializeAngle(input);
 
     assert.strictEqual(output, "-0.25turn");
   });
 });
 
-describe("parseUrl", () => {
+describe("serializeURL", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parseUrl(input);
+    const output = parsers.serializeURL(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parseUrl(input);
+    const output = parsers.serializeURL(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -796,7 +928,7 @@ describe("parseUrl", () => {
         value: "foo"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.serializeURL(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -808,7 +940,7 @@ describe("parseUrl", () => {
         value: ""
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.serializeURL(input);
 
     assert.strictEqual(output, 'url("")');
   });
@@ -820,7 +952,7 @@ describe("parseUrl", () => {
         value: "sample.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.serializeURL(input);
 
     assert.strictEqual(output, 'url("sample.png")');
   });
@@ -832,7 +964,7 @@ describe("parseUrl", () => {
         value: "sample\\\\-escaped.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.serializeURL(input);
 
     assert.strictEqual(output, 'url("sample\\-escaped.png")');
   });
@@ -844,7 +976,7 @@ describe("parseUrl", () => {
         value: "sample escaped -space.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.serializeURL(input);
 
     assert.strictEqual(output, 'url("sample escaped -space.png")');
   });
@@ -856,7 +988,7 @@ describe("parseUrl", () => {
         value: "sample\tescaped\t-tab.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.serializeURL(input);
 
     assert.strictEqual(output, 'url("sample\tescaped\t-tab.png")');
   });
@@ -868,7 +1000,7 @@ describe("parseUrl", () => {
         value: "sample'escaped'-quote.png"
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.serializeURL(input);
 
     // prettier-ignore
     assert.strictEqual(output, "url(\"sample'escaped'-quote.png\")");
@@ -881,23 +1013,23 @@ describe("parseUrl", () => {
         value: 'sample"escaped"-double-quote.png'
       }
     ];
-    const output = parsers.parseUrl(input);
+    const output = parsers.serializeURL(input);
 
     assert.strictEqual(output, 'url("sample\\"escaped\\"-double-quote.png")');
   });
 });
 
-describe("parseString", () => {
+describe("serializeString", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parseString(input);
+    const output = parsers.serializeString(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parseString(input);
+    const output = parsers.serializeString(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -909,7 +1041,7 @@ describe("parseString", () => {
         value: "exmaple.com"
       }
     ];
-    const output = parsers.parseString(input);
+    const output = parsers.serializeString(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -921,7 +1053,7 @@ describe("parseString", () => {
         value: "foo bar"
       }
     ];
-    const output = parsers.parseString(input);
+    const output = parsers.serializeString(input);
 
     assert.strictEqual(output, '"foo bar"');
   });
@@ -933,7 +1065,7 @@ describe("parseString", () => {
         value: "'foo bar\""
       }
     ];
-    const output = parsers.parseString(input);
+    const output = parsers.serializeString(input);
 
     assert.strictEqual(output, '"\'foo bar\\""');
   });
@@ -945,7 +1077,7 @@ describe("parseString", () => {
         value: "foo  bar"
       }
     ];
-    const output = parsers.parseString(input);
+    const output = parsers.serializeString(input);
 
     assert.strictEqual(output, '"foo  bar"');
   });
@@ -957,7 +1089,7 @@ describe("parseString", () => {
         value: "foo \\ bar"
       }
     ];
-    const output = parsers.parseString(input);
+    const output = parsers.serializeString(input);
 
     assert.strictEqual(output, '"foo \\ bar"');
   });
@@ -969,16 +1101,16 @@ describe("parseString", () => {
         value: 'foo "bar"'
       }
     ];
-    const output = parsers.parseString(input);
+    const output = parsers.serializeString(input);
 
     assert.strictEqual(output, '"foo \\"bar\\""');
   });
 });
 
-describe("parseColor", () => {
+describe("serializeColor", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -990,7 +1122,7 @@ describe("parseColor", () => {
         name: "canvastext"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "canvastext");
   });
@@ -1003,7 +1135,7 @@ describe("parseColor", () => {
         value: "0, 1%, 2%"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "rgb(5, 5, 5)");
   });
@@ -1016,7 +1148,7 @@ describe("parseColor", () => {
         value: "0, 1%, 2%, 0.5"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "rgba(5, 5, 5, 0.5)");
   });
@@ -1029,7 +1161,7 @@ describe("parseColor", () => {
         value: "120, 100%, 50%"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "rgb(0, 255, 0)");
   });
@@ -1042,7 +1174,7 @@ describe("parseColor", () => {
         value: "240, 100%, 50%"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "rgb(0, 0, 255)");
   });
@@ -1055,7 +1187,7 @@ describe("parseColor", () => {
         value: "128 0 128 / 1"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "rgb(128, 0, 128)");
   });
@@ -1068,7 +1200,7 @@ describe("parseColor", () => {
         value: "128 0 none"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "rgb(128, 0, 0)");
   });
@@ -1081,7 +1213,7 @@ describe("parseColor", () => {
         value: "127.5 0 127.5 / .5"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "rgba(128, 0, 128, 0.5)");
   });
@@ -1094,7 +1226,7 @@ describe("parseColor", () => {
         value: "46.2775% -47.5621 48.5837 / 1.0"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "lab(46.2775 -47.5621 48.5837)");
   });
@@ -1107,7 +1239,7 @@ describe("parseColor", () => {
         value: "srgb 0 .5 0 / 1.0"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "color(srgb 0 0.5 0)");
   });
@@ -1120,23 +1252,23 @@ describe("parseColor", () => {
         value: "in srgb, rgb(255 0 0), #0000ff 40%"
       }
     ];
-    const output = parsers.parseColor(input);
+    const output = parsers.serializeColor(input);
 
     assert.strictEqual(output, "color-mix(in srgb, rgb(255, 0, 0) 60%, rgb(0, 0, 255))");
   });
 });
 
-describe("parseGradient", () => {
+describe("serializeGradient", () => {
   it("should return undefined", () => {
     const input = "";
-    const output = parsers.parseGradient(input);
+    const output = parsers.serializeGradient(input);
 
     assert.strictEqual(output, undefined);
   });
 
   it("should return undefined", () => {
     const input = [];
-    const output = parsers.parseGradient(input);
+    const output = parsers.serializeGradient(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -1148,7 +1280,7 @@ describe("parseGradient", () => {
         name: "none"
       }
     ];
-    const output = parsers.parseGradient(input);
+    const output = parsers.serializeGradient(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -1161,7 +1293,7 @@ describe("parseGradient", () => {
         value: "circle -10px at center, red, blue"
       }
     ];
-    const output = parsers.parseGradient(input);
+    const output = parsers.serializeGradient(input);
 
     assert.strictEqual(output, undefined);
   });
@@ -1174,7 +1306,7 @@ describe("parseGradient", () => {
         value: "green, blue"
       }
     ];
-    const output = parsers.parseGradient(input);
+    const output = parsers.serializeGradient(input);
 
     assert.strictEqual(output, "linear-gradient(green, blue)");
   });
