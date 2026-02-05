@@ -1553,6 +1553,21 @@ describe("parsePropertyValue", () => {
       }
     ]);
   });
+
+  it("should get array for d", () => {
+    const property = "d";
+    const value = 'path("m 5,5 h 35 L 20,30 z")';
+    const output = parsers.parsePropertyValue(property, value, {
+      caseSensitive: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Function",
+        name: "path",
+        value: '"m 5,5 h 35 L 20,30 z"'
+      }
+    ]);
+  });
 });
 
 describe("isValidPropertyValue", () => {
