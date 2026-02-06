@@ -1393,8 +1393,7 @@ describe("parsePropertyValue", () => {
         type: "Calc",
         isNumber: true,
         value: "1.5",
-        name: "calc",
-        raw: "calc(1.5)"
+        name: "calc"
       }
     ]);
   });
@@ -1408,8 +1407,7 @@ describe("parsePropertyValue", () => {
         type: "Calc",
         isNumber: false,
         value: "1.5em",
-        name: "calc",
-        raw: "calc(1.5em)"
+        name: "calc"
       }
     ]);
   });
@@ -1423,8 +1421,7 @@ describe("parsePropertyValue", () => {
         type: "Calc",
         isNumber: false,
         value: "20% + 10px",
-        name: "calc",
-        raw: "calc(20% + 10px)"
+        name: "calc"
       }
     ]);
   });
@@ -1488,8 +1485,7 @@ describe("parsePropertyValue", () => {
       {
         type: "Function",
         name: "color",
-        value: "srgb 0 calc(1/2) 0",
-        raw: "color(srgb 0 calc(1/2) 0)"
+        value: "srgb 0 calc(1/2) 0"
       }
     ]);
   });
@@ -1502,8 +1498,7 @@ describe("parsePropertyValue", () => {
       {
         type: "Function",
         name: "rgb",
-        value: "0 128 0",
-        raw: "rgb(0 128 0)"
+        value: "0 128 0"
       }
     ]);
   });
@@ -1554,8 +1549,22 @@ describe("parsePropertyValue", () => {
       {
         type: "Function",
         name: "linear-gradient",
-        value: "green, blue",
-        raw: "linear-gradient(green, blue)"
+        value: "green, blue"
+      }
+    ]);
+  });
+
+  it("should get array for d", () => {
+    const property = "d";
+    const value = 'path("m 5,5 h 35 L 20,30 z")';
+    const output = parsers.parsePropertyValue(property, value, {
+      caseSensitive: true
+    });
+    assert.deepEqual(output, [
+      {
+        type: "Function",
+        name: "path",
+        value: '"m 5,5 h 35 L 20,30 z"'
       }
     ]);
   });
