@@ -16,14 +16,14 @@
   ],
   "main": "./lib/index.js",
   "dependencies": {
-    "@asamuzakjp/css-color": "^4.1.2",
-    "@csstools/css-syntax-patches-for-csstree": "^1.0.26",
+    "@asamuzakjp/css-color": "^5.0.0",
+    "@csstools/css-syntax-patches-for-csstree": "^1.0.28",
     "css-tree": "^3.1.0",
-    "lru-cache": "^11.2.5"
+    "lru-cache": "^11.2.6"
   },
   "devDependencies": {
     "@domenic/eslint-config": "^4.1.0",
-    "@webref/css": "^8.2.4",
+    "@webref/css": "^8.2.6",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
