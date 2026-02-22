@@ -38,7 +38,7 @@ const dimensionTypes = [
   "time",
   "time-percentage"
 ];
-const functionTypes = ["color", "image"];
+const functionTypes = ["color", "image", "paint"];
 const typeList = new Set([...caseSensitiveTypes, ...dimensionTypes, ...functionTypes]);
 
 await Promise.all([generateDefinitions(), generateDescriptors()]);
