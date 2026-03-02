@@ -6,7 +6,7 @@
     "CSSStyleDeclaration",
     "StyleSheet"
   ],
-  "version": "6.1.0",
+  "version": "6.2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jsdom/cssstyle.git"
