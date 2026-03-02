@@ -4,8 +4,14 @@ const { describe, it } = require("node:test");
 const assert = require("node:assert/strict");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
 
+// Mock globalObject
+const globalObject = {
+  DOMException: globalThis.DOMException,
+  TypeError: globalThis.TypeError
+};
+
 function testPropertyValue(property, value, expected) {
-  const style = new CSSStyleDeclaration();
+  const style = new CSSStyleDeclaration(globalObject);
   let res;
 
   style.setProperty(property, value);
@@ -34,7 +40,7 @@ function testPropertyValue(property, value, expected) {
 }
 
 function testImplicitPropertyValue(property, value, expected, sub) {
-  const style = new CSSStyleDeclaration();
+  const style = new CSSStyleDeclaration(globalObject);
   let res;
 
   style.setProperty(property, value);
