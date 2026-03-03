@@ -5,9 +5,15 @@ const assert = require("node:assert/strict");
 const { CSSStyleDeclaration } = require("../lib/CSSStyleDeclaration");
 const propertyDefinitions = require("../lib/generated/propertyDefinitions");
 
+// Mock globalObject
+const globalObject = {
+  DOMException: globalThis.DOMException,
+  TypeError: globalThis.TypeError
+};
+
 describe("CSSStyleDeclaration", () => {
   it("has getters and setters", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     const descriptors = Object.getOwnPropertyDescriptors(Object.getPrototypeOf(style));
 
     assert.ok(typeof descriptors.cssText.get === "function", "getter cssText");
@@ -18,7 +24,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("has all properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
 
     for (const property of propertyDefinitions.keys()) {
       assert.ok(style[property] !== undefined);
@@ -26,19 +32,19 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("has camelCase property", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
 
     assert.ok(style.backgroundColor !== undefined);
   });
 
   it("has PascalCase property for webkit prefixed property", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
 
     assert.ok(style.WebkitTextFillColor !== undefined);
   });
 
   it("has all functions", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
 
     assert.strictEqual(typeof style.item, "function");
     assert.strictEqual(typeof style.getPropertyValue, "function");
@@ -48,7 +54,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("throws if argument is not given", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
 
     assert.throws(
       () => {
@@ -57,40 +63,6 @@ describe("CSSStyleDeclaration", () => {
       (e) => {
         assert.strictEqual(e instanceof globalThis.TypeError, true);
         assert.strictEqual(e.message, "1 argument required, but only 0 present.");
-        return true;
-      }
-    );
-  });
-
-  it.skip("sets internals for Window", () => {
-    const window = {
-      getComputedStyle: () => {},
-      DOMException: globalThis.DOMException
-    };
-    const style = new CSSStyleDeclaration(null, {
-      context: window
-    });
-
-    assert.strictEqual(style.cssText, "");
-    assert.throws(
-      () => {
-        style.cssText = "color: green;";
-      },
-      (e) => {
-        assert.strictEqual(e instanceof window.DOMException, true);
-        assert.strictEqual(e.name, "NoModificationAllowedError");
-        assert.strictEqual(e.message, "cssText can not be modified.");
-        return true;
-      }
-    );
-    assert.throws(
-      () => {
-        style.removeProperty("color");
-      },
-      (e) => {
-        assert.strictEqual(e instanceof window.DOMException, true);
-        assert.strictEqual(e.name, "NoModificationAllowedError");
-        assert.strictEqual(e.message, "Property color can not be modified.");
         return true;
       }
     );
@@ -106,7 +78,7 @@ describe("CSSStyleDeclaration", () => {
         }
       }
     };
-    const style = new CSSStyleDeclaration(null, {
+    const style = new CSSStyleDeclaration(globalObject, undefined, {
       context: node
     });
     style.cssText = "color: green";
@@ -123,7 +95,7 @@ describe("CSSStyleDeclaration", () => {
         }
       }
     };
-    const style = new CSSStyleDeclaration(null, {
+    const style = new CSSStyleDeclaration(globalObject, undefined, {
       context: node
     });
     style.cssText = "color: green!";
@@ -140,7 +112,7 @@ describe("CSSStyleDeclaration", () => {
         }
       }
     };
-    const style = new CSSStyleDeclaration(null, {
+    const style = new CSSStyleDeclaration(globalObject, undefined, {
       context: node
     });
 
@@ -191,7 +163,7 @@ describe("CSSStyleDeclaration", () => {
         }
       }
     };
-    const style = new CSSStyleDeclaration(null, {
+    const style = new CSSStyleDeclaration(globalObject, undefined, {
       context: node
     });
     style.cssText = "color: light-dark(#008000, #0000ff)";
@@ -209,7 +181,7 @@ describe("CSSStyleDeclaration", () => {
         }
       }
     };
-    const style = new CSSStyleDeclaration(null, {
+    const style = new CSSStyleDeclaration(globalObject, undefined, {
       context: rule
     });
     style.cssText = "color: green";
@@ -217,7 +189,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("from style string", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "color: blue; background-color: red; width: 78%; height: 50vh;";
     assert.strictEqual(style.length, 4);
     assert.strictEqual(style.cssText, "color: blue; background-color: red; width: 78%; height: 50vh;");
@@ -231,7 +203,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("from properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.color = "blue";
     assert.strictEqual(style.length, 1);
     assert.strictEqual(style[0], "color");
@@ -249,7 +221,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("shorthand properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.background = "blue url(http://www.example.com/some_img.jpg)";
     assert.strictEqual(style.backgroundColor, "blue");
     assert.strictEqual(style.backgroundImage, 'url("http://www.example.com/some_img.jpg")');
@@ -267,7 +239,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("width and height properties and null and empty strings", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.height = 6;
     assert.strictEqual(style.height, "");
     style.width = 0;
@@ -287,7 +259,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("implicit properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderWidth = 0;
     assert.strictEqual(style.border, "");
     assert.strictEqual(style.borderWidth, "0px");
@@ -299,7 +271,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("top, left, right, bottom properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.top = 0;
     style.left = "0%";
     style.right = "5em";
@@ -313,7 +285,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it('top, left, right, bottom properties should accept "auto"', () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = `top: auto; right: auto; bottom: auto; left: auto;`;
     assert.strictEqual(style.top, "auto");
     assert.strictEqual(style.right, "auto");
@@ -322,7 +294,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("clear properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.clear = "none";
     assert.strictEqual(style.clear, "none");
     style.clear = "lfet";
@@ -336,7 +308,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("colors", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.color = "rgba(0,0,0,0)";
     assert.strictEqual(style.color, "rgba(0, 0, 0, 0)");
     style.color = "rgba(5%, 10%, 20%, 0.4)";
@@ -364,24 +336,24 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("invalid hex color value", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.color = "#1234567";
     assert.strictEqual(style.color, "");
   });
 
   it("shorthand properties with embedded spaces", () => {
-    let style = new CSSStyleDeclaration();
+    let style = new CSSStyleDeclaration(globalObject);
     style.background = "rgb(0, 0, 0) url(/something/somewhere.jpg)";
     assert.strictEqual(style.backgroundColor, "rgb(0, 0, 0)");
     assert.strictEqual(style.backgroundImage, 'url("/something/somewhere.jpg")');
     assert.strictEqual(style.cssText, 'background: url("/something/somewhere.jpg") rgb(0, 0, 0);');
-    style = new CSSStyleDeclaration();
+    style = new CSSStyleDeclaration(globalObject);
     style.border = "  1px  solid   black  ";
     assert.strictEqual(style.border, "1px solid black");
   });
 
   it("setting shorthand properties to an empty string should clear all dependent properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderWidth = "1px";
     assert.strictEqual(style.cssText, "border-width: 1px;");
     style.border = "";
@@ -389,7 +361,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting implicit properties to an empty string should clear all dependent properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.borderWidth = "";
@@ -397,7 +369,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting a shorthand property, whose shorthands are implicit properties, to an empty string should clear all dependent properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderTopWidth = "2px";
     assert.strictEqual(style.cssText, "border-top-width: 2px;");
     style.border = "";
@@ -409,7 +381,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border as none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "none";
     assert.strictEqual(style.border, "medium", "border");
     assert.strictEqual(style.borderWidth, "medium", "border-width");
@@ -422,7 +394,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border as none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "none";
     assert.strictEqual(style.border, "medium", "border");
     assert.strictEqual(style.borderWidth, "medium", "border-width");
@@ -435,7 +407,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border-style as none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderStyle = "none";
     assert.strictEqual(style.border, "", "border");
     assert.strictEqual(style.borderWidth, "", "border-width");
@@ -448,7 +420,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border-top as none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderTop = "none";
     assert.strictEqual(style.border, "", "border");
     assert.strictEqual(style.borderWidth, "", "border-width");
@@ -461,7 +433,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border as 1px and change border-style to none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "1px";
     style.borderStyle = "none";
     assert.strictEqual(style.border, "1px", "border");
@@ -475,7 +447,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border as 1px and change border-style to none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "1px";
     style.borderStyle = "none";
     assert.strictEqual(style.border, "1px", "border");
@@ -489,7 +461,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border as 1px and change border-top to none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "1px";
     style.borderTop = "none";
     assert.strictEqual(style.border, "", "border");
@@ -507,7 +479,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border as 1px solid and change border-top to none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "1px solid";
     style.borderTop = "none";
     assert.strictEqual(style.border, "", "border");
@@ -525,7 +497,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border as none and change border-style to null", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "none";
     style.borderStyle = null;
     assert.strictEqual(style.border, "", "border");
@@ -543,7 +515,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border as solid and change border-top to none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "solid";
     style.borderTop = "none";
     assert.strictEqual(style.border, "", "border");
@@ -561,7 +533,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border as solid and change border-style to none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "solid";
     style.borderStyle = "none";
     assert.strictEqual(style.border, "medium", "border");
@@ -575,7 +547,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border-style as solid and change border-top to none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderStyle = "solid";
     style.borderTop = "none";
     assert.strictEqual(style.border, "", "border");
@@ -593,7 +565,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border-top as solid and change border-style to none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderTop = "solid";
     style.borderStyle = "none";
     assert.strictEqual(style.border, "", "border");
@@ -611,7 +583,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set border-style as solid and change border-top to null", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderStyle = "solid";
     style.borderTop = null;
     assert.strictEqual(
@@ -629,7 +601,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting border values to none should change dependent values", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderTopWidth = "1px";
     assert.strictEqual(style.cssText, "border-top-width: 1px;");
     style.border = "none";
@@ -681,21 +653,21 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting border to green", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "green";
     assert.strictEqual(style.cssText, "border: green;");
     assert.strictEqual(style.border, "green");
   });
 
   it("setting border to green", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "green";
     assert.strictEqual(style.cssText, "border: green;");
     assert.strictEqual(style.border, "green");
   });
 
   it("setting border to initial should set all properties initial", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "initial";
     assert.strictEqual(style.cssText, "border: initial;");
     assert.strictEqual(style.border, "initial");
@@ -710,7 +682,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting borderTop to initial should set top related properties initial", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderTop = "initial";
     assert.strictEqual(style.cssText, "border-top: initial;");
     assert.strictEqual(style.border, "");
@@ -725,26 +697,26 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting border to 0 should be okay", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = 0;
     assert.strictEqual(style.cssText, "border: 0px;");
     assert.strictEqual(style.border, "0px");
   });
 
   it("setting borderColor to var() should be okay", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderColor = "var(--foo)";
     assert.strictEqual(style.cssText, "border-color: var(--foo);");
   });
 
   it("setting borderColor to inherit should be okay", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderColor = "inherit";
     assert.strictEqual(style.cssText, "border-color: inherit;");
   });
 
   it("setting values implicit and shorthand properties via csstext and setproperty should propagate to dependent properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "border: 1px solid black;";
     assert.strictEqual(style.cssText, "border: 1px solid black;");
     assert.strictEqual(style.borderTop, "1px solid black");
@@ -755,7 +727,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting opacity should work", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("opacity", 0.75);
     assert.strictEqual(style.cssText, "opacity: 0.75;");
     style.opacity = "0.50";
@@ -765,18 +737,18 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("width and height of auto should work", () => {
-    let style = new CSSStyleDeclaration();
+    let style = new CSSStyleDeclaration(globalObject);
     style.width = "auto";
     assert.strictEqual(style.cssText, "width: auto;");
     assert.strictEqual(style.width, "auto");
-    style = new CSSStyleDeclaration();
+    style = new CSSStyleDeclaration(globalObject);
     style.height = "auto";
     assert.strictEqual(style.cssText, "height: auto;");
     assert.strictEqual(style.height, "auto");
   });
 
   it("Shorthand serialization with just longhands", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "margin-right: 10px; margin-left: 10px; margin-top: 10px; margin-bottom: 10px;";
     assert.strictEqual(style.cssText, "margin: 10px;");
     assert.strictEqual(style.margin, "10px");
@@ -795,7 +767,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("padding and margin should set/clear shorthand properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     const parts = ["Top", "Right", "Bottom", "Left"];
 
     function testParts(name, v, V) {
@@ -824,7 +796,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("padding and margin shorthands should set main properties", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     const parts = ["Top", "Right", "Bottom", "Left"];
 
     function testParts(name, v, V) {
@@ -846,7 +818,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting individual padding and margin properties to an empty string should clear them", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
 
     const properties = ["padding", "margin"];
     const parts = ["Top", "Right", "Bottom", "Left"];
@@ -863,7 +835,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("removing and setting individual margin properties updates the combined property accordingly", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.margin = "1px 2px 3px 4px";
     style.marginTop = "";
     assert.strictEqual(style.margin, "");
@@ -888,7 +860,7 @@ describe("CSSStyleDeclaration", () => {
 
   for (const property of ["padding", "margin"]) {
     it(`removing an individual ${property} property should remove the combined property and replace it with the remaining individual ones`, () => {
-      const style = new CSSStyleDeclaration();
+      const style = new CSSStyleDeclaration(globalObject);
       const parts = ["Top", "Right", "Bottom", "Left"];
       const partValues = ["1px", "2px", "3px", "4px"];
 
@@ -915,7 +887,7 @@ describe("CSSStyleDeclaration", () => {
     });
 
     it(`setting additional ${property} properties keeps important status of others`, () => {
-      const style = new CSSStyleDeclaration();
+      const style = new CSSStyleDeclaration(globalObject);
       const importantProperty = `${property}-top: 3px !important;`;
       style.cssText = importantProperty;
       assert.strictEqual(style.cssText.includes(importantProperty), true);
@@ -931,7 +903,7 @@ describe("CSSStyleDeclaration", () => {
     });
 
     it(`setting individual ${property} keeps important status of others`, () => {
-      const style = new CSSStyleDeclaration();
+      const style = new CSSStyleDeclaration(globalObject);
       style.cssText = `${property}: 3px !important;`;
       style[`${property}Top`] = "4px";
       assert.strictEqual(style.cssText.includes(`${property}-top: 4px;`), true);
@@ -943,16 +915,18 @@ describe("CSSStyleDeclaration", () => {
   }
 
   it("setting a value to 0 should return the string value", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("fill-opacity", 0);
     assert.strictEqual(style.fillOpacity, "0");
   });
 
   it("onchange callback should be called when the csstext changes", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration((cssText) => {
-      called++;
-      assert.strictEqual(cssText, "opacity: 0;");
+    const style = new CSSStyleDeclaration(globalObject, undefined, {
+      onChangeCallback: (cssText) => {
+        called++;
+        assert.strictEqual(cssText, "opacity: 0;");
+      }
     });
     style.cssText = "opacity: 0;";
     assert.strictEqual(called, 1);
@@ -962,9 +936,11 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should be called only once when multiple properties were added", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration((cssText) => {
-      called++;
-      assert.strictEqual(cssText, "width: 100px; height: 100px;");
+    const style = new CSSStyleDeclaration(globalObject, undefined, {
+      onChangeCallback: (cssText) => {
+        called++;
+        assert.strictEqual(cssText, "width: 100px; height: 100px;");
+      }
     });
     style.cssText = "width: 100px;height:100px;";
     assert.strictEqual(called, 1);
@@ -972,8 +948,10 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should not be called when property is set to the same value", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration(() => {
-      called++;
+    const style = new CSSStyleDeclaration(globalObject, undefined, {
+      onChangeCallback: () => {
+        called++;
+      }
     });
 
     style.setProperty("opacity", 0);
@@ -984,21 +962,23 @@ describe("CSSStyleDeclaration", () => {
 
   it("onchange callback should not be called when removeProperty was called on non-existing property", () => {
     let called = 0;
-    const style = new CSSStyleDeclaration(() => {
-      called++;
+    const style = new CSSStyleDeclaration(globalObject, undefined, {
+      onChangeCallback: () => {
+        called++;
+      }
     });
     style.removeProperty("opacity");
     assert.strictEqual(called, 0);
   });
 
   it("setting float should work the same as cssfloat", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.float = "left";
     assert.strictEqual(style.cssFloat, "left");
   });
 
   it("setting improper css to csstext should not throw", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "color: ";
     assert.strictEqual(style.cssText, "");
     style.color = "black";
@@ -1007,7 +987,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("url parsing works with quotes", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.backgroundImage = "url(http://some/url/here1.png)";
     assert.strictEqual(style.backgroundImage, 'url("http://some/url/here1.png")');
     style.backgroundImage = "url('http://some/url/here2.png')";
@@ -1017,7 +997,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting 0 to a padding or margin works", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.padding = 0;
     assert.strictEqual(style.cssText, "padding: 0px;");
     style.margin = "1em";
@@ -1026,7 +1006,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting ex units to a padding or margin works", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.padding = "1ex";
     assert.strictEqual(style.cssText, "padding: 1ex;");
     style.margin = "1em";
@@ -1035,7 +1015,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting empty string and null to a padding or margin works", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     const parts = ["Top", "Right", "Bottom", "Left"];
     function testParts(base, nullValue) {
       const props = [base].concat(parts.map((part) => base + part));
@@ -1055,7 +1035,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting undefined to a padding or margin does nothing", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     const parts = ["Top", "Right", "Bottom", "Left"];
     function testParts(base) {
       const props = [base].concat(parts.map((part) => base + part));
@@ -1072,7 +1052,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("setting null to background works", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.background = "red";
     assert.strictEqual(style.cssText, "background: red;");
     style.background = null;
@@ -1080,7 +1060,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("flex properties should keep their values", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.flexDirection = "column";
     assert.strictEqual(style.cssText, "flex-direction: column;");
     style.flexDirection = "row";
@@ -1088,33 +1068,33 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("camelcase properties are not assigned with `.setproperty()`", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("fontSize", "12px");
     assert.strictEqual(style.cssText, "");
   });
 
   it("casing is ignored in `.setproperty()`", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("FoNt-SiZe", "12px");
     assert.strictEqual(style.fontSize, "12px");
     assert.strictEqual(style.getPropertyValue("font-size"), "12px");
   });
 
   it("support non string entries in border-spacing", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderSpacing = 0;
     assert.strictEqual(style.cssText, "border-spacing: 0px;");
   });
 
   it("float should be valid property for `.setproperty()`", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("float", "left");
     assert.strictEqual(style.float, "left");
     assert.strictEqual(style.getPropertyValue("float"), "left");
   });
 
   it("flex-shrink works", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("flex-shrink", 0);
     assert.strictEqual(style.getPropertyValue("flex-shrink"), "0");
     style.setProperty("flex-shrink", 1);
@@ -1123,14 +1103,14 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("flex-grow works", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("flex-grow", 2);
     assert.strictEqual(style.getPropertyValue("flex-grow"), "2");
     assert.strictEqual(style.cssText, "flex-grow: 2;");
   });
 
   it("flex-basis works", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("flex-basis", 0);
     assert.strictEqual(style.getPropertyValue("flex-basis"), "0px");
     style.setProperty("flex-basis", "250px");
@@ -1143,7 +1123,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("shorthand flex works", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("flex", "none");
     assert.strictEqual(style.getPropertyValue("flex-grow"), "0");
     assert.strictEqual(style.getPropertyValue("flex-shrink"), "0");
@@ -1191,7 +1171,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("font-size get a valid value", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     const invalidValue = "1r5px";
     style.cssText = "font-size: 15px";
     assert.strictEqual(1, style.length);
@@ -1201,28 +1181,28 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("getPropertyValue for custom properties in cssText", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "--foo: red";
 
     assert.strictEqual(style.getPropertyValue("--foo"), "red");
   });
 
   it("getPropertyValue for custom properties with setProperty", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("--bar", "blue");
 
     assert.strictEqual(style.getPropertyValue("--bar"), "blue");
   });
 
   it("getPropertyValue for custom properties with object setter", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style["--baz"] = "yellow";
 
     assert.strictEqual(style.getPropertyValue("--baz"), "");
   });
 
   it("custom properties are case-sensitive", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "--fOo: purple";
 
     assert.strictEqual(style.getPropertyValue("--foo"), "");
@@ -1231,92 +1211,92 @@ describe("CSSStyleDeclaration", () => {
 
   for (const property of ["width", "height", "margin", "margin-top", "bottom", "right", "padding"]) {
     it(`supports calc for ${property}`, () => {
-      const style = new CSSStyleDeclaration();
+      const style = new CSSStyleDeclaration(globalObject);
       style.setProperty(property, "calc(100% - 100px)");
       assert.strictEqual(style.getPropertyValue(property), "calc(100% - 100px)");
     });
   }
 
   it("supports nested calc", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("width", "calc(100% - calc(200px - 100px))");
     assert.strictEqual(style.getPropertyValue("width"), "calc(100% - 100px)");
   });
 
   it("supports nested calc", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("width", "calc(100% * calc(2 / 3))");
     assert.strictEqual(style.getPropertyValue("width"), "calc(66.6667%)");
   });
 
   it("supports var", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("width", "var(--foo)");
     assert.strictEqual(style.getPropertyValue("width"), "var(--foo)");
   });
 
   it("supports var with fallback", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("width", "var(--foo, 100px)");
     assert.strictEqual(style.getPropertyValue("width"), "var(--foo, 100px)");
   });
 
   it("supports var with var fallback", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("width", "var(--foo, var(--bar))");
     assert.strictEqual(style.getPropertyValue("width"), "var(--foo, var(--bar))");
   });
 
   it("supports calc with var inside", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("width", "calc(100% - var(--foo))");
     assert.strictEqual(style.getPropertyValue("width"), "calc(100% - var(--foo))");
   });
 
   it("supports var with calc inside", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("width", "var(--foo, calc(var(--bar) + 3px))");
     assert.strictEqual(style.getPropertyValue("width"), "var(--foo, calc(var(--bar) + 3px))");
   });
 
   it("supports color var", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("color", "var(--foo)");
     assert.strictEqual(style.getPropertyValue("color"), "var(--foo)");
   });
 
   it("should not normalize if var() is included", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("line-height", "calc( /* comment */ 100% - calc(var(--foo) *2 ))");
     assert.strictEqual(style.getPropertyValue("line-height"), "calc( /* comment */ 100% - calc(var(--foo) *2 ))");
   });
 
   it("supports abs", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("line-height", "abs(1 - 2 * 3)");
     assert.strictEqual(style.getPropertyValue("line-height"), "calc(5)");
   });
 
   it("supports abs inside calc", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("line-height", "calc(abs(1) + abs(2))");
     assert.strictEqual(style.getPropertyValue("line-height"), "calc(3)");
   });
 
   it("supports sign", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("line-height", "sign(.1)");
     assert.strictEqual(style.getPropertyValue("line-height"), "calc(1)");
   });
 
   it("supports sign inside calc", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("line-height", "calc(sign(.1) + sign(.2))");
     assert.strictEqual(style.getPropertyValue("line-height"), "calc(2)");
   });
 
   it("no-op for setting undefined to width", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("width", "10px");
     assert.strictEqual(style.getPropertyValue("width"), "10px");
 
@@ -1328,25 +1308,25 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("shorthand serialization with shorthand and longhands mixed", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "background-color: blue; background: red !important; background-color: green;";
     assert.strictEqual(style.cssText, "background: red !important;");
   });
 
   it("shorthand serialization", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 1px; border-image: none;";
     assert.strictEqual(style.cssText, "border: 1px;");
   });
 
   it("shorthand serialization", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "border-width: 1px;";
     assert.strictEqual(style.cssText, "border-width: 1px;");
   });
 
   it("shorthand serialization", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "border: 1px; border-top: 1px !important;";
     assert.strictEqual(
       style.cssText,
@@ -1355,19 +1335,19 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("set cssText as none", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "border: none;";
     assert.strictEqual(style.cssText, "border: medium;");
   });
 
   it("invalid cssText should be parsed", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "color: red; }";
     assert.strictEqual(style.cssText, "color: red;");
   });
 
   it("single value flex with CSS-wide keyword", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "flex: initial;";
     assert.strictEqual(style.flex, "initial");
     assert.strictEqual(style.flexGrow, "initial");
@@ -1377,7 +1357,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("single value flex with non-CSS-wide value", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "flex: 0;";
     assert.strictEqual(style.flex, "0 1 0%");
     assert.strictEqual(style.flexGrow, "0");
@@ -1387,7 +1367,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("multiple values flex with CSS-wide keyword", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "flex: initial; flex-basis: initial; flex-shrink: initial;";
     assert.strictEqual(style.flex, "initial");
     assert.strictEqual(style.flexGrow, "initial");
@@ -1397,7 +1377,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("multiple values flex with CSS-wide keywords and non-CSS-wide value", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "flex: initial; flex-shrink: 0;";
     assert.strictEqual(style.flex, "");
     assert.strictEqual(style.flexGrow, "initial");
@@ -1407,7 +1387,7 @@ describe("CSSStyleDeclaration", () => {
   });
 
   it("multiple values flex with CSS-wide and two non-CSS-wide-keyword values", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "flex: initial; flex-basis: 0; flex-shrink: 2;";
     assert.strictEqual(style.flex, "");
     assert.strictEqual(style.flexGrow, "initial");
@@ -1420,7 +1400,7 @@ describe("CSSStyleDeclaration", () => {
 /* regression tests */
 describe("regression test for https://github.com/jsdom/jsdom/issues/3833", () => {
   it("should set global value unset", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("width", "10px");
     assert.strictEqual(style.getPropertyValue("width"), "10px");
 
@@ -1431,7 +1411,7 @@ describe("regression test for https://github.com/jsdom/jsdom/issues/3833", () =>
 
 describe("regression test for https://github.com/jsdom/jsdom/issues/3878", () => {
   it("should not set custom properties twice", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("--foo", 0);
     style.setProperty("--foo", 1);
 
@@ -1444,34 +1424,34 @@ describe("regression test for https://github.com/jsdom/jsdom/issues/3878", () =>
 
 describe("regression test for https://github.com/jsdom/cssstyle/issues/129", () => {
   it("should set stringified value", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.setProperty("--foo", true);
     assert.strictEqual(style.getPropertyValue("--foo"), "true");
   });
 
   it("throws for setting Symbol", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     assert.throws(() => style.setProperty("width", Symbol("foo")));
   });
 });
 
 describe("regression test for https://github.com/jsdom/cssstyle/issues/70", () => {
   it('returns empty string for "webkit-*", without leading "-"', () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "background-color: green; webkit-transform: scale(3);";
     assert.strictEqual(style.backgroundColor, "green");
     assert.strictEqual(style.webkitTransform, "");
   });
 
   it('should set/get value for "-webkit-*"', () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "background-color: green; -webkit-transform: scale(3);";
     assert.strictEqual(style.backgroundColor, "green");
     assert.strictEqual(style.webkitTransform, "scale(3)");
   });
 
   it('returns undefined for unknown "-webkit-*"', () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.cssText = "background-color: green; -webkit-foo: scale(3);";
     assert.strictEqual(style.backgroundColor, "green");
     assert.strictEqual(style.webkitFoo, undefined);
@@ -1480,7 +1460,7 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/70", () =
 
 describe("regression test for https://github.com/jsdom/cssstyle/issues/124", () => {
   it("no-op when setting undefined to border", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.border = "1px solid green";
     assert.strictEqual(style.border, "1px solid green");
     style.border = undefined;
@@ -1488,7 +1468,7 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/124", () 
   });
 
   it("no-op when setting undefined to borderWidth", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.borderWidth = "1px";
     assert.strictEqual(style.borderWidth, "1px");
     style.border = undefined;
@@ -1511,7 +1491,7 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/212", () 
       "ui-monospace",
       "ui-rounded"
     ];
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     for (const keyword of keywords) {
       style.fontFamily = keyword;
       assert.strictEqual(style.fontFamily, keyword);
@@ -1520,7 +1500,7 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/212", () 
 
   it("should support generic() function keywords", () => {
     const keywords = ["generic(fangsong)", "generic(kai)", "generic(khmer-mul)", "generic(nastaliq)"];
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     for (const keyword of keywords) {
       style.fontFamily = keyword;
       assert.strictEqual(style.fontFamily, keyword);
@@ -1530,7 +1510,7 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/212", () 
   // see https://drafts.csswg.org/css-fonts-4/#changes-2021-12-21
   it("should support removed generic keywords as non generic family name", () => {
     const keywords = ["emoji", "fangsong"];
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     for (const keyword of keywords) {
       style.fontFamily = keyword;
       assert.strictEqual(style.fontFamily, keyword);
@@ -1538,7 +1518,7 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/212", () 
   });
 
   it("should support `-webkit-` prefixed family name", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.fontFamily = "-webkit-body";
     assert.strictEqual(style.fontFamily, "-webkit-body");
   });
@@ -1546,7 +1526,7 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/212", () 
 
 describe("regression test for https://github.com/jsdom/jsdom/issues/3021", () => {
   it("should get normalized value for font shorthand", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.font = "normal bold 4px sans-serif";
     assert.strictEqual(style.font, "bold 4px sans-serif");
   });
@@ -1554,7 +1534,7 @@ describe("regression test for https://github.com/jsdom/jsdom/issues/3021", () =>
 
 describe("regression test for https://github.com/jsdom/cssstyle/issues/214", () => {
   it("should return value for each property", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     const key = "background-color";
     const camel = "backgroundColor";
     const value = "var(--foo)";
@@ -1566,7 +1546,7 @@ describe("regression test for https://github.com/jsdom/cssstyle/issues/214", () 
   });
 
   it("should set var() values for background-attachment correctly", () => {
-    const style = new CSSStyleDeclaration();
+    const style = new CSSStyleDeclaration(globalObject);
     style.backgroundAttachment = "var(--foo)";
     assert.strictEqual(style.backgroundAttachment, "var(--foo)");
     style.setProperty("background-attachment", "var(--bar)");
