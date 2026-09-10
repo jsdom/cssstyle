@@ -771,6 +771,18 @@ describe("border", () => {
     testPropertyValue("border-spacing", "10px 20px", "10px 20px");
   });
 
+  it("border-spacing should not set / get negative length", () => {
+    testPropertyValue("border-spacing", "-10px", "");
+  });
+
+  it("border-spacing should not set / get negative length as the first of two values", () => {
+    testPropertyValue("border-spacing", "-10px 20px", "");
+  });
+
+  it("border-spacing should not set / get negative length as the second of two values", () => {
+    testPropertyValue("border-spacing", "10px -20px", "");
+  });
+
   it("border-top shorthand should set / get value", () => {
     testImplicitPropertyValue(
       "border-top",
